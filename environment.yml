@@ -1,0 +1,54 @@
+name: tcc_pdn
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Python
+  - python=3.9
+
+  # Data & Numerical
+  - numpy=1.23
+  - scipy=1.10
+  - pandas=2.0
+  - scikit-learn=1.3
+
+  # ML & Optimization
+  - xgboost=2.0
+  - optuna=3.1
+  - deap=1.4
+
+  # Deep Learning (optional, for ANN)
+  - pytorch::pytorch=2.0
+  - pytorch::pytorch-cuda=11.8
+
+  # Analysis & Visualization
+  - matplotlib=3.7
+  - seaborn=0.13
+  - plotly=5.14
+  - shap=0.42
+
+  # Jupyter & Development
+  - jupyter=1.0
+  - jupyterlab=4.0
+  - ipython=8.12
+  - pytest=7.4
+  - black=23.7
+  - flake8=6.0
+  - mypy=1.4
+
+  # Config & Logging
+  - hydra-core=1.3
+  - pyyaml=6.0
+
+  # Experiment Tracking
+  - mlflow=2.6
+
+  # Misc
+  - tqdm=4.66
+  - requests=2.31
+
+  # pip dependencies (if any)
+  - pip
+  - pip:
+    - scikit-rf>=0.22        # Touchstone file reading
+    - dataclasses-json>=0.5  # Serialization

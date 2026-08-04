@@ -1,0 +1,211 @@
+\chapter{Recursos e cronograma}
+\label{cap:recursos}
+
+\section{Recursos}
+\label{sec:recursos}
+
+\subsection{Recursos humanos}
+
+A execução é conduzida pelo autor, estudante de graduação em Engenharia Elétrica,
+sob orientação do Prof.\ Dr.\ Leandro dos Santos Coelho, do Departamento de
+Engenharia Elétrica da UFPR e do PPGEE/UFPR. Prevê-se interlocução pontual com o
+Prof.\ Dr.\ Bruno Pohlot Ricobom no que se refere ao escâner de campo próximo,
+caso a validação experimental complementar descrita na
+Seção~\ref{sec:validacao_exp} venha a ser realizada. Registre-se que essa
+interlocução tem caráter de apoio técnico pontual e não constitui coorientação
+formal; o trabalho não prevê coorientador, conforme declarado na página de
+identificação.
+
+Estima-se dedicação de vinte horas semanais ao longo de dois semestres letivos,
+com reuniões de acompanhamento quinzenais com o orientador.
+
+\subsection{Recursos materiais e computacionais}
+
+O trabalho não requer aquisição de equipamentos nem licenças comerciais. Toda a
+cadeia de ferramentas é livre, conforme relacionado na
+Tabela~\ref{tab:ferramentas}.
+
+\begin{table}[htb]
+\centering
+\caption{Recursos computacionais e de software}
+\label{tab:ferramentas}
+\footnotesize
+\begin{tabular}{@{}p{0.26\linewidth}p{0.30\linewidth}p{0.36\linewidth}@{}}
+\toprule
+\textbf{Recurso} & \textbf{Especificação} & \textbf{Finalidade} \\
+\midrule
+Estação de trabalho & computador pessoal, 8\,GB de RAM & desenvolvimento,
+treinamento e análise \\[0.3em]
+Armazenamento & 60\,GB livres em disco & base bruta (24\,GB), base processada e
+resultados \\[0.3em]
+Python 3.12 & \texttt{numpy}, \texttt{pandas}, \texttt{scipy} & manipulação
+numérica \\[0.3em]
+\texttt{scikit-rf} & --- & leitura de arquivos Touchstone e conversão entre
+parâmetros \\[0.3em]
+\texttt{scikit-learn}, \texttt{LightGBM} & --- & modelos de referência \\[0.3em]
+\texttt{PyTorch} & versão para CPU & modelo informado por física \\[0.3em]
+\texttt{Optuna} & --- & otimização de hiperparâmetros e dos pesos $\lambda_k$
+\\[0.3em]
+\texttt{pymoo} & --- & NSGA-II e evolução diferencial multiobjetivo \\[0.3em]
+\texttt{SHAP}, \texttt{PySR} & --- & interpretabilidade e regressão simbólica
+\\[0.3em]
+\texttt{MLflow} & --- & registro de experimentos \\[0.3em]
+\texttt{pytest}, \texttt{Hydra} & --- & testes automatizados e configuração
+\\[0.3em]
+Git & repositório privado & versionamento de código e do texto \\[0.3em]
+\LaTeX & modelo UFPR & redação do documento \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+O dimensionamento computacional foi verificado quanto à viabilidade. O
+treinamento de um perceptron multicamadas sobre 985 amostras de oito dimensões,
+com saída de 334 pontos, é executável em CPU em poucos minutos. O gargalo real é
+a etapa de pré-processamento, que percorre 24\,GB de arquivos Touchstone; medições
+preliminares indicam tempo de leitura da ordem de 0{,}1\,s por arquivo, o que
+projeta cerca de dois minutos para a base completa em uma passagem única, cujo
+resultado é persistido. Como plano de contingência, caso a memória disponível se
+mostre insuficiente na etapa de otimização, prevê-se o uso do Google Colab em
+sua camada gratuita.
+
+\subsection{Recursos financeiros}
+
+Não há custos previstos para o escopo principal. Os dados são de acesso gratuito
+e o software é livre. Um custo eventual, estimado entre R\$\,300 e R\$\,600,
+poderia incorrer na fabricação das duas placas de teste da validação experimental
+complementar, item opcional que não integra o caminho crítico e cujo
+financiamento seria discutido com o laboratório de origem caso venha a ser
+executado.
+
+\section{Cronograma}
+\label{sec:cronograma}
+
+O trabalho distribui-se por dois semestres letivos: 2026/2, dedicado à
+fundamentação, à infraestrutura de dados e ao estabelecimento das referências; e
+2027/1, dedicado ao modelo informado por física, à otimização, à
+interpretabilidade e à redação final. A divisão respeita a estrutura de TCC I e
+TCC II do curso.
+
+\subsection{Marcos de decisão}
+
+Adotam-se quatro marcos com critérios objetivos de continuidade, apresentados na
+Tabela~\ref{tab:marcos}. A finalidade é permitir redirecionamento antecipado, em
+vez de constatação tardia de inviabilidade.
+
+\begin{table}[htb]
+\centering
+\caption{Marcos de decisão e planos de contingência}
+\label{tab:marcos}
+\footnotesize
+\begin{tabular}{@{}p{0.06\linewidth}p{0.17\linewidth}p{0.32\linewidth}p{0.34\linewidth}@{}}
+\toprule
+& \textbf{Prazo} & \textbf{Critério de continuidade} & \textbf{Contingência} \\
+\midrule
+M1 & set./2026 & unidades confirmadas; pipeline de extração de $Z(f)$ validado
+contra invariantes analíticas em toda a base (a amostra preliminar de 40
+configurações já é consistente) & rever hipótese de unidades; consultar os
+mantenedores da base \\[0.4em]
+M2 & nov./2026 & melhor referência atinge $R^2 > 0{,}80$ sobre $|Z|_{\max}$ &
+revisar representação do alvo; considerar redução de dimensionalidade da curva
+\\[0.4em]
+M3 & abr./2027 & modelo informado por física supera a ablação em ao menos uma
+fração de treinamento, com significância estatística & reportar resultado
+negativo como contribuição; deslocar ênfase para interpretabilidade \\[0.4em]
+M4 & jun./2027 & fronteira de Pareto verificada por simulação de referência &
+restringir a otimização mono-objetivo sobre $|Z|_{\max}$ \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+Cabe registrar que o marco M3 não condiciona a validade do trabalho. A hipótese
+H1 é falsificável, e sua refutação — a constatação de que a informação física
+não produz ganho mensurável neste problema — constitui resultado legítimo e
+publicável, desde que o desenho experimental tenha poder estatístico suficiente
+para sustentá-la. O plano de contingência associado preserva a entrega, e não
+apenas a confirmação da hipótese.
+
+\subsection{Detalhamento por período}
+
+\begin{table}[htb]
+\centering
+\caption{Cronograma de execução --- TCC I (2026/2)}
+\label{tab:crono1}
+\footnotesize
+\begin{tabular}{@{}p{0.52\linewidth}ccccc@{}}
+\toprule
+\textbf{Atividade} & \textbf{ago} & \textbf{set} & \textbf{out} & \textbf{nov} &
+\textbf{dez} \\
+\midrule
+Revisão bibliográfica sistemática              & \mes & \mes & \mes &      &      \\
+Caracterização e validação da base de dados    & \mes & \mes &      &      &      \\
+Pipeline de extração de impedância e testes    &      & \mes & \mes &      &      \\
+Análise exploratória dos dados                 &      &      & \mes &      &      \\
+Implementação dos modelos de referência        &      &      & \mes & \mes &      \\
+Protocolo experimental e registro de execuções &      &      &      & \mes &      \\
+Redação dos capítulos 1 a 3                    &      &      & \mes & \mes & \mes \\
+Entrega e apresentação de TCC I                &      &      &      &      & \mes \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+\begin{table}[htb]
+\centering
+\caption{Cronograma de execução --- TCC II (2027/1)}
+\label{tab:crono2}
+\footnotesize
+\begin{tabular}{@{}p{0.52\linewidth}ccccc@{}}
+\toprule
+\textbf{Atividade} & \textbf{mar} & \textbf{abr} & \textbf{mai} & \textbf{jun} &
+\textbf{jul} \\
+\midrule
+Formulação e implementação dos termos físicos  & \mes & \mes &      &      &      \\
+Calibração dos pesos e curvas de aprendizado   &      & \mes & \mes &      &      \\
+Testes de hipótese H1 e H2                     &      &      & \mes &      &      \\
+Otimização multiobjetivo do empilhamento       &      &      & \mes & \mes &      \\
+Interpretabilidade e teste da hipótese H3      &      &      &      & \mes &      \\
+Validação experimental complementar (opcional) &      &      &      & \mes &      \\
+Redação dos capítulos de resultados e conclusão&      &      & \mes & \mes & \mes \\
+Verificação de integridade e revisão final     &      &      &      &      & \mes \\
+Defesa                                         &      &      &      &      & \mes \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+\section{Resultados fundamentais a serem atingidos}
+\label{sec:resultados_esperados}
+
+Ao final do trabalho, esperam-se as seguintes entregas:
+
+\begin{alineas}
+\item um modelo substituto informado por física para predição da curva de
+impedância de PDNs de seis camadas, com $R^2 > 0{,}90$ sobre $|Z|_{\max}$ em
+conjunto de teste isolado e latência de inferência inferior a 1\,ms;
+
+\item uma quantificação do efeito da informação física sobre o erro de
+generalização em função do volume de dados de treinamento, com significância
+estatística avaliada, respondendo às hipóteses H1 e H2;
+
+\item uma fronteira de Pareto de empilhamentos que equilibram impedância máxima e
+custo de fabricação estimado, com as soluções extremas verificadas por simulação
+de referência;
+
+\item um conjunto de expressões analíticas interpretáveis relacionando
+parâmetros de empilhamento ao risco eletromagnético, acompanhado de faixas de
+validade, respondendo à hipótese H3;
+
+\item uma implementação de código aberto, reprodutível e documentada, com testes
+automatizados e registro de experimentos\seapendice{, conforme as práticas
+descritas no Apêndice~\ref{ap:engenharia}};
+
+\item o texto do TCC segundo as normas da UFPR e, como desdobramento pretendido,
+um manuscrito submetido a evento da área — IEEE EMC+SIPI ou DesignCon — bem como
+base para ingresso no mestrado do PPGEE/UFPR.
+\end{alineas}

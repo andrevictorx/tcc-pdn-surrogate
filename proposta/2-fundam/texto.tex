@@ -1,0 +1,296 @@
+\chapter{Referencial teórico}
+\label{cap:fundamentacao}
+
+Este capítulo estabelece a base conceitual do trabalho em quatro movimentos. A
+Seção~\ref{sec:pdn} descreve o comportamento eletromagnético da rede de
+distribuição de energia e deriva as relações analíticas que serão posteriormente
+utilizadas como restrições físicas. A Seção~\ref{sec:sparam} formaliza a
+representação por parâmetros de espalhamento e sua conversão para impedância. A
+Seção~\ref{sec:surrogate} revisa o estado da arte em modelos substitutos
+aplicados a integridade de sinal e potência. A Seção~\ref{sec:pinn} apresenta o
+paradigma de aprendizado informado por física e delimita a lacuna que este
+trabalho pretende ocupar.
+
+\section{A rede de distribuição de energia como estrutura eletromagnética}
+\label{sec:pdn}
+
+\subsection{Função e critério de projeto}
+
+A PDN tem por função entregar corrente aos circuitos integrados mantendo a tensão
+de alimentação dentro de uma janela de tolerância, tipicamente de $\pm 5\%$ em
+torno do valor nominal. Como a corrente demandada por um circuito digital varia
+abruptamente a cada transição lógica, a especificação de projeto é formulada no
+domínio da frequência por meio de uma \emph{impedância-alvo}
+\citep{swaminathan2020}:
+
+\begin{equation}
+Z_{\text{target}} = \frac{V_{dd} \cdot \delta}{I_{\max}},
+\label{eq:ztarget}
+\end{equation}
+
+\noindent onde $V_{dd}$ é a tensão de alimentação, $\delta$ é a tolerância
+relativa admitida e $I_{\max}$ é a máxima variação de corrente. O critério de
+projeto exige que $|Z(f)| < Z_{\text{target}}$ ao longo de toda a faixa de
+frequências em que o circuito integrado apresenta conteúdo espectral relevante.
+Para um processador moderno, esse critério pode significar manter a impedância
+abaixo de alguns miliohms de corrente contínua até centenas de megahertz — uma
+exigência severa, cuja violação em qualquer ponto da faixa compromete o
+desempenho.
+
+\subsection{O par de planos como cavidade ressonante}
+
+Em placas multicamadas, a PDN é implementada por pares de planos de cobre
+separados por um dielétrico de espessura $h$, muito menor que as dimensões
+laterais $a$ e $b$. Essa geometria constitui um guia de ondas de placas paralelas
+cujas paredes laterais, por serem interfaces com o ar, comportam-se
+aproximadamente como paredes magnéticas. Sob a hipótese $h \ll \lambda$, apenas
+modos $\text{TM}_{mn0}$ propagam-se, e a estrutura admite solução analítica
+fechada. As frequências de ressonância são \citep{swaminathan2020}:
+
+\begin{equation}
+f_{mn} = \frac{c_0}{2\sqrt{\varepsilon_r}}
+         \sqrt{\left(\frac{m}{a}\right)^2 + \left(\frac{n}{b}\right)^2},
+\qquad m,n \in \mathbb{Z}_{\geq 0},\; (m,n) \neq (0,0),
+\label{eq:modos}
+\end{equation}
+
+\noindent onde $c_0$ é a velocidade da luz no vácuo e $\varepsilon_r$ a
+permissividade relativa do dielétrico. Em uma cavidade pouco amortecida, a
+impedância vista entre os planos apresenta máximos pronunciados nessas
+frequências. É precisamente esse comportamento que estabelece a ponte entre
+integridade de potência e compatibilidade eletromagnética: nos picos de
+ressonância a cavidade acumula energia e a irradia pelas bordas abertas da placa,
+transformando o par de planos em uma antena de fenda distribuída. Convém
+registrar, desde já, que a observabilidade desses máximos em uma grandeza
+específica — a autoimpedância de uma porta, por exemplo — depende do
+amortecimento introduzido pelas vias e do acoplamento entre a porta e a
+distribuição modal de campo. A Seção~\ref{sec:preliminar} examina essa questão
+sobre os dados efetivamente utilizados.
+
+No extremo oposto da faixa, quando $f \rightarrow 0$, o comprimento de onda
+excede largamente as dimensões da placa e a cavidade comporta-se como um
+capacitor concentrado de valor
+
+\begin{equation}
+C_{\text{plate}} = \varepsilon_0 \varepsilon_r \frac{a\,b}{h},
+\label{eq:cplate}
+\end{equation}
+
+\noindent de modo que $|Z(f)| \approx 1/(2\pi f\, C_{\text{plate}})$, uma reta de
+inclinação $-20$\,dB/década em escala logarítmica.
+
+As Equações~\ref{eq:modos} e~\ref{eq:cplate} constituem o repertório físico
+disponível em forma fechada para este problema. Ambas dependem exclusivamente de
+parâmetros que integram o vetor de entrada do modelo substituto, o que as torna
+candidatas naturais a restrições de treinamento. Qual delas é de fato utilizável
+depende, contudo, de sua observabilidade na grandeza predita — questão empírica
+que a Seção~\ref{sec:preliminar} resolve sobre os dados. O comportamento
+intermediário da resposta, governado pelo acoplamento entre modos, pelas perdas
+no dielétrico e no cobre e, sobretudo, pelo efeito do arranjo de vias que perfura
+os planos, não admite forma fechada e constitui, justamente, o que se pretende
+aprender dos dados.
+
+\subsection{O papel do arranjo de vias}
+
+Vias que atravessam os planos perturbam a cavidade de duas maneiras. Vias de
+referência conectadas ao plano de terra atuam como curtos-circuitos distribuídos,
+deslocando e amortecendo os modos ressonantes. Vias de sinal, por sua vez,
+atravessam os planos através de aberturas circulares (\textit{antipads}) que
+constituem descontinuidades de impedância e caminhos de acoplamento entre
+cavidades adjacentes. O efeito líquido depende de forma não trivial do raio da
+via, do raio do \textit{antipad}, do passo do arranjo e de sua posição relativa
+às distribuições modais de campo — dependência que motiva o recurso a modelos
+empíricos \citep{hillebrecht2024}.
+
+\section{Representação por parâmetros de espalhamento}
+\label{sec:sparam}
+
+Em frequências de micro-ondas, a caracterização de estruturas com múltiplos
+acessos é feita por parâmetros de espalhamento, que relacionam ondas de tensão
+incidentes e refletidas em cada porta. Para uma estrutura de $P$ portas, a matriz
+$\mathbf{S}(f) \in \mathbb{C}^{P \times P}$ descreve completamente o
+comportamento linear do sistema. A conversão para a matriz de impedância é dada
+por
+
+\begin{equation}
+\mathbf{Z}(f) = \sqrt{\mathbf{Z}_0}\,
+                \left(\mathbf{I} + \mathbf{S}(f)\right)
+                \left(\mathbf{I} - \mathbf{S}(f)\right)^{-1}
+                \sqrt{\mathbf{Z}_0},
+\label{eq:s2z}
+\end{equation}
+
+\noindent onde $\mathbf{Z}_0$ é a matriz diagonal de impedâncias de referência
+das portas, tipicamente $50\,\Omega$. A autoimpedância $Z_{11}(f)$, obtida do
+elemento $(1,1)$ dessa matriz, corresponde à impedância que o circuito integrado
+enxerga ao demandar corrente da PDN, e é a grandeza de interesse primário deste
+trabalho.
+
+Três propriedades da resposta são fisicamente obrigatórias e serão usadas como
+restrições no Capítulo~\ref{cap:metodologia}. A \emph{passividade} exige que a
+estrutura não gere energia, o que se traduz na condição de que todos os valores
+singulares de $\mathbf{S}(f)$ sejam menores ou iguais à unidade, ou
+equivalentemente que $\operatorname{Re}\{Z_{11}(f)\} \geq 0$ para toda
+frequência. A \emph{causalidade} exige que a resposta não anteceda a excitação, o
+que vincula as partes real e imaginária da resposta pelas relações de
+Kramers-Kronig, implementáveis numericamente pela transformada de Hilbert. A
+\emph{reciprocidade}, válida para meios isotrópicos e sem materiais girotrópicos,
+exige que $\mathbf{S}$ seja simétrica. \citet{torun2020} demonstram que
+redes neurais treinadas apenas para minimizar erro numérico violam rotineiramente
+as duas primeiras propriedades, gerando modelos inúteis para simulação
+subsequente no domínio do tempo.
+
+\section{Modelos substitutos em integridade de sinal e potência}
+\label{sec:surrogate}
+
+Um modelo substituto é uma aproximação computacionalmente barata de uma função
+custosa de avaliar. No contexto eletromagnético, substitui o solver por um
+regressor treinado sobre um conjunto de simulações previamente executadas
+\citep{swaminathan2020}.
+
+\subsection{Panorama de abordagens}
+
+O trabalho de referência de \citet{swaminathan2020} sistematiza a aplicação de
+aprendizado de máquina a problemas de integridade de sinal e potência em
+encapsulamento, cobrindo desde redes neurais rasas até processos gaussianos, e
+identifica a escassez de dados como o gargalo dominante. \citet{zhang2021}
+demonstram a viabilidade em escala ao treinar uma rede profunda sobre mais de um
+milhão de placas geradas sinteticamente por método de elementos de contorno,
+obtendo predição de impedância de PDN em 0,1\,s — cerca de cem vezes mais rápido
+que o método de contorno e aproximadamente cinco mil vezes mais rápido que
+simulação de onda completa. Esse resultado estabelece o teto de desempenho
+alcançável quando dados são abundantes, e simultaneamente delimita a condição em
+que a abordagem funciona: um orçamento de simulação inacessível à maioria dos
+grupos de pesquisa.
+
+Estudos comparativos recentes indicam que a escolha do regressor depende
+criticamente do regime de dados. Processos gaussianos com núcleo anisotrópico
+apresentam desempenho superior quando as amostras são escassas, ao passo que
+redes neurais os superam largamente em conjuntos volumosos. Essa dependência
+justifica a estratégia adotada neste trabalho, que estabelece uma bateria de
+referências abrangendo ambos os regimes antes de introduzir o modelo informado
+por física.
+
+\subsection{Otimização apoiada por modelos substitutos}
+
+Uma vez disponível um substituto rápido, torna-se viável embuti-lo em laços de
+otimização. A linha mais explorada na literatura é o posicionamento de
+capacitores de desacoplamento por aprendizado por reforço profundo
+\citep{zhang2020decap,duan2024}, em que um agente aprende a selecionar posições e
+valores de capacitância que satisfaçam a impedância-alvo com o menor número de
+componentes. Essas abordagens compartilham uma premissa restritiva: tratam a
+geometria da placa como fixa e otimizam apenas os componentes adicionados a
+posteriori. O presente trabalho adota a perspectiva complementar, otimizando os
+parâmetros do próprio empilhamento — decisão que antecede o posicionamento de
+capacitores e que, por ocorrer mais cedo no fluxo de projeto, tem custo marginal
+de implementação muito inferior.
+
+Para a etapa de otimização, adotam-se algoritmos evolutivos multiobjetivo, campo
+em que se concentra parte substancial da produção do grupo de pesquisa no qual o
+trabalho se insere \citep{coelho2010,takara2026}. A escolha por metaheurísticas
+populacionais, em detrimento de métodos baseados em gradiente, decorre da
+natureza mista do espaço de busca — que combina variáveis contínuas, como
+espessura de dielétrico e permissividade, e variáveis discretas, como número de
+camadas e contagem de vias — e da presença de múltiplos ótimos locais associados
+à estrutura modal da cavidade.
+
+\subsection{Bases de dados públicas}
+
+A ausência de dados padronizados dificultou por muito tempo a comparação entre
+métodos na área. A SI/PI-Database, mantida pelo \textit{Institut für Theoretische
+Elektrotechnik} da Universidade Técnica de Hamburgo, foi criada especificamente
+para suprir essa lacuna \citep{schierholz2021}. Ela reúne vinte e cinco
+estruturas distintas de PCB, cada uma acompanhada de um arquivo tabular de
+parâmetros de projeto e dos correspondentes arquivos Touchstone com a resposta
+eletromagnética. \citet{hillebrecht2024} ampliaram substancialmente a base com
+três subconjuntos de aproximadamente quinze mil variações de arranjos de vias
+simulados até 60\,GHz, e demonstraram sua aplicação à análise de dependências
+entre parâmetros de PCB e a frequência de relógio de PCI Gen 6. A base é
+gerada por modelagem baseada em física e validada por comparação com solver de
+onda completa, o que confere aos rótulos qualidade suficiente para servirem de
+referência de treinamento.
+
+\section{Aprendizado informado por física}
+\label{sec:pinn}
+
+\subsection{Formulação}
+
+O paradigma de redes neurais informadas por física, consolidado por
+\citet{raissi2019}, propõe incorporar conhecimento físico diretamente à função de
+perda, transformando o treinamento em um problema de otimização sujeito a
+restrições brandas. A perda assume a forma composta
+
+\begin{equation}
+\mathcal{L} = \underbrace{\mathcal{L}_{\text{dados}}}_{\text{ajuste às amostras}}
+            + \sum_{k} \lambda_k \,
+              \underbrace{\mathcal{L}_{\text{física},k}}_{\text{violação de restrição}},
+\label{eq:pinn}
+\end{equation}
+
+\noindent em que cada termo $\mathcal{L}_{\text{física},k}$ penaliza o desvio em
+relação a uma lei conhecida e $\lambda_k$ pondera sua importância relativa. O
+efeito prático é uma redução do espaço de hipóteses: soluções que ajustam bem os
+dados de treinamento mas violam a física tornam-se inacessíveis ao otimizador. O
+benefício é máximo, portanto, exatamente no regime em que os dados são escassos —
+situação em que a evidência empírica, isoladamente, não basta para descartar tais
+soluções.
+
+\subsection{Aplicação a integridade de sinal e potência}
+
+A adoção do paradigma em integridade de sinal e potência ainda é incipiente e
+concentra-se no pós-processamento. \citet{torun2020} propõem camadas
+dedicadas de imposição de causalidade e passividade, aplicadas à saída da rede,
+que garantem consistência física das respostas preditas mediante as relações de
+Kramers-Kronig e as propriedades espectrais dos parâmetros de espalhamento.
+Trabalhos mais recentes exploram modelos substitutos guiados por física para
+interconexões verticais, combinando restrições físicas com otimização
+multiobjetivo por enxame de partículas.
+
+Permanece, entretanto, um espaço pouco explorado. A literatura em integridade de
+potência não tira proveito de uma circunstância particularmente favorável do
+problema da cavidade retangular: a existência de soluções analíticas exatas nos
+dois extremos da faixa de análise, dadas pelas Equações~\ref{eq:modos}
+e~\ref{eq:cplate}. Diferentemente de aplicações em que a restrição física é uma
+equação diferencial cuja avaliação demanda diferenciação automática custosa,
+aqui as restrições são expressões algébricas de custo desprezível, calculáveis
+diretamente a partir do vetor de entrada. Essa característica torna o problema um
+candidato especialmente adequado ao paradigma informado por física, e é sobre
+essa observação que se assenta a contribuição pretendida por este trabalho.
+
+\section{Síntese e posicionamento}
+\label{sec:sintese}
+
+O Quadro~\ref{quad:posicionamento} resume o posicionamento da proposta em relação
+aos trabalhos discutidos.
+
+\begin{table}[htb]
+\centering
+\caption{Posicionamento da proposta em relação ao estado da arte}
+\label{quad:posicionamento}
+\footnotesize
+\begin{tabular}{@{}p{0.20\linewidth}p{0.16\linewidth}p{0.17\linewidth}p{0.17\linewidth}p{0.20\linewidth}@{}}
+\toprule
+\textbf{Trabalho} & \textbf{Alvo} & \textbf{Regime de dados} & \textbf{Física
+incorporada} & \textbf{Otimização} \\
+\midrule
+\citet{zhang2021} & $Z(f)$ de PDN & $>10^6$ amostras & não & não \\[0.3em]
+\citet{torun2020} & $\mathbf{S}(f)$ & moderado & pós-processamento &
+não \\[0.3em]
+\citet{zhang2020decap}; \citet{duan2024} & posição de capacitores & simulação
+em laço & não & aprendizado por reforço \\[0.3em]
+\citet{hillebrecht2024} & análise de dependências & $\approx 15\times 10^3$
+amostras & modelagem dos dados & não \\[0.3em]
+\textbf{Esta proposta} & $Z(f)$ de PDN & $985$ amostras & na função de perda &
+evolutiva multiobjetivo \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+A lacuna que o trabalho pretende ocupar pode ser enunciada de forma direta: os
+métodos de alto desempenho existentes dependem de orçamentos de simulação
+inacessíveis, enquanto os métodos que incorporam física o fazem apenas na saída
+do modelo. Este trabalho investiga se a incorporação de física \emph{durante} o
+treinamento permite operar com acurácia útil em um regime de dados três ordens de
+grandeza menor.

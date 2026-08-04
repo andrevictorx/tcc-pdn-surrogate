@@ -1,0 +1,115 @@
+{
+  "description": "Claude Code settings for TCC PDN ML Optimization project",
+  "project_name": "PDN Machine Learning Optimization",
+  "root_directory": "/home/andre/Downloads/TCC",
+
+  "agent_configuration": {
+    "default_agent": "general-purpose",
+    "multi_agent_enabled": true,
+    "specialized_agents": {
+      "spec_and_design": {
+        "type": "Explore + Plan",
+        "focus": ["spec/", "design/"],
+        "tools": ["Explore", "Plan", "Read"]
+      },
+      "implementation": {
+        "type": "Code",
+        "focus": ["src/", "tests/"],
+        "tools": ["Edit", "Write", "Bash"]
+      },
+      "analysis_experiments": {
+        "type": "Analysis",
+        "focus": ["notebooks/", "experiments/"],
+        "tools": ["Write", "Bash", "Jupyter"]
+      },
+      "qa_review": {
+        "type": "Code-Review",
+        "focus": ["tests/", "src/"],
+        "tools": ["code-review", "Bash"]
+      }
+    }
+  },
+
+  "file_organization": {
+    "specs": "spec/",
+    "design_docs": "design/",
+    "source_code": "src/",
+    "notebooks": "notebooks/",
+    "data": "data/",
+    "experiments": "experiments/",
+    "tests": "tests/",
+    "scripts": "scripts/",
+    "documentation": "docs/",
+    "external_references": "data/external/"
+  },
+
+  "naming_conventions": {
+    "notebooks": "NN_description.ipynb (e.g., 01_data_exploration.ipynb)",
+    "test_files": "test_module_name.py",
+    "experiments": "exp_NNN_description/ (e.g., exp_001_baseline/)",
+    "python_modules": "snake_case.py",
+    "classes": "PascalCase",
+    "functions": "snake_case"
+  },
+
+  "code_style": {
+    "language": "Python",
+    "style_guide": "PEP8",
+    "max_line_length": 100,
+    "docstring_style": "Google",
+    "type_hints": true,
+    "min_test_coverage": 90
+  },
+
+  "workflow": {
+    "spec_driven_development": true,
+    "design_first": true,
+    "code_review_required": true,
+    "test_required": true,
+    "documentation_required": true
+  },
+
+  "dependencies": {
+    "env_file": "environment.yml",
+    "requirements_file": "requirements.txt (generated from environment.yml)",
+    "package_manager": "conda"
+  },
+
+  "experiment_tracking": {
+    "tool": "MLflow / Hydra",
+    "config_location": "experiments/exp_*/config.yaml",
+    "results_location": "experiments/exp_*/results/",
+    "logs_location": "experiments/exp_*/logs/"
+  },
+
+  "git_workflow": {
+    "branch_naming": "feat/*, fix/*, docs/*, etc.",
+    "commit_style": "conventional commits",
+    "pr_required": true,
+    "hooks_enabled": true
+  },
+
+  "key_files_to_read_first": [
+    "README.md",
+    "CLAUDE.md",
+    "spec/RESEARCH_BRIEF.md",
+    "spec/SCOPE.md",
+    "spec/ROADMAP.md",
+    "design/architecture.md"
+  ],
+
+  "memory_locations": {
+    "project_context": "/home/andre/.claude/projects/-home-andre-Downloads-TCC/memory/",
+    "user_profile": "user_*.md",
+    "feedback": "feedback_*.md",
+    "project_notes": "project_*.md"
+  },
+
+  "quick_commands": {
+    "setup_env": "conda env create -f environment.yml && conda activate tcc_pdn",
+    "run_tests": "pytest tests/ -v --cov=src/",
+    "run_exploration": "jupyter notebook notebooks/",
+    "train_baseline": "python scripts/train.py --config experiments/exp_001/config.yaml",
+    "code_review": "/code-review"
+  }
+}

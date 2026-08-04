@@ -1,0 +1,141 @@
+% ==============================================================================
+% Proposta de Trabalho de Conclusão de Curso — Engenharia Elétrica / UFPR
+%
+% Baseado no modelo LaTeX do prof. Carlos A. Maziero (PPGInf/UFPR)
+%   https://git.c3sl.ufpr.br/maziero/tese
+% Adaptado para a estrutura de PROJETO definida no cap. 6 do
+%   "Manual de Normalização de Documentos Científicos" (UFPR/SiBi, 2024).
+%
+% Estrutura obrigatória de projeto (Quadro 8 do Manual):
+%   Folha de rosto -> Sumário -> Introdução (tema, problema, hipóteses,
+%   objetivos, justificativa) -> Desenvolvimento (referencial teórico,
+%   metodologia, recursos, cronograma) -> Referências.
+% ==============================================================================
+
+\documentclass[defesa,oneside,english,brazilian]{ppginf}
+
+% amssymb precisa vir ANTES de newtxmath (carregado em packages.tex): a ordem
+% inversa provoca "Command \Bbbk already defined" nas versões recentes de newtx.
+\usepackage{amssymb}
+
+\input{packages}
+
+% --- ajustes locais -----------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{pdflscape}
+
+\usepackage[table]{xcolor}
+
+% --- controle dos apêndices ---------------------------------------------------
+% A versão de ENTREGA para a UFPR sai sem apêndices (padrão: "make").
+% A versão PESSOAL, com os dois apêndices, sai com "make pessoal", que define
+% a macro \comapendices pela linha de comando.
+%
+% Os apêndices são material de consulta pessoal e NÃO integram o repositório
+% público. Por isso a inclusão é condicionada também à existência dos arquivos:
+% num clone do repositório, "make pessoal" simplesmente produz a versão de
+% entrega, sem erro de compilação.
+%
+% Trechos do texto que só fazem sentido quando os apêndices existem devem ser
+% envolvidos por \seapendice{...}: o conteúdo desaparece na versão de entrega.
+\newif\ifapendices
+\apendicesfalse
+\ifdefined\comapendices
+  \IfFileExists{a1-engenharia/texto.tex}{%
+    \IfFileExists{a2-integridade/texto.tex}{\apendicestrue}{}%
+  }{}
+\fi
+
+\ifapendices
+  \newcommand{\seapendice}[1]{#1}
+\else
+  \newcommand{\seapendice}[1]{}
+\fi
+
+% cronograma: célula sombreada para marcar atividade no mês
+\newcommand{\mes}{\cellcolor{black!55}}
+
+% Alíneas conforme item 3.4.3 do Manual de Normalização da UFPR (2024):
+% ordenadas por letras minúsculas seguidas de parêntese, texto iniciando em
+% minúscula e terminando em ponto-e-vírgula (exceto a última, com ponto final).
+\newlist{alineas}{enumerate}{1}
+\setlist[alineas]{label=\alph*), leftmargin=1.5cm, itemsep=0.3\baselineskip,
+                  topsep=0.5\baselineskip, parsep=0pt}
+
+% Subalíneas (item 3.4.4): travessão, recuo maior.
+\newlist{subalineas}{itemize}{1}
+\setlist[subalineas]{label=\textendash, leftmargin=2.5cm, itemsep=0.2\baselineskip,
+                     topsep=0.3\baselineskip, parsep=0pt}
+
+\begin{document}
+
+% --- metadados ----------------------------------------------------------------
+
+\title{Modelos substitutos informados por física para predição de impedância
+de redes de distribuição de energia em placas de circuito impresso multicamadas}
+
+\pchave{Compatibilidade eletromagnética; integridade de potência; modelo
+substituto; redes neurais informadas por física; otimização multiobjetivo.}
+
+\keyword{Electromagnetic compatibility; power integrity; surrogate model;
+physics-informed neural networks; multi-objective optimization.}
+
+\author{André Victor Xavier Pires}
+\advisor{Prof.\ Dr.\ Leandro dos Santos Coelho}
+
+\instit{UFPR}{Universidade Federal do Paraná}
+\field{Engenharia Elétrica}
+\local{Curitiba}
+\date{2026}
+
+\coverimage{0-iniciais/fundo-capa.pdf}
+
+\descr{Proposta de Trabalho de Conclusão de Curso apresentada como requisito
+parcial à obtenção do grau de Bacharel em Engenharia Elétrica, ênfase em
+sistemas eletrônicos embarcados (curso noturno), Setor de Tecnologia, da
+Universidade Federal do Paraná}
+
+% --- elementos pré-textuais ---------------------------------------------------
+
+\frontmatter
+\pagestyle{frontmatter}
+
+\titlepage
+
+\include{0-iniciais/identificacao}   % dados e checklist do Anexo I (normas do DELT)
+
+\include{0-iniciais/resumo}
+\include{0-iniciais/abstract}
+
+\listoffigures
+\clearpage
+\listoftables
+\include{0-iniciais/abreviaturas}
+\include{0-iniciais/simbolos}
+
+\tableofcontents
+
+% --- elementos textuais -------------------------------------------------------
+
+\mainmatter
+\pagestyle{mainmatter}
+
+\include{1-intro/texto}      % Introdução: tema, problema, hipóteses, objetivos, justificativa
+\include{2-fundam/texto}     % Referencial teórico
+\include{3-metodo/texto}     % Metodologia
+\include{4-recursos/texto}   % Recursos e cronograma
+
+% --- elementos pós-textuais ---------------------------------------------------
+
+\bibliography{referencias}
+
+% Apêndices apenas na versão pessoal ("make pessoal"); ver nota no preâmbulo.
+\ifapendices
+  \appendix
+  \include{a1-engenharia/texto}    % Apêndice A — engenharia de software assistida por IA
+  \include{a2-integridade/texto}   % Apêndice B — integridade acadêmica e uso de IA
+\fi
+
+\end{document}

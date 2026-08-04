@@ -1,0 +1,40 @@
+\begin{abstract}
+
+\noindent
+The power delivery network (PDN) of a multilayer printed circuit board is a
+primary determinant of a product's electromagnetic compliance: cavity
+resonances between power and reference planes raise the impedance seen by the
+integrated circuits, converting switching noise into radiated emission and
+jeopardizing approval in regulatory testing. Assessing this impedance currently
+relies on full-wave electromagnetic solvers whose computational cost --- tens of
+minutes per configuration --- precludes systematic exploration of the design
+space during early layout, precisely when low-cost design decisions are still
+available. This proposal develops and validates a physics-informed surrogate
+model that predicts the complete PDN impedance curve $Z(f)$ from 1\,MHz to
+1\,GHz, given eight geometric and material stackup parameters, with inference
+latency below one millisecond. The work uses the six-layer PDN subset of the
+SI/PI-Database maintained by Hamburg University of Technology, comprising 985
+Latin-hypercube-sampled configurations simulated with a physics-based method
+over 334 frequency points. The central contribution is the incorporation, into
+the neural network loss function, of electromagnetic constraints available in
+closed form --- the capacitive behavior governing the quasi-static regime, the
+monotonicity of the response up to the series null, and the passivity condition
+of the system --- in order to compensate for sample scarcity, a regime in which
+purely data-driven models tend to violate the physics of the problem. A
+preliminary investigation already carried out on the dataset confirmed the
+validity of the capacitive anchor, whose measured slope is
+$-1.018 \pm 0.008$ against a theoretical $-1$, and ruled out anchoring on modal
+frequencies, which are not observable in the self-impedance within the analyzed
+band. The model will be benchmarked against a suite of baselines (regularized linear
+regression, random forests, gradient boosting, Gaussian processes and multilayer
+perceptrons), embedded in a multi-objective evolutionary optimizer to search for
+stackups with reduced electromagnetic interference risk, and interpreted through
+symbolic regression and Shapley values, with the aim of distilling
+engineer-readable design guidelines. Expected deliverables include a model
+achieving a coefficient of determination above 0.90 for maximum impedance
+prediction on a held-out test set, a set of interpretable analytical expressions
+relating stackup parameters to electromagnetic risk, and a reproducible
+open-source implementation documented according to spec-driven development
+practices.
+
+\end{abstract}

@@ -1,0 +1,42 @@
+\begin{resumo}
+
+\noindent % a NBR 6028:2021 dispensa o recuo de parágrafo para o resumo
+A rede de distribuição de energia (PDN) de uma placa de circuito impresso
+multicamadas é um dos principais determinantes da conformidade eletromagnética
+do produto: ressonâncias de cavidade entre planos de alimentação e referência
+elevam a impedância vista pelos circuitos integrados, convertendo ruído de
+comutação em emissão radiada e comprometendo a aprovação em ensaios normativos.
+A avaliação dessa impedância depende hoje de solvers eletromagnéticos de onda
+completa, cujo custo computacional — dezenas de minutos por configuração —
+inviabiliza a exploração sistemática do espaço de projeto nas fases iniciais do
+layout, quando as decisões de baixo custo ainda são possíveis. Esta proposta
+tem por objetivo desenvolver e validar um modelo substituto (\textit{surrogate})
+informado por física capaz de predizer a curva completa de impedância
+$Z(f)$ da PDN, no intervalo de 1\,MHz a 1\,GHz, a partir de oito parâmetros
+geométricos e de material do empilhamento, com latência de inferência inferior
+a um milissegundo. O trabalho utiliza o subconjunto de PDN de seis camadas da
+SI/PI-Database da Universidade Técnica de Hamburgo, composto por 985
+configurações amostradas por hipercubo latino e simuladas por método baseado em
+física em 334 pontos de frequência. A contribuição central é a incorporação, à
+função de perda da rede neural, de restrições eletromagnéticas disponíveis em
+forma fechada — o comportamento capacitivo que rege o regime quase-estático, a
+monotonicidade da resposta até o nulo de série e a condição de passividade do
+sistema — de modo a compensar a escassez de amostras, regime em que modelos
+puramente orientados a dados tendem a violar a física do problema. Uma
+investigação preliminar já conduzida sobre a base confirmou a validade da âncora
+capacitiva, cuja inclinação medida vale $-1{,}018 \pm 0{,}008$ contra $-1$
+teórico, e afastou a ancoragem em frequências modais, não observáveis na
+autoimpedância dentro da faixa analisada. O modelo será comparado a uma bateria de
+referências (regressão linear regularizada, florestas aleatórias, gradient
+boosting, processos gaussianos e perceptron multicamadas), integrado a um
+otimizador evolutivo multiobjetivo para busca de empilhamentos de menor risco
+de interferência eletromagnética, e interpretado por regressão simbólica e
+valores de Shapley, com o objetivo de destilar diretrizes de projeto legíveis
+por engenheiros. Espera-se entregar, ao final, um modelo com coeficiente de
+determinação superior a 0,90 na predição da impedância máxima em conjunto de
+teste, um conjunto de expressões analíticas interpretáveis relacionando
+parâmetros de empilhamento e risco eletromagnético, e uma implementação
+reprodutível de código aberto documentada segundo práticas de desenvolvimento
+orientado a especificação.
+
+\end{resumo}

@@ -1,0 +1,317 @@
+\chapter{Introdução}
+\label{cap:introducao}
+
+A eletrônica digital contemporânea opera em um regime em que a distinção entre
+``circuito'' e ``estrutura eletromagnética'' deixou de existir. Interfaces como
+PCI Express Gen 6, DDR5 e Ethernet de 112\,Gb/s impõem tempos de transição da
+ordem de dezenas de picossegundos, o que desloca conteúdo espectral relevante
+para a faixa de dezenas de gigahertz. Nesse regime, trilhas comportam-se como
+linhas de transmissão, pares de planos comportam-se como cavidades ressonantes e
+descontinuidades geométricas comportam-se como antenas não intencionais
+\citep{swaminathan2020,hillebrecht2024}. A consequência prática é que a
+conformidade eletromagnética de um produto — sua aprovação em ensaios de emissão
+irradiada e conduzida segundo normas como CISPR 32 e IEC 61000 — passa a ser
+determinada por decisões de \textit{layout} tomadas semanas antes de existir
+qualquer protótipo físico.
+
+Entre os subsistemas que governam esse comportamento, a rede de distribuição de
+energia (\textit{power delivery network}, PDN) ocupa posição central. A PDN é o
+caminho de baixa impedância que conecta o regulador de tensão aos terminais de
+alimentação dos circuitos integrados, e em placas multicamadas ela é implementada
+predominantemente por pares de planos de cobre separados por dielétrico fino.
+Essa geometria, embora eficiente do ponto de vista de distribuição de corrente,
+constitui uma cavidade ressonante: acima de algumas centenas de megahertz, os
+modos próprios da cavidade produzem picos de impedância que amplificam o ruído de
+comutação dos circuitos integrados e o convertem em emissão irradiada pelas
+bordas da placa \citep{swaminathan2020}. Controlar a curva de impedância $Z(f)$
+da PDN é, portanto, simultaneamente um problema de integridade de potência e um
+problema de compatibilidade eletromagnética.
+
+O presente trabalho situa-se nessa interseção. Propõe-se construir um modelo
+substituto (\textit{surrogate model}) que prediga a resposta em impedância de
+uma PDN diretamente a partir dos parâmetros geométricos e de material do
+empilhamento, com custo computacional compatível com a exploração interativa do
+espaço de projeto, e cuja formulação incorpore explicitamente restrições físicas
+conhecidas do problema.
+
+\section{Tema}
+\label{sec:tema}
+
+Modelagem substituta informada por física, baseada em aprendizado de máquina,
+para predição da impedância de redes de distribuição de energia em placas de
+circuito impresso multicamadas, com aplicação à triagem de risco de
+interferência eletromagnética em fase de projeto.
+
+\section{Problema}
+\label{sec:problema}
+
+A determinação da curva de impedância de uma PDN exige, hoje, a solução numérica
+das equações de Maxwell na estrutura tridimensional da placa. Solvers de onda
+completa fornecem essa resposta com alta fidelidade, mas a um custo que varia de
+dezenas de minutos a horas por configuração. Métodos baseados em física, como a
+técnica de cavidade com portas de contorno empregada na construção da
+SI/PI-Database, reduzem esse custo em uma a duas ordens de grandeza sem perda
+significativa de acurácia para geometrias planares
+\citep{schierholz2021,hillebrecht2024}, mas permanecem incompatíveis com laços de
+projeto que exigem milhares de avaliações — como varreduras paramétricas,
+análises de sensibilidade e, sobretudo, otimização automatizada do empilhamento.
+
+Estabelece-se assim uma assimetria temporal perversa. As decisões que mais
+influenciam o desempenho eletromagnético — número de camadas, espessura das
+cavidades, escolha do dielétrico, densidade e distribuição de vias — são tomadas
+no início do projeto, exatamente quando ainda não há tempo nem modelo detalhado
+para simulá-las. Quando a simulação de onda completa se torna viável, o
+\textit{layout} já está consolidado e as correções possíveis restringem-se a
+paliativos de alto custo: adição de capacitores de desacoplamento, blindagens
+metálicas ou, no pior caso, respin da placa após reprovação em ensaio de
+certificação.
+
+A literatura recente propõe superar essa assimetria por meio de modelos
+substitutos treinados sobre dados simulados
+\citep{zhang2021,swaminathan2020,torun2020}. Tais modelos deslocam o custo
+computacional para uma fase de treinamento realizada uma única vez, entregando
+predições em milissegundos. Persiste, contudo, uma limitação estrutural: modelos
+puramente orientados a dados minimizam erro numérico sem qualquer garantia de
+consistência física. Redes neurais treinadas para predizer parâmetros de
+espalhamento produzem, com frequência, respostas não passivas ou não causais, o
+que as inutiliza para simulação no domínio do tempo e mina a confiança do
+projetista \citep{torun2020}. O problema agrava-se quando o orçamento de
+dados é modesto — situação típica de conjuntos com poucas centenas ou milhares
+de simulações — pois a rede dispõe de evidência insuficiente para inferir, apenas
+dos dados, regularidades que a física já fornece em forma fechada.
+
+Formula-se, portanto, o problema de pesquisa:
+
+\begin{quote}
+Em que medida a incorporação de restrições eletromagnéticas conhecidas em forma
+fechada — o comportamento capacitivo que rege o regime quase-estático, a
+monotonicidade da resposta até o nulo de série, a passividade e a causalidade —
+à função de perda de um modelo substituto neural melhora a acurácia e a
+plausibilidade física da predição da impedância de PDNs de placas multicamadas,
+em um regime de escassez de dados de treinamento?
+\end{quote}
+
+\section{Hipóteses}
+\label{sec:hipoteses}
+
+Da formulação do problema derivam-se três hipóteses, enunciadas de forma
+afirmativa e passíveis de refutação experimental ao final do trabalho.
+
+\begin{description}
+\item[H1 --- Ganho de acurácia sob escassez de dados.] Um modelo substituto cuja
+função de perda combine o erro de reconstrução da curva de impedância com termos
+de penalização derivados da física da cavidade apresenta erro de generalização
+menor do que um modelo de arquitetura idêntica treinado apenas com erro de
+reconstrução, quando ambos são treinados com o mesmo orçamento de dados
+($N < 1000$ amostras). O ganho é crescente à medida que a fração de dados de
+treinamento é reduzida.
+
+\item[H2 --- Plausibilidade física.] A imposição de restrições de passividade e
+de comportamento assintótico em baixa frequência reduz a incidência de predições
+fisicamente inconsistentes — impedância com parte real negativa, desvio da
+inclinação capacitiva no limite $f \rightarrow 0$ ou oscilação espúria na região
+monotônica — a níveis significativamente inferiores aos observados no modelo de
+referência puramente orientado a dados.
+
+\item[H3 --- Interpretabilidade acionável.] O conjunto de parâmetros de
+empilhamento admite uma descrição de baixa dimensionalidade, recuperável por
+regressão simbólica e por análise de valores de Shapley, suficiente para produzir
+expressões analíticas que relacionem parâmetros de projeto ao risco
+eletromagnético com erro compatível com o uso como diretriz de projeto na fase
+inicial de \textit{layout}.
+\end{description}
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+\subsection{Objetivo geral}
+\label{subsec:obj_geral}
+
+Desenvolver e validar um modelo substituto informado por física, baseado em
+aprendizado de máquina, capaz de predizer a curva de impedância $Z(f)$ da rede de
+distribuição de energia de placas de circuito impresso multicamadas a partir dos
+parâmetros geométricos e de material do empilhamento, com acurácia e latência
+compatíveis com sua aplicação à triagem de risco de interferência eletromagnética
+durante a fase de projeto.
+
+\subsection{Objetivos específicos}
+\label{subsec:obj_especificos}
+
+\begin{alineas}
+\item caracterizar o subconjunto de PDN de seis camadas da SI/PI-Database,
+verificando integridade, unidades físicas, cobertura do espaço de projeto e
+identificando os parâmetros efetivamente variados;
+
+\item implementar um pipeline reprodutível de extração da matriz de impedância a
+partir dos arquivos Touchstone de parâmetros de espalhamento, com validação
+numérica contra propriedades analíticas conhecidas;
+
+\item estabelecer uma bateria de modelos de referência — regressão linear
+regularizada, floresta aleatória, \textit{gradient boosting}, regressão por
+processos gaussianos e perceptron multicamadas — avaliados sob protocolo único de
+validação cruzada;
+
+\item verificar, sobre os próprios dados, quais relações analíticas da cavidade
+são efetivamente observáveis na grandeza a ser predita, e formular os termos de
+perda apenas a partir daquelas que se confirmarem;
+
+\item treinar e avaliar o modelo informado por física, quantificando o ganho
+sobre a melhor referência em função do tamanho do conjunto de treinamento, de
+modo a testar as hipóteses H1 e H2;
+
+\item acoplar o modelo substituto a um otimizador evolutivo multiobjetivo para
+determinação de empilhamentos que minimizem simultaneamente a impedância máxima
+na faixa de análise e o custo de fabricação estimado;
+
+\item extrair diretrizes de projeto interpretáveis por meio de regressão
+simbólica e de análise de valores de Shapley, testando a hipótese H3;
+
+\item documentar e publicar a implementação como software livre reprodutível,
+acompanhada das especificações, testes automatizados e registro de experimentos.
+\end{alineas}
+
+\section{Justificativa}
+\label{sec:justificativa}
+
+A relevância técnica do tema decorre da posição que a compatibilidade
+eletromagnética ocupa no ciclo de desenvolvimento de produtos eletrônicos. A
+reprovação em ensaio de certificação é um evento de alto custo e alta latência:
+implica reprojeto de \textit{layout}, nova fabricação de protótipos e novo
+agendamento de laboratório acreditado, com impacto tipicamente medido em meses de
+atraso. Ferramentas que antecipam esse diagnóstico para a fase de projeto atacam
+o custo na origem, e é justamente essa antecipação que os modelos substitutos
+viabilizam ao reduzir o custo de avaliação de minutos para milissegundos
+\citep{zhang2021}.
+
+A relevância científica reside na lacuna metodológica identificada na
+Seção~\ref{sec:problema}. A aplicação de redes neurais informadas por física,
+consolidada em mecânica dos fluidos e em problemas de meio contínuo desde o
+trabalho seminal de \citet{raissi2019}, permanece pouco explorada em integridade
+de potência. Os trabalhos existentes na área concentram-se em duas frentes: o uso
+de camadas de pós-processamento que impõem passividade e causalidade a
+parâmetros de espalhamento preditos \citep{torun2020}, ou o uso de
+aprendizado por reforço para posicionamento de capacitores de desacoplamento
+sobre uma PDN cuja geometria já está fixada \citep{zhang2020decap,duan2024}. A
+proposta aqui formulada distingue-se por incorporar a física \emph{durante} o
+treinamento, e por fazê-lo a partir de grandezas que, no caso específico da
+cavidade retangular, são conhecidas analiticamente. Uma investigação preliminar
+conduzida sobre a base de dados, relatada na Seção~\ref{sec:preliminar},
+confirmou que o comportamento quase-estático da resposta segue com precisão a lei
+capacitiva prevista — a inclinação medida vale $-1{,}018 \pm 0{,}008$ contra $-1$
+teórico —, o que fornece uma âncora física exata em um dos extremos da faixa de
+análise e delimita, ao mesmo tempo, quais restrições são legítimas.
+
+O alinhamento institucional também sustenta a proposta. A pesquisa dialoga
+diretamente com as linhas de investigação do orientador em modelos substitutos,
+aprendizado de máquina por comitês, regressão simbólica e otimização por
+metaheurísticas \citep{tessaro2026,takara2026,coelho2010}, e oferece continuidade
+natural em nível de mestrado no PPGEE/UFPR — seja pela extensão a geometrias
+arbitrárias por meio de redes neurais em grafos, seja pela validação experimental
+contra medições de campo próximo.
+
+A viabilidade, por fim, está assegurada. Os dados necessários já foram obtidos: a
+SI/PI-Database é de acesso público mediante aceite de termos de uso, e os três
+subconjuntos relevantes totalizando aproximadamente 24\,GB já se encontram
+disponíveis localmente. Toda a cadeia de software é livre e executável em
+computador pessoal sem aceleração por unidade de processamento gráfico, e a
+metodologia proposta apoia-se em técnicas já demonstradas na literatura, o que
+reduz o risco de inviabilidade técnica dentro do horizonte de dois semestres
+letivos.
+
+\section{Público alvo}
+\label{sec:publico_alvo}
+
+O público primário do trabalho é o engenheiro de projeto de hardware digital de
+alta velocidade e a equipe de compatibilidade eletromagnética que o assessora,
+em organizações que desenvolvem produtos eletrônicos submetidos a ensaios de
+certificação. O momento em que esse público é atendido é preciso: a janela
+inicial de definição do empilhamento, quando o número de camadas, a espessura
+das cavidades, o dielétrico e a densidade de vias ainda são reversíveis e não
+existe protótipo nem modelo tridimensional detalhado. O artefato dirigido a ele
+é duplo — um preditor da curva $Z(f)$ com latência inferior a um milissegundo,
+que torna praticável a varredura interativa de centenas de empilhamentos
+candidatos, e um conjunto de expressões analíticas interpretáveis que permitem
+decidir sem executar o modelo, na forma de diretriz de projeto.
+
+O público secundário é a comunidade acadêmica que investiga modelos substitutos
+em integridade de sinal e de potência e, mais amplamente, o aprendizado de
+máquina informado por física aplicado a problemas de engenharia com física
+parcialmente conhecida. A esse público destinam-se a implementação de código
+aberto, o protocolo experimental completo e, sobretudo, o desenho falsificável
+das hipóteses H1 e H2: o trabalho é construído de modo que a ausência de ganho
+da informação física, caso se confirme, seja um resultado reportável e não uma
+falha de execução. A base de dados empregada é pública \citep{schierholz2021,
+hillebrecht2024}, o que torna as comparações reproduzíveis por terceiros.
+
+O público terciário é institucional. O pipeline de extração da matriz de
+impedância a partir de arquivos Touchstone, a caracterização do subconjunto de
+seis camadas da SI/PI-Database e a infraestrutura de registro de experimentos
+permanecem disponíveis para trabalhos subsequentes do Departamento de
+Engenharia Elétrica da UFPR, seja em novos TCCs que explorem outras topologias
+de interconexão, seja em nível de pós-graduação no PPGEE. Nesse sentido, parte
+do valor entregue não é o modelo final, mas a infraestrutura verificada que o
+sustenta.
+
+\section{Contribuição para a ênfase e para a formação do autor}
+\label{sec:contribuicao}
+
+A ênfase em sistemas eletrônicos embarcados forma o profissional que projeta o
+hardware digital de um produto e responde por seu funcionamento em campo. É
+exatamente nesse ponto que o presente trabalho incide. O sistema embarcado é o
+lugar onde a decisão de empilhamento, o ruído de comutação dos circuitos
+integrados e a aprovação em ensaio de certificação deixam de ser assuntos
+separados: a mesma escolha de espessura de cavidade que reduz o custo da placa
+determina a impedância vista pelos componentes e, por consequência, a emissão
+irradiada medida no laboratório acreditado. O trabalho contribui para a ênfase
+ao tratar essa camada física — habitualmente terceirizada a especialistas ou
+descoberta tardiamente por reprovação em ensaio — como objeto explícito de
+projeto, deslocando a conformidade com CISPR 32 e IEC 61000 de evento terminal
+para critério quantitativo disponível desde a primeira semana de
+\textit{layout}.
+
+A contribuição é também de integração curricular. O problema exige,
+simultaneamente, eletromagnetismo aplicado para compreender a cavidade
+ressonante formada pelo par de planos, teoria de circuitos e de linhas de
+transmissão para interpretar a impedância vista pelos terminais de alimentação,
+análise de sinais no domínio da frequência para operar com parâmetros de
+espalhamento, e programação e métodos numéricos para construir o modelo
+substituto e o otimizador. Competências distribuídas ao longo da ênfase são
+assim articuladas em um único artefato verificável, e não exercitadas
+isoladamente.
+
+Para a formação do autor, o trabalho consolida três competências de natureza
+distinta. A primeira é metodológica: a condução de uma investigação empírica
+com hipóteses enunciadas de forma refutável, protocolo experimental fixado
+antes da observação dos resultados e critérios de continuidade estabelecidos a
+priori, conforme os marcos da Seção~\ref{sec:cronograma}. A segunda é técnica:
+o domínio de aprendizado de máquina aplicado a um problema de engenharia cuja
+física é parcialmente conhecida em forma fechada, situação em que a
+contribuição do engenheiro está justamente em decidir o que o modelo deve
+aprender e o que já se sabe. A terceira é de prática profissional: o
+desenvolvimento de software reprodutível, especificado, testado e
+versionado\seapendice{, segundo as práticas relatadas no
+Apêndice~\ref{ap:engenharia}}, com registro explícito do uso de ferramentas de
+inteligência artificial\seapendice{ conforme o Apêndice~\ref{ap:integridade}}. O
+conjunto constitui, ainda, preparação direta
+para o ingresso em mestrado no PPGEE/UFPR, alinhado às linhas de pesquisa do
+orientador \citep{tessaro2026,takara2026,coelho2010}.
+
+\section{Organização do documento}
+\label{sec:organizacao}
+
+Este capítulo apresentou o tema, o problema, as hipóteses, os objetivos e a
+justificativa do trabalho, e delimitou o público alvo
+(Seção~\ref{sec:publico_alvo}) e a contribuição esperada para a ênfase do curso
+e para a formação do autor (Seção~\ref{sec:contribuicao}). O
+Capítulo~\ref{cap:fundamentacao} apresenta o referencial teórico, cobrindo os
+fundamentos eletromagnéticos da PDN, a representação por parâmetros de
+espalhamento, os modelos substitutos aplicados a integridade de sinal e potência
+e o estado da arte em aprendizado informado por física. O
+Capítulo~\ref{cap:metodologia} descreve a metodologia, incluindo a caracterização
+da base de dados, a formulação dos termos de perda, o protocolo experimental e os
+critérios de avaliação. O Capítulo~\ref{cap:recursos} relaciona os recursos
+necessários e apresenta o cronograma de execução.\seapendice{ O
+Apêndice~\ref{ap:engenharia} detalha as práticas de engenharia de software
+adotadas, e o Apêndice~\ref{ap:integridade} apresenta a política de uso de
+ferramentas de inteligência artificial e os procedimentos de verificação de
+integridade acadêmica adotados no trabalho.}

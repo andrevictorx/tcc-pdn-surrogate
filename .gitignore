@@ -1,0 +1,136 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+*.ipynb
+
+# ==============================================================================
+# NÃO VERSIONAR — repositório é PÚBLICO
+# ==============================================================================
+
+# SI/PI-Database (TUHH): ~93 GB extraídos + 21 GB de zips.
+# Acesso é público mediante aceite dos termos de uso da TUHH; a base NÃO é
+# redistribuída aqui. Ver spec/DATA_SPEC.md para a origem e o procedimento.
+*.zip
+6_layer_pcb_based_pdn_with_two_arrays_LHS_mar_2023/
+Universal-SE-SI-Array-10MAY2024/
+Universal-Diff-SI-Array-10MAY2024/
+*.[sS][0-9]*[pP]
+parameter.csv
+parameter_edit.csv
+
+# Correspondência privada
+*.msg
+*.eml
+
+# Data (large files)
+data/raw/**/*.S*p
+data/raw/**/*.zip
+data/processed/**
+*.pkl
+*.parquet
+*.h5
+*.hdf5
+
+# Experiments
+experiments/*/results/**
+experiments/*/logs/**
+*.log
+
+# MLFlow
+mlruns/
+.mlflow
+
+# Models (except maybe one baseline)
+models/*.pkl
+models/*.joblib
+
+# Output
+*.png
+plots/
+outputs/
+
+# ------------------------------------------------------------------------------
+# PDFs: por padrão nenhum entra. Isso cobre os artigos IEEE, as folhas de dados
+# da TUHH e o Manual de Normalização da UFPR — material de terceiros, protegido
+# por direito autoral, que não pode ser redistribuído em repositório público.
+# ------------------------------------------------------------------------------
+*.pdf
+
+# Exceções: material próprio e arquivos necessários para compilar o documento.
+!proposta/Plano_de_Trabalho_*.pdf
+!proposta/0-iniciais/fundo-capa.pdf
+!proposta/3-metodo/figuras/*.pdf
+
+# A versão com apêndices é de consulta pessoal — não vai para o repositório.
+proposta/main_com_apendices.pdf
+proposta/main.pdf
+
+# Apêndices A e B: material de consulta pessoal, fora do repositório público.
+# main.tex detecta a ausência e compila normalmente a versão de entrega.
+proposta/a1-engenharia/
+proposta/a2-integridade/
+
+# ------------------------------------------------------------------------------
+# LaTeX — arquivos intermediários
+# ------------------------------------------------------------------------------
+*.aux
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# Config (secrets)
+.env
+secrets.yaml
+config/secrets.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+.cache/
+.pytest_cache/
+*.bak
+*.tmp
