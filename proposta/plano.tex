@@ -1,0 +1,113 @@
+% ==============================================================================
+% Plano de trabalho de TCC — Engenharia Elétrica / UFPR
+%
+% Versão ENXUTA, para entrega à comissão de TCC. Segue estrita e exclusivamente
+% a lista de itens do "Anexo I — Normas para elaboração do plano de trabalho"
+% (Departamento de Engenharia Elétrica, UFPR):
+%
+%   dados de identificação (estudante, matrícula, ênfase, orientador,
+%   coorientador) + descrição do projeto contendo 1) título, 2) introdução,
+%   3) objetivos, 4) público alvo, 5) metodologia de desenvolvimento,
+%   6) recursos necessários, 7) resultados fundamentais a serem atingidos,
+%   8) contribuição esperada para a ênfase e importância para a formação do
+%   autor, 9) cronograma, 10) bibliografia a ser utilizada.
+%
+% A estrutura de capítulo/seções reproduz essa lista: o capítulo se chama
+% "Descrição do projeto" — expressão do próprio Anexo — e cada seção é um dos
+% itens 2 a 9, na ordem em que o Anexo os enumera. O item 1 está na folha de
+% rosto; o item 10, em REFERÊNCIAS. O sumário funciona, assim, como o próprio
+% checklist do Anexo I.
+%
+% O documento longo (main.tex, 48 páginas, com referencial teórico, hipóteses,
+% justificativa e apêndices) permanece no repositório como material de
+% aprofundamento e base para o texto de TCC. Ambos compartilham a mesma classe,
+% os mesmos pacotes e a mesma base bibliográfica.
+%
+% Compilar:  make            (este documento — a entrega)
+%            make completo   (o documento longo, com apêndices)
+% ==============================================================================
+
+\documentclass[defesa,oneside,english,brazilian]{ppginf}
+
+% amssymb antes de newtxmath (ver nota em main.tex)
+\usepackage{amssymb}
+
+\input{packages}
+
+% --- ajustes locais -----------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[table]{xcolor}
+
+% cronograma: célula sombreada para marcar atividade no mês
+\newcommand{\mes}{\cellcolor{black!55}}
+
+% O Manual de Normalização da UFPR (2024) exige espaçamento simples no interior de
+% tabelas e na lista de referências — só o corpo do texto usa 1,5. A classe não
+% aplica essa distinção, então ela é feita aqui. Nas referências, as entradas são
+% separadas entre si por uma linha em branco, conforme a NBR 6023.
+\AtBeginEnvironment{table}{\setstretch{1.0}}
+\AtBeginEnvironment{thebibliography}{\setstretch{1.0}\setlength{\itemsep}{\baselineskip}}
+
+% Alíneas conforme item 3.4.3 do Manual de Normalização da UFPR (2024).
+\newlist{alineas}{enumerate}{1}
+\setlist[alineas]{label=\alph*), leftmargin=1.5cm, itemsep=0.3\baselineskip,
+                  topsep=0.5\baselineskip, parsep=0pt}
+
+\begin{document}
+
+% --- metadados ----------------------------------------------------------------
+
+\title{Predição de margem de conformidade eletromagnética em placas de circuito
+impresso multicamadas por modelo substituto informado por física}
+
+\pchave{Compatibilidade eletromagnética; integridade de potência; modelo
+substituto; redes neurais informadas por física; conformidade normativa;
+otimização multiobjetivo.}
+
+\keyword{Electromagnetic compatibility; power integrity; surrogate model;
+physics-informed neural networks; regulatory compliance; multi-objective
+optimization.}
+
+\author{André Victor Xavier Pires}
+\advisor{Prof.\ Dr.\ Leandro dos Santos Coelho}
+% CONFIRMAR com o Prof. Bruno o aceite da coorientação e a grafia da titulação e
+% da área de atuação declaradas em plano/identificacao.tex antes da entrega.
+\coadvisor{Prof.\ Dr.\ Bruno Pohlot Ricobom}
+
+\instit{UFPR}{Universidade Federal do Paraná}
+\field{Engenharia Elétrica}
+\local{Curitiba}
+\date{2026}
+
+\coverimage{0-iniciais/fundo-capa.pdf}
+
+\descr{Plano de trabalho apresentado à comissão de Trabalho de Conclusão de
+Curso do curso de Engenharia Elétrica, ênfase em sistemas eletrônicos
+embarcados (curso noturno), Setor de Tecnologia da Universidade Federal do
+Paraná, como requisito para matrícula na disciplina de Trabalho de Conclusão de
+Curso I, conforme o Anexo I da regulamentação do curso}
+
+% --- elementos pré-textuais ---------------------------------------------------
+
+\frontmatter
+\pagestyle{frontmatter}
+
+\titlepage
+
+\include{plano/identificacao}
+
+\tableofcontents
+
+% --- elementos textuais -------------------------------------------------------
+
+\mainmatter
+\pagestyle{mainmatter}
+
+\include{plano/conteudo}
+
+% --- elementos pós-textuais ---------------------------------------------------
+
+\bibliography{referencias}
+
+\end{document}

@@ -9,45 +9,63 @@ cd ~/Downloads/TCC/proposta
 
 ---
 
-## 1. Onde fica cada coisa
+## 1. São dois documentos
 
-O `main.tex` quase não tem texto: ele só **monta** o documento. O conteúdo está
-em arquivos separados, um por capítulo.
+A pasta contém **dois** documentos que compartilham a mesma classe LaTeX, os
+mesmos pacotes e a mesma bibliografia:
+
+| Documento | Fonte | Saída | Para quê |
+|---|---|---|---|
+| **Plano de trabalho** (15 pág.) | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` | **a entrega à comissão** — segue estritamente a lista do Anexo I |
+| **Documento completo** (49 pág.) | `main.tex` + `0-iniciais/` … `a2-integridade/` | `Documento_completo_com_apendices.pdf` | leitura pessoal e base do texto de TCC — tem referencial teórico, hipóteses, justificativa e apêndices |
+
+O `plano.tex` e o `main.tex` quase não têm texto: eles só **montam** o documento.
+O conteúdo está em arquivos separados.
+
+### Plano de trabalho — onde fica cada coisa
 
 | Quero mexer em… | Arquivo |
 |---|---|
-| Título, autor, orientador, palavras-chave | `main.tex` (bloco "metadados", linhas ~47–70) |
-| **Matrícula, ênfase, coorientador, quadro do Anexo I** | `0-iniciais/identificacao.tex` |
-| Resumo (português) | `0-iniciais/resumo.tex` |
-| Abstract (inglês) | `0-iniciais/abstract.tex` |
-| Lista de siglas | `0-iniciais/abreviaturas.tex` |
-| Lista de símbolos | `0-iniciais/simbolos.tex` |
-| **Cap. 1 — Introdução, objetivos, público alvo, contribuição** | `1-intro/texto.tex` |
-| **Cap. 2 — Referencial teórico** | `2-fundam/texto.tex` |
-| **Cap. 3 — Metodologia** | `3-metodo/texto.tex` |
-| **Cap. 4 — Recursos, cronograma, resultados** | `4-recursos/texto.tex` |
-| Referências bibliográficas | `referencias.bib` |
-| Apêndice A — engenharia de software | `a1-engenharia/texto.tex` |
-| Apêndice B — integridade e uso de IA | `a2-integridade/texto.tex` |
+| Título, autor, orientador, **coorientador** | `plano.tex` (bloco "metadados") |
+| **Matrícula, ênfase, dados do coorientador** | `plano/identificacao.tex` |
+| **Todo o conteúdo** (itens 2 a 9 do Anexo I) | `plano/conteudo.tex` |
+| Referências bibliográficas | `referencias.bib` (compartilhado) |
+
+O `plano/conteudo.tex` é um arquivo único, com as oito seções na ordem do Anexo I
+e um cabeçalho de comentário no topo mapeando seção → item do Anexo.
+
+### Documento completo — onde fica cada coisa
+
+| Quero mexer em… | Arquivo |
+|---|---|
+| Título, autor, orientador, coorientador | `main.tex` (bloco "metadados") |
+| Matrícula, ênfase, quadro do Anexo I | `0-iniciais/identificacao.tex` |
+| Resumo / Abstract | `0-iniciais/resumo.tex`, `0-iniciais/abstract.tex` |
+| Listas de siglas e símbolos | `0-iniciais/abreviaturas.tex`, `0-iniciais/simbolos.tex` |
+| Cap. 1 — Introdução, objetivos, público alvo, contribuição | `1-intro/texto.tex` |
+| Cap. 2 — Referencial teórico | `2-fundam/texto.tex` |
+| Cap. 3 — Metodologia | `3-metodo/texto.tex` |
+| Cap. 4 — Recursos, cronograma, resultados | `4-recursos/texto.tex` |
+| Apêndices A e B | `a1-engenharia/texto.tex`, `a2-integridade/texto.tex` |
 
 Abra qualquer um deles num editor de texto comum (VS Code, gedit, nano). São
 arquivos de texto puro.
+
+> ⚠️ **Os dois documentos têm objetivos diferentes.** O plano adotou o objetivo
+> novo — predizer a **margem de conformidade em dB** contra a curva-limite de uma
+> norma escolhida. O documento completo ainda carrega o objetivo anterior, de
+> predizer só a impedância. Ao atualizá-lo, comece pelo `1-intro/texto.tex` e pelo
+> `\title{}` do `main.tex`.
 
 ---
 
 ## 2. Recompilar
 
 ```bash
-make            # versão de ENTREGA (sem apêndices)
-make pessoal    # versão PESSOAL (com apêndices A e B)
-make tudo       # as duas de uma vez
+make            # PLANO DE TRABALHO -> o PDF da entrega
+make completo   # DOCUMENTO COMPLETO, com apêndices
+make tudo       # os dois
 ```
-
-Saídas:
-
-- `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` — **é este
-  que vai para o professor**
-- `main_com_apendices.pdf` — sua cópia com os apêndices
 
 Se algo ficar estranho (numeração errada, referência aparecendo como `??`),
 limpe os arquivos intermediários e refaça:
@@ -63,22 +81,23 @@ lista de referências. O `make` já faz tudo na ordem certa.
 
 ---
 
-## 3. Como os apêndices entram e saem
+## 3. Como os apêndices entram e saem (documento completo)
 
-O mesmo fonte gera as duas versões. O mecanismo tem duas partes:
+Os apêndices A e B pertencem só ao documento completo, e ainda assim de forma
+condicional. O mecanismo tem três partes:
 
 1. No fim do `main.tex`:
 
    ```latex
-   \ifdefined\comapendices
+   \ifapendices
      \appendix
      \include{a1-engenharia/texto}
      \include{a2-integridade/texto}
    \fi
    ```
 
-   `make pessoal` define `\comapendices` na linha de comando; `make` normal não
-   define, e os apêndices simplesmente não entram.
+   `make completo` define `\comapendices` na linha de comando, e o `main.tex`
+   liga `\ifapendices` se — e só se — os arquivos existirem no disco.
 
 2. Trechos de texto que **citam** os apêndices ficam envolvidos por
    `\seapendice{...}`. Exemplo em `1-intro/texto.tex`:
@@ -88,24 +107,23 @@ O mesmo fonte gera as duas versões. O mecanismo tem duas partes:
    Apêndice~\ref{ap:engenharia}}, com registro explícito...
    ```
 
-   Na versão de entrega, o miolo desaparece e a frase fica "…testado e
-   versionado, com registro explícito…". Isso evita que a entrega saia com
-   referências apontando para um apêndice inexistente (aquele `??` feio).
+   Sem os apêndices, o miolo desaparece e a frase fica "…testado e versionado, com
+   registro explícito…". Isso evita referências apontando para um apêndice
+   inexistente (aquele `??` feio).
 
-3. Os dois arquivos de apêndice (`a1-engenharia/`, `a2-integridade/`) estão no
-   `.gitignore`: eles existem **só na sua máquina** e não vão para o repositório
-   público. O `main.tex` verifica se os arquivos existem antes de incluí-los, de
-   modo que quem clonar o repositório e rodar `make pessoal` recebe a versão de
-   entrega, sem erro de compilação.
+3. Os dois diretórios de apêndice (`a1-engenharia/`, `a2-integridade/`) estão no
+   `.gitignore`: existem **só na sua máquina** e não vão para o repositório
+   público. Quem clonar o repositório e rodar `make completo` recebe o documento
+   sem apêndices, sem erro de compilação.
 
    > **Cuidado:** como não estão versionados, os apêndices **não têm backup**. Se
    > formatar a máquina, você os perde. Vale guardar uma cópia à parte.
 
 **Se você escrever uma frase nova que cite um apêndice, envolva com
-`\seapendice{}`** — senão a versão de entrega sai quebrada. Para conferir:
+`\seapendice{}`** — senão a versão sem apêndices sai quebrada. Para conferir:
 
 ```bash
-make && /usr/bin/grep -c "??" main.log     # tem que dar 0
+make completo && /usr/bin/grep -c "??" main_ap.log     # tem que dar 0
 ```
 
 ---
@@ -114,14 +132,22 @@ make && /usr/bin/grep -c "??" main.log     # tem que dar 0
 
 ### Trocar uma informação de identificação
 
-Abra `0-iniciais/identificacao.tex`. É uma tabela; cada linha tem o formato
-`\textbf{Rótulo} & valor \\`. Exemplo, se o professor decidir formalizar o
-coorientador:
+Abra `plano/identificacao.tex` (ou `0-iniciais/identificacao.tex`, no documento
+completo). É uma tabela; cada linha tem o formato `\textbf{Rótulo} & valor \\`:
 
 ```latex
-\textbf{Coorientador} & Prof.\ Dr.\ Bruno Pohlot Ricobom --- Departamento de
-Engenharia Elétrica, UFPR \\
+\textbf{Coorientador} & Prof.\ Dr.\ Bruno Pohlot Ricobom \\[0.4em]
+\textbf{\quad Vínculo} & Departamento de Engenharia Elétrica, UFPR \\
 ```
+
+O nome do coorientador aparece **também** na folha de rosto, via
+`\coadvisor{...}` no `plano.tex` — se mudar em um lugar, mude nos dois.
+
+### Remover o coorientador
+
+Três lugares: a linha `\coadvisor{...}` no `plano.tex` (comente ou apague), as
+quatro linhas do coorientador em `plano/identificacao.tex`, e o §1.5.1 (Recursos
+humanos) em `plano/conteudo.tex`.
 
 ### Acrescentar um parágrafo
 
@@ -164,19 +190,21 @@ correspondente é ignorada.
 
 ### Marcar um mês no cronograma
 
-Em `4-recursos/texto.tex`, as tabelas de cronograma usam `\mes` para pintar a
+No fim de `plano/conteudo.tex`, a tabela de cronograma usa `\mes` para pintar a
 célula:
 
 ```latex
-Revisão bibliográfica sistemática   & \mes & \mes & \mes &      &      \\
+Revisão bibliográfica sistemática  & \mes & \mes & \mes & & & & & & & \\
 ```
 
-Cada `&` separa uma coluna (ago, set, out, nov, dez). Célula vazia = sem
-atividade. O número de colunas tem que bater com o cabeçalho.
+Cada `&` separa uma coluna. São **dez**: ago–dez de 2026/2, depois mar–jul de
+2027/1. Célula vazia = sem atividade. O número de `&` tem que bater com o
+cabeçalho, senão o LaTeX reclama de "extra alignment tab".
 
 ### Acrescentar uma sigla
 
-Em `0-iniciais/abreviaturas.tex`, mantendo a ordem alfabética:
+Só o documento completo tem lista de siglas. Em `0-iniciais/abreviaturas.tex`,
+mantendo a ordem alfabética:
 
 ```latex
 FEM & \textit{Finite Element Method} (método dos elementos finitos)\\
@@ -198,13 +226,15 @@ FEM & \textit{Finite Element Method} (método dos elementos finitos)\\
 Para achar o erro no log:
 
 ```bash
-/usr/bin/grep -n -A5 "^!" main.log       # primeiro erro fatal
-/usr/bin/grep -c "Undefined" main.log    # referências/comandos indefinidos
+/usr/bin/grep -n -A5 "^!" plano.log       # primeiro erro fatal
+/usr/bin/grep -c "Undefined" plano.log    # referências/comandos indefinidos
 ```
 
+O log do plano é `plano.log`; o do documento completo, `main_ap.log`.
+
 > Use `/usr/bin/grep` com caminho completo neste ambiente: existe uma função de
-> shell chamada `grep` que ignora arquivos listados no `.gitignore` — e o
-> `main.log` é um deles, então o `grep` normal não acha nada dentro dele.
+> shell chamada `grep` que ignora arquivos listados no `.gitignore` — e os `.log`
+> são ignorados, então o `grep` normal não acha nada dentro deles.
 
 **Caracteres que precisam de escape no LaTeX:** `& % $ # _ { }` viram
 `\& \% \$ \# \_ \{ \}`. O `~` e o `^` precisam de `\textasciitilde{}` e
@@ -216,17 +246,17 @@ Para achar o erro no log:
 
 ```bash
 make clean && make
-/usr/bin/grep -c "Undefined" main.log    # 0
-/usr/bin/grep -c "??" main.log           # 0
-pdfinfo Plano_de_Trabalho_*.pdf | grep Pages
+/usr/bin/grep -c "Undefined" plano.log    # 0
+/usr/bin/grep -c "??" plano.log           # 0
+pdfinfo Plano_de_Trabalho_*.pdf | grep Pages   # deve dar 15
 ```
 
 Depois abra o PDF e confira a olho:
 
-- página de identificação: matrícula, ênfase e coorientador corretos;
-- quadro do Anexo I: cada item aponta para uma seção que realmente existe (se
-  você mexeu na ordem das seções, os números mudam sozinhos, mas vale conferir);
-- sumário coerente;
+- página de identificação: matrícula, ênfase e dados do coorientador corretos;
+- **sumário**: as oito seções têm de ser, na ordem, os itens 2 a 9 do Anexo I —
+  Introdução, Objetivos, Público alvo, Metodologia, Recursos, Resultados,
+  Contribuição, Cronograma. O sumário é o checklist da comissão;
 - lista de referências completa, sem `(?)`.
 
 ---
@@ -247,6 +277,6 @@ tlmgr install collection-latexrecommended collection-fontsrecommended \
 ```
 
 Alternativa sem instalar nada: subir a pasta `proposta/` no **Overleaf**
-(New Project → Upload Project → zip da pasta) e compilar com pdfLaTeX. Nesse
-caso o Overleaf não roda o `Makefile`, então a versão gerada será a de
-**entrega** (sem apêndices) — que é justamente a que você precisa enviar.
+(New Project → Upload Project → zip da pasta) e compilar com pdfLaTeX. O Overleaf
+não roda o `Makefile`, então defina `plano.tex` como documento principal
+(Menu → Main document) para gerar a entrega.

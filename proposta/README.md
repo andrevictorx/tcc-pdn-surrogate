@@ -1,6 +1,17 @@
-# Proposta de TCC — build
+# Documentos de TCC — build
 
-Documento em LaTeX da proposta, no modelo da UFPR.
+Dois documentos em LaTeX, no modelo da UFPR, compartilhando classe, pacotes e
+bibliografia:
+
+| Documento | Fonte | Saída | Papel |
+|---|---|---|---|
+| **Plano de trabalho** | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` (15 pág.) | **entrega à comissão de TCC** — segue estrita e exclusivamente a lista de itens do Anexo I |
+| **Documento completo** | `main.tex` + `0-iniciais/` … | `Documento_completo_com_apendices.pdf` (49 pág.) | leitura pessoal e base do texto de TCC — referencial teórico, hipóteses, justificativa, apêndices |
+
+No plano, o capítulo se chama *Descrição do projeto* (expressão do próprio Anexo)
+e cada seção é um dos itens 2 a 9, na ordem em que o Anexo os enumera; o item 1
+está na folha de rosto e o item 10 em REFERÊNCIAS. **O sumário é o checklist do
+Anexo I.**
 
 ## Origem e adaptações
 
@@ -19,37 +30,38 @@ Baseado no modelo do Prof. Carlos Maziero (PPGInf/UFPR),
 - ficha catalográfica e folha de aprovação omitidas — não se aplicam a projeto.
 
 O modo `defesa` da classe já entrega espaçamento 1,5 e páginas pré-textuais
-contadas mas não numeradas, como o Manual exige.
+contadas mas não numeradas, como o Manual exige. O que a classe **não** faz e foi
+acrescentado nos dois documentos: espaçamento **simples** no interior das tabelas e
+na lista de referências, com linha em branco entre entradas, conforme o Manual e a
+NBR 6023 — apenas o corpo do texto usa 1,5.
 
 ## Compilar
 
-Duas saídas, a partir do mesmo fonte:
-
 ```bash
-make            # ENTREGA  -> Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf
-make pessoal    # PESSOAL  -> main_com_apendices.pdf (com os apêndices A e B)
-make tudo       # as duas
+make            # PLANO DE TRABALHO -> o PDF da entrega
+make completo   # DOCUMENTO COMPLETO, com os apêndices A e B
+make tudo       # os dois
 make clean      # remove intermediários
 ```
 
-A diferença é só a macro `\comapendices`, definida pela linha de comando no alvo
-`pessoal`. Ela liga os dois `\include` de apêndice no fim de `main.tex` e, via
-`\seapendice{...}`, reativa os trechos de texto que citam os apêndices — de modo
-que a versão de entrega não fica com referências penduradas.
+Os apêndices entram pela macro `\comapendices`, definida na linha de comando pelo
+alvo `completo`. Ela liga os `\include` de apêndice no fim de `main.tex` e, via
+`\seapendice{...}`, reativa os trechos de texto que os citam — de modo que a versão
+sem apêndices não fica com referências penduradas.
 
 > **Nota para quem clonou o repositório:** os apêndices A e B são material de
 > consulta pessoal do autor e não integram o repositório público
-> (`a1-engenharia/` e `a2-integridade/` estão no `.gitignore`). O `main.tex`
-> testa a existência dos arquivos com `\IfFileExists`, de modo que `make
-> pessoal` num clone produz exatamente a versão de entrega, sem erro.
+> (`a1-engenharia/` e `a2-integridade/` estão no `.gitignore`). O `main.tex` testa a
+> existência dos arquivos com `\IfFileExists`, de modo que `make completo` num clone
+> compila normalmente, apenas sem os apêndices.
 
 Sem `make`:
 
 ```bash
-# entrega (sem apêndices)
-pdflatex main && bibtex main && pdflatex main && pdflatex main
+# plano de trabalho (entrega)
+pdflatex plano && bibtex plano && pdflatex plano && pdflatex plano
 
-# pessoal (com apêndices)
+# documento completo, com apêndices
 pdflatex -jobname=main_ap "\def\comapendices{}\input{main}" && bibtex main_ap && \
 pdflatex -jobname=main_ap "\def\comapendices{}\input{main}" && \
 pdflatex -jobname=main_ap "\def\comapendices{}\input{main}"
@@ -78,15 +90,24 @@ cd .. && python scripts/verify_physics_anchors.py --n 40 --seed 42
 
 ## Conformidade com o Anexo I
 
-O documento atende aos itens exigidos pelo **Anexo I** das normas de TCC do
-DELT/UFPR. A página `0-iniciais/identificacao.tex`, logo após a folha de rosto,
-traz os dados de identificação (estudante, matrícula, ênfase, orientador,
-coorientador) e um quadro que mapeia cada um dos dez itens obrigatórios para a
-seção correspondente. Ao mexer na numeração de seções, conferir esse quadro.
+Ambos os documentos declaram os dados de identificação exigidos — estudante,
+matrícula, ênfase, orientador e coorientador com dados profissionais — em uma página
+logo após a folha de rosto (`plano/identificacao.tex` e
+`0-iniciais/identificacao.tex`).
+
+No **plano**, os itens 2 a 9 são as seções, na ordem do Anexo, com os títulos
+literais: mexer na ordem das seções quebra essa correspondência. No **documento
+completo**, cuja estrutura segue o cap. 6 do Manual de Normalização, a página de
+identificação traz um quadro mapeando cada item do Anexo para a seção
+correspondente — ao renumerar seções, conferir o quadro.
 
 ## Estado
 
-Entrega: 40 páginas · versão pessoal: 48 páginas · 13 referências, todas
-verificadas via Crossref em 2026-08-01 · compilação sem erros, sem referências
-indefinidas, sem *warnings* do LaTeX (1 *overfull box* de 2,5 pt na lista de
-referências).
+Plano de trabalho: 15 páginas, 13 referências. Documento completo: 49 páginas.
+Referências verificadas via Crossref em 2026-08-01, **exceto** as cinco entradas de
+norma técnica e livro acrescentadas em 2026-08-04 (CISPR 32, IEC 61000-6-3, IEC
+61000-6-4, Paul 2006, Ott 2009), que não têm DOI indexado e cujo ano e edição devem
+ser conferidos no catálogo do editor antes da entrega final.
+
+Compilação dos dois sem erros, sem referências indefinidas e sem *warnings* do
+LaTeX; um *overfull box* de 2,5 pt na lista de referências do documento completo.

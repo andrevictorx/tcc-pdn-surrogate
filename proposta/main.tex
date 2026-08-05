@@ -57,6 +57,12 @@
 % cronograma: célula sombreada para marcar atividade no mês
 \newcommand{\mes}{\cellcolor{black!55}}
 
+% O Manual de Normalização da UFPR (2024) exige espaçamento simples no interior de
+% tabelas e na lista de referências — só o corpo do texto usa 1,5. A classe não
+% aplica essa distinção, então ela é feita aqui.
+\AtBeginEnvironment{table}{\setstretch{1.0}}
+\AtBeginEnvironment{thebibliography}{\setstretch{1.0}\setlength{\itemsep}{\baselineskip}}
+
 % Alíneas conforme item 3.4.3 do Manual de Normalização da UFPR (2024):
 % ordenadas por letras minúsculas seguidas de parêntese, texto iniciando em
 % minúscula e terminando em ponto-e-vírgula (exceto a última, com ponto final).
@@ -84,6 +90,7 @@ physics-informed neural networks; multi-objective optimization.}
 
 \author{André Victor Xavier Pires}
 \advisor{Prof.\ Dr.\ Leandro dos Santos Coelho}
+\coadvisor{Prof.\ Dr.\ Bruno Pohlot Ricobom}
 
 \instit{UFPR}{Universidade Federal do Paraná}
 \field{Engenharia Elétrica}

@@ -3,6 +3,7 @@
 **Estudante:** André Victor Xavier Pires · **Matrícula:** GRR20212735
 **Ênfase:** Sistemas eletrônicos embarcados (curso noturno)
 **Orientador:** Prof. Dr. Leandro dos Santos Coelho
+**Coorientador:** Prof. Dr. Bruno Pohlot Ricobom — **aceite pendente de confirmação**
 **Prazo interno:** enviar ao orientador até **quinta, 06/08/2026** (ele viaja na
 sexta, 07/08, data em que pretende encaminhar).
 
@@ -15,15 +16,44 @@ ambos assinados pelo orientador:
 
 | # | Documento | Quem produz | Estado |
 |---|-----------|-------------|--------|
-| 1 | **Plano de trabalho** (Anexo I) | estudante | ✅ pronto — `proposta/Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` |
+| 1 | **Plano de trabalho** (Anexo I) | estudante | ✅ pronto — `proposta/Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`, 15 páginas |
 | 2 | **Declaração de orientação** (Anexo III) | orientador preenche e assina | ⬜ PDF original em `anexo_iii_declaracao_de_orientacao_de_tcc.pdf`, em branco |
 
 O **Anexo II** (relatório final de TCC I) **não** entra agora — é o documento de
 fim do semestre, para a terceira avaliação de TCC I.
 
+> **Não confundir os dois PDFs de `proposta/`.** O que vai para a comissão é o
+> **plano de trabalho** (15 páginas), que segue estritamente a lista do Anexo I.
+> O `Documento_completo_com_apendices.pdf` (49 páginas, com referencial teórico,
+> hipóteses, justificativa e apêndices) é material de leitura pessoal e base para
+> o texto de TCC — **não é a entrega**.
+
 ---
 
-## 2. Anexo III — o que o professor precisa preencher
+## 2. Antes de tudo: confirmar a coorientação
+
+O plano de trabalho **já declara o Prof. Dr. Bruno Pohlot Ricobom como
+coorientador**, com os dados profissionais que o Anexo I exige. Isso pressupõe o
+aceite dele. Portanto, antes de enviar:
+
+1. **Perguntar ao Prof. Bruno** se aceita coorientar, e confirmar com ele:
+   - a grafia da **titulação** e do **vínculo** (hoje: "Departamento de Engenharia
+     Elétrica, Setor de Tecnologia, UFPR");
+   - a **área de atuação** declarada (hoje: "instrumentação eletrônica e medição de
+     campo próximo aplicada a compatibilidade eletromagnética");
+   - a **contribuição** atribuída a ele (concepção das placas de teste e condução da
+     validação experimental por varredura de campo próximo).
+2. **Avisar o Prof. Leandro**, porque é ele quem marca a caixa de coorientação no
+   Anexo III.
+
+Se o Prof. Bruno **não** aceitar, o plano precisa ser revertido: editar
+`proposta/plano/identificacao.tex` (linha do coorientador), o §1.5.1 de
+`proposta/plano/conteudo.tex` e a linha `\coadvisor{...}` de `proposta/plano.tex`,
+e recompilar com `make`. São cinco minutos.
+
+---
+
+## 3. Anexo III — o que o professor precisa preencher
 
 O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparecem:
 
@@ -31,22 +61,14 @@ O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparece
 - **1ª linha de aluno** → `André Victor Xavier Pires`, matrícula `GRR20212735`
 - **2ª linha de aluno** → deixar em branco (trabalho **individual**)
 - **Ênfase** → marcar **`( x ) sistemas eletrônicos embarcados (curso noturno)`**
-- **Coorientação** → marcar uma das duas caixas:
-  - `( x ) não terá coorientador(a)` — é o que o plano de trabalho declara hoje; ou
-  - `( ) será coorientado por ______` — se o professor decidir formalizar a
-    participação do Prof. Dr. Bruno Pohlot Ricobom. **Nesse caso o plano de
-    trabalho precisa ser atualizado** com os dados profissionais do coorientador,
-    porque o Anexo I os exige.
+- **Coorientação** → marcar **`( x ) será coorientado por Bruno Pohlot Ricobom`**,
+  coerente com o que o plano de trabalho declara
 - **Data** e **assinatura** → assinatura digital pelo gov.br/SEI ou à mão com
   digitalização posterior.
 
-> A página de identificação do plano de trabalho já declara "coorientador: não
-> previsto". Se o professor marcar a segunda caixa, avise — é uma edição de dois
-> minutos em `proposta/0-iniciais/identificacao.tex` e uma recompilação.
-
 ---
 
-## 3. Sequência da entrega
+## 4. Sequência da entrega
 
 1. **Até qui 06/08** — enviar ao Prof. Leandro, por e-mail, dois anexos:
    - `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`
@@ -65,7 +87,7 @@ O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparece
 
 ---
 
-## 4. O que NÃO se aplica nesta etapa
+## 5. O que NÃO se aplica nesta etapa
 
 O roteiro de "passo a passo para finalização do documento TCC" — transformar em
 PDF, **remover metadados**, processo **SEI**, publicação no **Repositório
@@ -77,7 +99,7 @@ colegiado do curso de Engenharia Elétrica em 01/11/2024.
 
 ---
 
-## 5. Como este plano alimenta as avaliações do semestre
+## 6. Como este plano alimenta as avaliações do semestre
 
 TCC I tem **três** avaliações, e todas reaproveitam o que já está escrito:
 
@@ -90,24 +112,29 @@ TCC I tem **três** avaliações, e todas reaproveitam o que já está escrito:
 A rubrica sugerida para TCC I (`sugestoes_avaliacao_tcc_1.pdf`) distribui 100
 pontos assim — 70 de conteúdo, 30 de defesa:
 
-| Critério | Pontos | Onde já está coberto |
+| Critério | Pontos | Onde está coberto |
 |---|---|---|
-| Referencial teórico | **25** | Capítulo 2 |
-| Metodologia | **20** | Capítulo 3 |
+| Referencial teórico | **25** | ⚠️ **não está no plano** — está no cap. 2 do documento completo |
+| Metodologia | **20** | plano §1.4 |
 | Arguição | 20 | preparação para a banca |
-| Introdução | 10 | Capítulo 1 (§1.1–1.2) |
-| Objetivos | 10 | §1.4 — a rubrica pontua **diferenciar geral de específicos**, o que o documento faz |
-| Planejamento (cronograma) | 10 | §4.2 — a rubrica exige cronograma **aderente aos objetivos** |
+| Introdução | 10 | plano §1.1 |
+| Objetivos | 10 | plano §1.2 — a rubrica pontua **diferenciar geral de específicos**, o que o plano faz |
+| Planejamento (cronograma) | 10 | plano §1.8 — a rubrica exige cronograma **aderente aos objetivos** |
 | Apresentação | 10 | slides do seminário |
 
+**Por isso o documento completo importa.** O plano enxuto segue só o Anexo I, que
+não pede referencial teórico — mas a rubrica de TCC I dá a ele **25 pontos, o maior
+peso isolado**. O capítulo 2 do `Documento_completo_com_apendices.pdf` já cobre
+isso; ele é a base do relatório do Anexo II e do seminário de banca.
+
 **Diferença entre o Anexo I (agora) e o Anexo II (dezembro):** o Anexo II
-acrescenta três itens que o plano não tem — **revisão bibliográfica** (que o
-Capítulo 2 já cobre), **resultados preliminares** e **potencial mercadológico do
+acrescenta três itens que o plano não tem — **revisão bibliográfica** (coberta pelo
+documento completo), **resultados preliminares** e **potencial mercadológico do
 projeto**. Vale ter isso em vista ao longo do semestre.
 
 ---
 
-## 6. Arquivos de referência
+## 7. Arquivos de referência
 
 - `anexo_i_-_normas_para_plano_de_trabalho.pdf` — checklist do plano (atendido)
 - `anexo_ii_-_normas_para_relatorio_final_de_tcc_i.pdf` — relatório de dezembro

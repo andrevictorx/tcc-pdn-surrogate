@@ -93,13 +93,16 @@ outputs/
 *.pdf
 
 # Exceções: material próprio e arquivos necessários para compilar o documento.
+# O plano de trabalho é a entrega oficial e fica versionado.
 !proposta/Plano_de_Trabalho_*.pdf
 !proposta/0-iniciais/fundo-capa.pdf
 !proposta/3-metodo/figuras/*.pdf
 
-# A versão com apêndices é de consulta pessoal — não vai para o repositório.
+# O documento completo é de consulta pessoal — não vai para o repositório.
+proposta/Documento_completo_com_apendices.pdf
 proposta/main_com_apendices.pdf
 proposta/main.pdf
+proposta/plano.pdf
 
 # Apêndices A e B: material de consulta pessoal, fora do repositório público.
 # main.tex detecta a ausência e compila normalmente a versão de entrega.

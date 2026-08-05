@@ -1,10 +1,11 @@
-# Modelo substituto informado por física para predição de impedância de PDN
+# Predição de margem de conformidade eletromagnética em PCBs por modelo substituto informado por física
 
 Trabalho de Conclusão de Curso — Engenharia Elétrica, ênfase em sistemas
 eletrônicos embarcados · Universidade Federal do Paraná.
 
 **Autor:** André Victor Xavier Pires (GRR20212735)
 **Orientador:** Prof. Dr. Leandro dos Santos Coelho (DELT / PPGEE — UFPR)
+**Coorientador:** Prof. Dr. Bruno Pohlot Ricobom (DELT — UFPR)
 **Período:** TCC I (2026/2) · TCC II (2027/1) — **em andamento**
 
 ---
@@ -23,16 +24,31 @@ justamente na fase inicial de *layout*, quando as correções ainda são baratas
 
 ## A proposta
 
-Treinar um **modelo substituto** que prediga a curva de impedância `Z(f)` da PDN
-diretamente dos parâmetros do empilhamento, em menos de 1 ms, **incorporando
-restrições eletromagnéticas conhecidas em forma fechada à função de perda** —
-comportamento capacitivo no regime quase-estático, monotonicidade até o nulo de
-série e passividade.
+O projetista de hardware não formula sua pergunta em termos de impedância. Ele
+precisa saber se **o empilhamento tem margem contra a curva-limite de emissão da
+norma que o produto precisa atender**, no ambiente em que será usado. A proposta
+entrega isso em duas camadas:
 
-A hipótese central é que essa informação física compensa a escassez de dados
-(< 1000 amostras), regime em que modelos puramente orientados a dados tendem a
-violar a física do problema. As hipóteses são enunciadas de forma refutável: um
-resultado negativo é reportável.
+**Camada 1 — científica e validada.** Um modelo substituto que prediz a curva `Z(f)`
+da PDN a partir dos parâmetros do empilhamento, em menos de 1 ms, **incorporando
+restrições eletromagnéticas conhecidas em forma fechada à função de perda** —
+comportamento capacitivo no regime quase-estático, monotonicidade até o nulo de série
+e passividade. A hipótese central é que essa informação física compensa a escassez de
+dados (< 1000 amostras), regime em que modelos puramente orientados a dados tendem a
+violar a física do problema. As hipóteses são refutáveis: um resultado negativo é
+reportável.
+
+**Camada 2 — normativa e determinística.** Converte `Z(f)` em margem estimada, em
+decibéis, contra as curvas-limite da CISPR 32 (classes A e B) e das normas genéricas
+IEC 61000-6-3 e 6-4, selecionáveis por ambiente de uso. É essa margem — não a
+impedância — que serve de função objetivo à otimização do empilhamento.
+
+> ⚠️ **O que a camada 2 é e o que não é.** Ela é analítica e **não é calibrada contra
+> medição**: a base de dados não contém dados de campo. Sua saída não é veredito de
+> certificação — que depende também de gabinete, cabos, conectores, aterramento, rede
+> de desacoplamento e firmware — mas um **indicador ordinal de triagem**. A validade
+> desse ordenamento é medida, não assumida: varre-se uma família de premissas
+> plausíveis e quantifica-se a estabilidade do ranking por coeficiente de Kendall.
 
 ---
 
@@ -40,11 +56,13 @@ resultado negativo é reportável.
 
 | Etapa | Estado |
 |---|---|
-| Proposta / plano de trabalho (Anexo I) | ✅ concluída — 40 páginas, 13 referências verificadas |
+| Plano de trabalho (Anexo I) | ✅ concluído — 15 páginas, `proposta/plano.tex` |
+| Documento de aprofundamento | ✅ 49 páginas, `proposta/main.tex` |
 | Caracterização da base de dados | 🔄 verificada sobre amostra de 40 configurações |
 | Pipeline de extração de impedância | 🔄 em implementação (`src/data/touchstone.py`) |
 | Modelos de referência | ⬜ |
 | Modelo informado por física | ⬜ |
+| Camada normativa de margem | ⬜ |
 | Otimização multiobjetivo | ⬜ |
 
 ---
@@ -84,7 +102,7 @@ tests/        testes automatizados
 scripts/      utilitários e verificações reproduzíveis
 notebooks/    exploração
 experiments/  rastreamento de experimentos
-proposta/     documento LaTeX da proposta de TCC
+proposta/     documentos LaTeX: plano de trabalho (entrega) e texto completo
 docs/         documentação de processo
 ```
 
@@ -116,10 +134,12 @@ python scripts/verify_physics_anchors.py --n 40 --seed 42
 
 Requer a base da TUHH disponível localmente.
 
-### Compilar o documento da proposta
+### Compilar os documentos
 
 ```bash
-cd proposta && make
+cd proposta
+make            # plano de trabalho (Anexo I), 15 páginas
+make completo   # documento de aprofundamento, 49 páginas
 ```
 
 Detalhes em [`proposta/README.md`](proposta/README.md); guia de edição em
@@ -154,6 +174,9 @@ resultado numérico afirmado é verificável por script neste repositório.
   [doi:10.1016/j.jcp.2018.10.045](https://doi.org/10.1016/j.jcp.2018.10.045)
 - Torun, H. M. *et al.* **A Spectral Convolutional Net for Co-Optimization of
   Integrated Voltage Regulators and Embedded Inductors.** IEEE, 2020.
+- Paul, C. R. **Introduction to Electromagnetic Compatibility.** 2. ed. Wiley, 2006.
+- IEC. **CISPR 32** — Emission requirements for multimedia equipment; **IEC 61000-6-3
+  / 6-4** — Generic emission standards for residential / industrial environments.
 
 A lista completa está em [`proposta/referencias.bib`](proposta/referencias.bib).
 
