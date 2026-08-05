@@ -5,7 +5,7 @@ bibliografia:
 
 | Documento | Fonte | Saída | Papel |
 |---|---|---|---|
-| **Plano de trabalho** | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` (15 pág.) | **entrega à comissão de TCC** — segue estrita e exclusivamente a lista de itens do Anexo I |
+| **Plano de trabalho** | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` (18 pág.) | **entrega à comissão de TCC** — segue estrita e exclusivamente a lista de itens do Anexo I |
 | **Documento completo** | `main.tex` + `0-iniciais/` … | `Documento_completo_com_apendices.pdf` (49 pág.) | leitura pessoal e base do texto de TCC — referencial teórico, hipóteses, justificativa, apêndices |
 
 No plano, o capítulo se chama *Descrição do projeto* (expressão do próprio Anexo)
@@ -103,10 +103,11 @@ correspondente — ao renumerar seções, conferir o quadro.
 
 ## Estado
 
-Plano de trabalho: 15 páginas, 13 referências. Documento completo: 49 páginas.
+Plano de trabalho: 18 páginas, 14 referências. Documento completo: 49 páginas.
 Referências verificadas via Crossref em 2026-08-01, **exceto** as cinco entradas de
 norma técnica e livro acrescentadas em 2026-08-04 (CISPR 32, IEC 61000-6-3, IEC
-61000-6-4, Paul 2006, Ott 2009), que não têm DOI indexado e cujo ano e edição devem
+61000-6-4, Paul 2006, Ott 2009) e a de Hassab et al. (2025), extraída de folha de
+dados da base, que não têm DOI indexado e cujo ano e edição devem
 ser conferidos no catálogo do editor antes da entrega final.
 
 Compilação dos dois sem erros, sem referências indefinidas e sem *warnings* do

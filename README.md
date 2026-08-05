@@ -56,7 +56,7 @@ impedância — que serve de função objetivo à otimização do empilhamento.
 
 | Etapa | Estado |
 |---|---|
-| Plano de trabalho (Anexo I) | ✅ concluído — 15 páginas, `proposta/plano.tex` |
+| Plano de trabalho (Anexo I) | ✅ concluído — 18 páginas, `proposta/plano.tex` |
 | Documento de aprofundamento | ✅ 49 páginas, `proposta/main.tex` |
 | Caracterização da base de dados | 🔄 verificada sobre amostra de 40 configurações |
 | Pipeline de extração de impedância | 🔄 em implementação (`src/data/touchstone.py`) |
@@ -75,11 +75,18 @@ latino).
 
 | | |
 |---|---|
-| Configurações | **985** |
-| Features (parâmetros que efetivamente variam) | **8** de 17 colunas |
+| Configurações | **985** (referência controlada) · **~135.700** na família PDN completa |
+| Cavidades | **5** no subconjunto de referência · **1 a 13** na família completa |
+| Features (parâmetros que efetivamente variam) | **8** de 17 colunas no subconjunto de referência |
 | Alvo | curva `Z11(f)` — **334 pontos**, 1 MHz a 1 GHz, espaçamento linear de 3 MHz |
 | Formato bruto | Touchstone `.s36p`, 36 portas, ~24 MB por arquivo |
-| Volume | ~24 GB descompactados no subconjunto principal |
+| Volume | ~24 GB descompactados na referência · ~119 GB comprimidos na família completa |
+
+Os catorze subconjuntos de PDN da base compartilham a faixa de 1 MHz a 1 GHz e o
+mesmo solver baseado em física, o que os torna combináveis: o alvo é uma curva de
+autoimpedância em uma única porta, de modo que a variação no número de portas (2 a
+68) não impõe dimensão de saída variável. O trabalho os harmoniza sob atributos
+derivados independentes de topologia — ver §1.4.2 do plano de trabalho.
 
 > ⚠️ **A base não está neste repositório.** É de acesso público mediante aceite
 > dos termos de uso da TUHH e não pode ser redistribuída aqui. Consulte
@@ -138,7 +145,7 @@ Requer a base da TUHH disponível localmente.
 
 ```bash
 cd proposta
-make            # plano de trabalho (Anexo I), 15 páginas
+make            # plano de trabalho (Anexo I), 18 páginas
 make completo   # documento de aprofundamento, 49 páginas
 ```
 

@@ -16,14 +16,14 @@ ambos assinados pelo orientador:
 
 | # | Documento | Quem produz | Estado |
 |---|-----------|-------------|--------|
-| 1 | **Plano de trabalho** (Anexo I) | estudante | ✅ pronto — `proposta/Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`, 15 páginas |
+| 1 | **Plano de trabalho** (Anexo I) | estudante | ✅ pronto — `proposta/Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`, 18 páginas |
 | 2 | **Declaração de orientação** (Anexo III) | orientador preenche e assina | ⬜ PDF original em `anexo_iii_declaracao_de_orientacao_de_tcc.pdf`, em branco |
 
 O **Anexo II** (relatório final de TCC I) **não** entra agora — é o documento de
 fim do semestre, para a terceira avaliação de TCC I.
 
 > **Não confundir os dois PDFs de `proposta/`.** O que vai para a comissão é o
-> **plano de trabalho** (15 páginas), que segue estritamente a lista do Anexo I.
+> **plano de trabalho** (18 páginas), que segue estritamente a lista do Anexo I.
 > O `Documento_completo_com_apendices.pdf` (49 páginas, com referencial teórico,
 > hipóteses, justificativa e apêndices) é material de leitura pessoal e base para
 > o texto de TCC — **não é a entrega**.

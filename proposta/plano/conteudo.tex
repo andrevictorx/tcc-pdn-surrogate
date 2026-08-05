@@ -58,16 +58,15 @@ projeto que exigem milhares de avaliações — varreduras paramétricas, análi
 sensibilidade e, sobretudo, otimização automatizada do empilhamento.
 
 A literatura recente propõe superar essa barreira por meio de modelos substitutos
-treinados sobre dados simulados \citep{swaminathan2020,torun2020}, que
-deslocam o custo para uma fase de treinamento única e entregam predições em
-milissegundos. Persiste, contudo, uma limitação estrutural: modelos puramente
-orientados a dados minimizam erro numérico sem qualquer garantia de consistência
-física, e redes neurais treinadas para predizer parâmetros de espalhamento
-produzem com frequência respostas não passivas ou não causais, o que as inutiliza
-para simulação no domínio do tempo e mina a confiança do projetista
-\citep{torun2020}. O problema agrava-se em regime de escassez de dados, pois a
-rede dispõe de evidência insuficiente para inferir, apenas dos dados,
-regularidades que a física já fornece em forma fechada.
+treinados sobre dados simulados \citep{swaminathan2020,torun2020}, que deslocam o
+custo para uma fase de treinamento única e entregam predições em milissegundos.
+Persiste, contudo, uma limitação estrutural: modelos puramente orientados a dados
+minimizam erro numérico sem garantia de consistência física, e redes neurais
+treinadas para predizer parâmetros de espalhamento produzem com frequência respostas
+não passivas ou não causais, o que as inutiliza para simulação no domínio do tempo e
+mina a confiança do projetista \citep{torun2020}. O problema agrava-se quanto menor
+o orçamento de dados, pois a rede dispõe de evidência insuficiente para inferir,
+apenas deles, regularidades que a física já fornece em forma fechada.
 
 Este trabalho propõe uma arquitetura de duas camadas. A primeira é um modelo
 substituto informado por física, treinado para predizer a curva $Z(f)$ a partir
@@ -80,20 +79,22 @@ otimização do empilhamento. Formula-se, assim, o problema de pesquisa:
 
 \begin{quote}
 Em que medida a incorporação de restrições eletromagnéticas conhecidas em forma
-fechada à função de perda de um modelo substituto neural melhora a acurácia e a
-plausibilidade física da predição da impedância de PDNs de placas multicamadas
-em regime de escassez de dados, e em que medida a margem normativa dela derivada
-ordena empilhamentos de forma estável o suficiente para orientar decisões de
-projeto?
+fechada à função de perda de um modelo substituto neural melhora a acurácia, a
+plausibilidade física e a generalização entre topologias na predição da impedância
+de PDNs de placas multicamadas, em função do volume de dados de treinamento, e em
+que medida a margem normativa dela derivada ordena empilhamentos de forma estável
+o suficiente para orientar decisões de projeto?
 \end{quote}
 
 Uma investigação preliminar já conduzida sobre a base de dados delimitou quais
 restrições são legítimas: o comportamento quase-estático segue com precisão a lei
 capacitiva prevista — inclinação logarítmica medida de $-1{,}018 \pm 0{,}008$
 contra $-1$ teórico —, enquanto a ancoragem em frequências modais, inicialmente
-prevista como principal, foi \emph{refutada}. A viabilidade está assegurada: os
-dados já foram obtidos, a cadeia de software é livre e executável em computador
-pessoal, e a metodologia apoia-se em técnicas demonstradas na literatura.
+prevista como principal, foi \emph{refutada}. A viabilidade está assegurada: o
+subconjunto de referência já foi obtido e caracterizado, os demais são de acesso
+público nas mesmas condições, a cadeia de software é livre e executável em
+computador pessoal, e a metodologia apoia-se em técnicas demonstradas na
+literatura.
 
 \section{Objetivos}
 \label{sec:objetivos}
@@ -110,20 +111,27 @@ otimização do empilhamento durante a fase inicial de projeto.
 \subsection{Objetivos específicos}
 
 \begin{alineas}
-\item caracterizar o subconjunto de PDN de seis camadas da SI/PI-Database e
-implementar um pipeline reprodutível de extração da matriz de impedância a partir
-dos arquivos Touchstone, com validação numérica contra propriedades analíticas
-conhecidas;
+\item implementar um pipeline reprodutível e incremental de extração da curva de
+impedância a partir dos arquivos Touchstone, com validação numérica contra
+propriedades analíticas conhecidas, e \textbf{harmonizar os subconjuntos de PDN da
+SI/PI-Database} — de 1 a 13 cavidades, cerca de 135 mil configurações — em uma
+representação de atributos independente de topologia;
 
 \item verificar, sobre os próprios dados, quais relações analíticas da cavidade
 são efetivamente observáveis na grandeza a ser predita, e formular os termos de
-perda apenas a partir daquelas que se confirmarem;
+perda apenas a partir daquelas que se confirmarem, aproveitando a variação do
+número de cavidades para testar a lei de escala da capacitância efetiva;
 
 \item treinar e avaliar o modelo informado por física contra uma bateria de
 referências — regressão linear regularizada, floresta aleatória, \textit{gradient
 boosting}, processos gaussianos e perceptron multicamadas — sob protocolo único,
-quantificando o ganho em função do tamanho do conjunto de treinamento e a
-plausibilidade física das predições;
+quantificando a plausibilidade física das predições e o ganho em função do volume
+de treinamento, de modo a estimar o volume a partir do qual a informação física
+deixa de ser vantajosa;
+
+\item avaliar a generalização entre topologias por validação com contagem de
+camadas retida, delimitando em que medida um modelo treinado em um conjunto de
+empilhamentos prediz empilhamentos de topologia não vista;
 
 \item implementar a camada normativa de estimativa de margem, compreendendo o
 gabarito paramétrico de excitação, o modelo analítico de radiação e as
@@ -183,12 +191,45 @@ dependência de instrumentação com incerteza ainda não caracterizada.
 
 Utiliza-se a SI/PI-Database, mantida pelo \textit{Institut für Theoretische
 Elektrotechnik} da Universidade Técnica de Hamburgo \citep{schierholz2021,
-hillebrecht2024}, cujo acesso é público mediante aceite dos termos de uso. O
-subconjunto adotado é o \textit{6-Layer PCB based PDN with Two Via Arrays},
-amostrado por hipercubo latino. Por inspeção direta dos arquivos verificou-se:
-\textbf{985} configurações; resposta em formato Touchstone \texttt{.s36p} com 36
-portas e \textbf{334} pontos de frequência entre 1\,MHz e 1\,GHz, com
-espaçamento \emph{linear} de 3\,MHz; volume descompactado de 24\,GB.
+hillebrecht2024}, cujo acesso é público mediante aceite dos termos de uso. A base
+oferece catorze subconjuntos de PDN, relacionados na Tabela~\ref{tab:subconjuntos},
+que totalizam aproximadamente \textbf{135 mil} configurações simuladas. O trabalho
+se propõe a aproveitá-los em conjunto, e não apenas um deles.
+
+\begin{table}[htb]
+\centering
+\caption{Subconjuntos de PDN da SI/PI-Database considerados}
+\label{tab:subconjuntos}
+\footnotesize
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{Subconjunto} & \textbf{Cavidades} & \textbf{Portas} &
+\textbf{Config.} & \textbf{Pontos $f$} \\
+\midrule
+Par de planos com arranjo 11$\times$11      &  1 &     2 & 36\,200 & 334 \\
+2 camadas, arranjo extenso                  &  1 &     2 & 10\,000 & 334 \\
+4 camadas, quatro variantes                 &  3 & 2--28 & 50\,500 & 334 \\
+4 camadas, Eurocard, quatro variantes       &  3 & 4--68 &  8\,000 & 121 \\
+\textbf{6 camadas, 2 arranjos (LHS)}        &  \textbf{5} & \textbf{36} & \textbf{985} & \textbf{334} \\
+8 camadas, 2 arranjos (LHS)                 &  7 &    28 & 10\,000 & 334 \\
+14 camadas, 2 arranjos, barra central       & 13 &     4 & 20\,000 & 334 \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize NOTA: em negrito, a referência controlada. As variantes de 4 camadas
+compreendem topologias de dois e três arranjos com barra central de potência,
+amostragem aleatória e contorno poligonal. Todos os subconjuntos cobrem 1\,MHz a
+1\,GHz e provêm da mesma ferramenta baseada em física, com contorno magnético
+perfeito. Exclui-se o de onda completa de 14 camadas (1--200\,GHz, 39 configurações),
+fora da banda e de fidelidade distinta.
+\\FONTE: SI/PI-Database, TUHH (2025).}
+\end{table}
+
+O subconjunto \textit{6-Layer PCB based PDN with Two Via Arrays}, amostrado por
+hipercubo latino, permanece como \textbf{referência controlada}, por já estar
+caracterizado e verificado: \textbf{985} configurações, Touchstone \texttt{.s36p} com
+36 portas e \textbf{334} pontos entre 1\,MHz e 1\,GHz, com espaçamento \emph{linear}
+de 3\,MHz, em 24\,GB descompactados.
 
 Dos dezessete parâmetros do arquivo tabular, nove permanecem constantes em todas as
 configurações — espessura de metalização, dimensões laterais da placa
@@ -201,8 +242,59 @@ nos dois arranjos de vias, o raio da via (10 a 20\,mil), o raio do
 corrige uma premissa inicial do projeto, que assumia treze variáveis de entrada, e
 tem duas consequências: favorável, porque um espaço de oito dimensões amostrado com
 985 pontos apresenta densidade razoável; e restritiva, porque parâmetros mantidos
-fixos não poderão ter seu efeito estimado, de modo que qualquer diretriz derivada
-estará condicionada aos valores adotados na geração da base.
+fixos nesse subconjunto não têm seu efeito estimável a partir dele isoladamente —
+limitação que a incorporação dos demais subconjuntos ataca diretamente, pois
+condutividade, tangente de perdas, dimensões da placa e espessura de metalização
+\emph{variam} em alguns deles.
+
+\subsection{Harmonização dos subconjuntos}
+\label{subsec:harmonizacao}
+
+A união dos subconjuntos é viável porque três condições se verificam: todos cobrem
+a mesma faixa de 1\,MHz a 1\,GHz; todos provêm da mesma ferramenta de simulação com
+o mesmo tipo de contorno, o que afasta viés sistemático de fidelidade entre eles; e
+o alvo é uma curva de autoimpedância em uma única porta, de modo que a variação no
+número total de portas — de 2 a 68 — não impõe dimensão de saída variável. Restam
+quatro obstáculos, com tratamento definido.
+
+O obstáculo principal é o \textbf{espaço de parâmetros heterogêneo}: cada
+subconjunto varia um subconjunto distinto de um vocabulário comum — cinco parâmetros
+no de 2 camadas, oito no de 6, cerca de dezesseis no de 8, incluindo dimensões da
+placa e propriedades do condutor. Adota-se, por isso, representação por
+\textbf{atributos derivados independentes de topologia}: número de cavidades,
+espessura total do empilhamento, capacitância de placas paralelas acumulada,
+densidade de vias por área, passo normalizado pela espessura da cavidade, razão
+entre raios de \textit{antipad} e de via, razão de aspecto da placa e posição
+relativa da porta — todos calculáveis em qualquer topologia, com os parâmetros
+brutos mantidos onde existam.
+
+Os demais obstáculos são mecânicos. A porta de interesse recebe numeração diferente
+em cada subconjunto, o que exige um adaptador por subconjunto, verificável contra a
+folha de dados correspondente. As quatro variantes Eurocard usam 121 pontos de
+frequência na mesma faixa, contra 334 das demais: adota-se a grade de 334 pontos,
+com interpolação das de menor resolução e registro da origem de cada amostra, para
+que o efeito da interpolação possa ser isolado. E os cerca de 119\,GB comprimidos do
+conjunto completo excederiam o armazenamento se descompactados de uma vez, de modo
+que o pré-processamento é \textbf{incremental}: cada subconjunto é baixado, reduzido
+à curva de impedância na porta de interesse — compressão de cerca de quatro ordens
+de grandeza — e tem os arquivos brutos descartados antes do próximo. Há ainda
+desenhos de amostragem distintos, o que exige manter o experimento controlado de
+curva de aprendizado restrito aos subconjuntos por hipercubo latino, aproximadamente
+uniformes no espaço de projeto, deixando os demais para os testes de generalização.
+
+O ganho não é apenas de volume. Com o número de cavidades variando de 1 a 13, essa
+grandeza torna-se atributo observável, o que permite testar diretamente se a
+capacitância efetiva escala com o número de cavidades em paralelo — exatamente o
+desvio que a investigação preliminar detectou e não pôde explicar com um único
+subconjunto de cinco cavidades. Confirmada a lei, o termo quase-estático passa a
+restringir também a magnitude, e não apenas a forma. E a variedade de topologias
+permite avaliar generalização por validação \textbf{com topologia retida} — treinar
+em parte das contagens de camadas e testar nas retidas —, o que converte a principal
+limitação de validade externa do trabalho em resultado mensurável. Cabe registrar
+que o grupo mantenedor da base já publicou predição de perfis de impedância de PDN
+por aprendizado de máquina sobre o subconjunto de 2 camadas \citep{hassab2025}; o
+presente trabalho se distingue por incorporar a física à função de perda, por operar
+sobre a família completa de topologias e pela camada normativa.
 
 Três riscos identificados na caracterização serão tratados antes da modelagem. A
 \textbf{ambiguidade de unidades} — a documentação não declara as unidades das
@@ -372,9 +464,13 @@ acompanhado da faixa de validade e do erro esperado de cada uma.
 
 \subsection{Delimitações e ameaças à validade}
 
-As conclusões restringem-se a PDNs de seis camadas com dimensões laterais fixas e
-dois arranjos de vias em posições fixas, não sendo extrapoláveis a geometrias
-arbitrárias. Os rótulos são produto de simulação, não de medição, de modo que erros
+As conclusões restringem-se a pares de planos com arranjos de vias retangulares,
+não sendo extrapoláveis a geometrias arbitrárias; contornos não retangulares são
+apenas parcialmente cobertos pelo subconjunto poligonal. O alcance em número de
+camadas passa a ser objeto de medição em vez de premissa, mas a validação com
+topologia retida pode revelar que a generalização não se sustenta — o que
+delimitaria o escopo de uso da ferramenta e é igualmente reportável. Os rótulos são
+produto de simulação, não de medição, de modo que erros
 sistemáticos do modelo de referência propagam-se ao substituto — a base foi validada
 contra solver de onda completa pelos autores originais \citep{schierholz2021}, o que
 limita, mas não elimina, essa ameaça. E um ganho eventualmente observado poderia
@@ -415,8 +511,11 @@ de acompanhamento quinzenais.
 \subsection{Recursos materiais e computacionais}
 
 O trabalho não requer aquisição de equipamentos nem licenças comerciais. Basta uma
-estação de trabalho pessoal com 8\,GB de memória e 60\,GB livres em disco —
-suficientes para a base bruta de 24\,GB, a base processada e os resultados. A cadeia
+estação de trabalho pessoal com 8\,GB de memória e cerca de 60\,GB livres em disco.
+Esse valor é suficiente mesmo com a incorporação de todos os subconjuntos, porque o
+pré-processamento é incremental: o disco precisa acomodar apenas o maior
+subconjunto por vez, e não os cerca de 119\,GB comprimidos do conjunto completo,
+conforme a estratégia da Seção~\ref{subsec:harmonizacao}. A cadeia
 de software é integralmente livre: Python com \texttt{numpy}, \texttt{pandas} e
 \texttt{scipy}; \texttt{scikit-rf} para arquivos Touchstone; \texttt{scikit-learn} e
 \texttt{LightGBM} para as referências; \texttt{PyTorch} para o modelo informado por
@@ -425,12 +524,15 @@ física; \texttt{Optuna} e \texttt{pymoo} para otimização; \texttt{SHAP} e
 \texttt{Hydra}, Git e \LaTeX{} para registro, testes, configuração, versionamento e
 redação.
 
-O dimensionamento foi verificado quanto à viabilidade: o treinamento de um perceptron
-multicamadas sobre 985 amostras de oito dimensões, com saída de 334 pontos, é
-executável em CPU em poucos minutos. O gargalo real é o pré-processamento dos 24\,GB
-de arquivos Touchstone, cujo tempo de leitura medido projeta cerca de dois minutos em
-passagem única, com resultado persistido. Como contingência, prevê-se o uso do Google
-Colab em sua camada gratuita.
+O dimensionamento foi verificado quanto à viabilidade. O treinamento de um
+perceptron multicamadas sobre o subconjunto de referência é executável em CPU em
+poucos minutos; na ordem de $10^5$ amostras, ainda em CPU, projeta-se treinamento em
+horas, compatível com execuções noturnas. O gargalo real é o pré-processamento: o
+tempo de leitura medido no subconjunto de referência, de cerca de 0{,}1\,s por
+arquivo, projeta aproximadamente dois minutos para suas 985 configurações e algo da
+ordem de poucas horas para o conjunto completo, em passagem única cujo resultado é
+persistido. Como contingência para as etapas de otimização e de treinamento em
+escala, prevê-se o uso do Google Colab em sua camada gratuita.
 
 \subsection{Recursos financeiros}
 
@@ -450,10 +552,14 @@ validação experimental complementar, item opcional fora do caminho crítico.
 impedância de PDNs de seis camadas, com $R^2 > 0{,}90$ sobre $|Z|_{\max}$ em
 conjunto de teste isolado e latência de inferência inferior a 1\,ms;
 
+\item um conjunto de dados harmonizado, reprodutível a partir da base original,
+reunindo os subconjuntos de PDN de 1 a 13 cavidades sob uma representação de
+atributos independente de topologia;
+
 \item uma quantificação do efeito da informação física sobre o erro de
 generalização em função do volume de dados de treinamento, com significância
 estatística avaliada, e da redução na incidência de predições fisicamente
-inconsistentes;
+inconsistentes, acompanhada da avaliação de generalização com topologia retida;
 
 \item uma camada normativa que traduz a impedância predita em margem estimada em
 decibéis contra as curvas-limite da CISPR 32 e das normas genéricas
@@ -536,7 +642,8 @@ está detalhada na Tabela~\ref{tab:crono}.
 \midrule
 Revisão bibliográfica sistemática           & \mes & \mes & \mes &      &      &      &      &      &      &      \\
 Caracterização e validação da base          & \mes & \mes &      &      &      &      &      &      &      &      \\
-Pipeline de extração de impedância          &      & \mes & \mes &      &      &      &      &      &      &      \\
+Pipeline incremental de extração            &      & \mes & \mes &      &      &      &      &      &      &      \\
+Harmonização dos subconjuntos de PDN        &      &      & \mes & \mes &      &      &      &      &      &      \\
 Levantamento normativo e curvas-limite      &      & \mes & \mes &      &      &      &      &      &      &      \\
 Análise exploratória dos dados              &      &      & \mes &      &      &      &      &      &      &      \\
 Modelos de referência                       &      &      & \mes & \mes &      &      &      &      &      &      \\
@@ -545,6 +652,7 @@ Entrega e apresentação de TCC I             &      &      &      &      & \mes
 Termos físicos da função de perda           &      &      &      &      &      & \mes & \mes &      &      &      \\
 Calibração dos pesos e curva de aprendizado &      &      &      &      &      &      & \mes & \mes &      &      \\
 Camada normativa de estimativa de margem    &      &      &      &      &      &      & \mes & \mes &      &      \\
+Generalização com topologia retida          &      &      &      &      &      &      &      & \mes &      &      \\
 Estabilidade do ordenamento                 &      &      &      &      &      &      &      & \mes &      &      \\
 Otimização multiobjetivo do empilhamento    &      &      &      &      &      &      &      & \mes & \mes &      \\
 Interpretabilidade e diretrizes de projeto  &      &      &      &      &      &      &      &      & \mes &      \\
@@ -560,8 +668,9 @@ Revisão final e defesa                      &      &      &      &      &      
 Adotam-se quatro marcos de decisão com critérios objetivos de continuidade, para
 permitir redirecionamento antecipado em vez de constatação tardia de
 inviabilidade: em setembro de 2026, o pipeline de extração de $Z(f)$ validado
-contra invariantes analíticas em toda a base; em novembro de 2026, a melhor
-referência atingindo $R^2 > 0{,}80$ sobre $|Z|_{\max}$; em abril de 2027, o modelo
+contra invariantes analíticas; em novembro de 2026, ao menos quatro subconjuntos
+harmonizados e a melhor referência atingindo $R^2 > 0{,}80$ sobre $|Z|_{\max}$ no
+subconjunto de referência; em abril de 2027, o modelo
 informado por física superando a ablação em ao menos uma fração de treinamento
 com significância estatística; e em junho de 2027, a fronteira de Pareto
 verificada por simulação de referência. O terceiro marco não condiciona a validade
