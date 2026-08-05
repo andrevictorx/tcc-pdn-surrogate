@@ -16,8 +16,8 @@ mesmos pacotes e a mesma bibliografia:
 
 | Documento | Fonte | Saída | Para quê |
 |---|---|---|---|
-| **Plano de trabalho** (18 pág.) | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` | **a entrega à comissão** — segue estritamente a lista do Anexo I |
-| **Documento completo** (49 pág.) | `main.tex` + `0-iniciais/` … `a2-integridade/` | `Documento_completo_com_apendices.pdf` | leitura pessoal e base do texto de TCC — tem referencial teórico, hipóteses, justificativa e apêndices |
+| **Plano de trabalho** (11 pág.) | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` | **a entrega à comissão** — segue estritamente a lista do Anexo I |
+| **Documento completo** (48 pág.) | `main.tex` + `0-iniciais/` … `a2-integridade/` | `Documento_completo_com_apendices.pdf` | leitura pessoal e base do texto de TCC — tem referencial teórico, hipóteses, justificativa e apêndices |
 
 O `plano.tex` e o `main.tex` quase não têm texto: eles só **montam** o documento.
 O conteúdo está em arquivos separados.
@@ -248,7 +248,7 @@ O log do plano é `plano.log`; o do documento completo, `main_ap.log`.
 make clean && make
 /usr/bin/grep -c "Undefined" plano.log    # 0
 /usr/bin/grep -c "??" plano.log           # 0
-pdfinfo Plano_de_Trabalho_*.pdf | grep Pages   # deve dar 18
+pdfinfo Plano_de_Trabalho_*.pdf | grep Pages   # deve dar 11
 ```
 
 Depois abra o PDF e confira a olho:

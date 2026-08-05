@@ -1,19 +1,25 @@
 % =============================================================================
 % Referências bibliográficas
 %
-% NOTA DE PROCEDIMENTO (ver Apêndice B, Seção "Verificação de originalidade"):
-% todos os registros abaixo foram conferidos na fonte primária via Crossref
-% (api.crossref.org) em 01/08/2026. Título, autoria, veículo, ano, volume,
-% páginas e DOI correspondem ao registro do editor. Nenhuma referência foi
-% incluída com base apenas em indicação de ferramenta assistiva.
+% NOTA DE PROCEDIMENTO. Todos os registros foram conferidos na fonte primária:
+%   - artigos e o livro da Springer: API do Crossref (api.crossref.org), pelo DOI,
+%     em 05/08/2026 — título, autoria, veículo, ano, volume e páginas conferem
+%     com o registro do editor;
+%   - livros sem DOI: catálogo da Open Library, pelo ISBN, em 05/08/2026, e
+%     página de copyright do próprio exemplar;
+%   - normas IEC/CISPR: catálogo oficial do editor (webstore.iec.ch) em
+%     05/08/2026, incluindo verificação de edição vigente.
+% Nenhuma referência foi incluída com base apenas em indicação de ferramenta
+% assistiva, e nenhuma entrada não verificável foi mantida.
+%
+% Autoria: conforme a NBR 6023, obras com mais de três autores são registradas
+% pelo primeiro seguido de "et al." — daí o "and others" nas entradas abaixo.
 % =============================================================================
 
 % ---------- Base de dados SI/PI ----------------------------------------------
 
 @article{schierholz2021,
-  author  = {Schierholz, Morten and Sanchez-Masis, Allan and Carmona-Cruz, Allan
-             and Duan, Xiaomin and Roy, Kallol and Yang, Cheng and
-             Rimolo-Donadio, Renato and Schuster, Christian},
+  author  = {Schierholz, Morten and others},
   title   = {{SI/PI}-Database of {PCB}-Based Interconnects for Machine Learning
              Applications},
   journal = {IEEE Access},
@@ -24,8 +30,7 @@
 }
 
 @article{hillebrecht2024,
-  author  = {Hillebrecht, Til and Schierholz, Morten and Hassab, Youcef and
-             Alfert, Johannes and Schuster, Christian},
+  author  = {Hillebrecht, Til and others},
   title   = {Generation and Application of a Very Large Dataset for Signal
              Integrity Via Array and Link Analysis},
   journal = {IEEE Transactions on Electromagnetic Compatibility},
@@ -36,11 +41,10 @@
   doi     = {10.1109/TEMC.2024.3450307}
 }
 
-% ---------- Modelos substitutos em SI/PI --------------------------------------
+% ---------- Modelos substitutos em integridade de sinal e potência -----------
 
 @article{swaminathan2020,
-  author  = {Swaminathan, Madhavan and Torun, Hakki Mert and Yu, Huan and
-             Hejase, Jose Ale and Becker, Wiren Dale},
+  author  = {Swaminathan, Madhavan and others},
   title   = {Demystifying Machine Learning for Signal and Power Integrity
              Problems in Packaging},
   journal = {IEEE Transactions on Components, Packaging and Manufacturing
@@ -53,9 +57,7 @@
 }
 
 @article{zhang2021,
-  author  = {Zhang, Ling and Juang, Jack and Kiguradze, Zurab and Pu, Bo and
-             Jin, Shuai and Wu, Songping and Yang, Zhiping and Fan, Jun and
-             Hwang, Chulsoon},
+  author  = {Zhang, Ling and others},
   title   = {Fast impedance prediction for power distribution network using
              deep learning},
   journal = {International Journal of Numerical Modelling: Electronic Networks,
@@ -67,11 +69,8 @@
   doi     = {10.1002/jnm.2956}
 }
 
-% ---------- Consistência física em modelos neurais ---------------------------
-
 @article{torun2020,
-  author  = {Torun, Hakki Mert and Durgun, Ahmet Cemal and Aygun, Kemal and
-             Swaminathan, Madhavan},
+  author  = {Torun, Hakki Mert and others},
   title   = {Causal and Passive Parameterization of {S}-Parameters Using Neural
              Networks},
   journal = {IEEE Transactions on Microwave Theory and Techniques},
@@ -82,45 +81,17 @@
   doi     = {10.1109/TMTT.2020.3011449}
 }
 
-@inproceedings{torun2019,
-  author    = {Torun, Hakki Mert and Durgun, Ahmet Cemal and Aygun, Kemal and
-               Swaminathan, Madhavan},
-  title     = {Enforcing Causality and Passivity of Neural Network Models of
-               Broadband {S}-Parameters},
-  booktitle = {2019 IEEE 28th Conference on Electrical Performance of Electronic
-               Packaging and Systems (EPEPS)},
-  pages     = {1--3},
-  year      = {2019},
-  doi       = {10.1109/EPEPS47316.2019.193234}
-}
-
-% ---------- Otimização de capacitores de desacoplamento ----------------------
-
-@inproceedings{zhang2020decap,
-  author    = {Zhang, Ling and Huang, Wenchang and Juang, Jack and Lin, Hank and
-               Tseng, Bin-Chyi and Hwang, Chulsoon},
-  title     = {An Enhanced Deep Reinforcement Learning Algorithm for Decoupling
-               Capacitor Selection in Power Distribution Network Design},
-  booktitle = {2020 IEEE International Symposium on Electromagnetic
-               Compatibility and Signal/Power Integrity (EMCSI)},
-  pages     = {245--250},
+@book{jiang2020,
+  author    = {Jiang, Ping and Zhou, Qi and Shao, Xinyu},
+  title     = {Surrogate Model-Based Engineering Design and Optimization},
+  series    = {Springer Tracts in Mechanical Engineering},
+  publisher = {Springer Nature Singapore},
+  address   = {Singapore},
   year      = {2020},
-  doi       = {10.1109/EMCSI38923.2020.9191512}
+  doi       = {10.1007/978-981-15-0731-1}
 }
 
-@misc{duan2024,
-  author       = {Duan, Yuanyuan and Feng, Haiyang and Yu, Zhiping and
-                  Wu, Hanming and Shao, Leilai and Zhu, Xiaolei},
-  title        = {Hierarchical Decoupling Capacitor Optimization for Power
-                  Distribution Network of {2.5D} {ICs} with Co-Analysis of
-                  Frequency and Time Domains Based on Deep Reinforcement
-                  Learning},
-  howpublished = {arXiv:2407.04737},
-  year         = {2024},
-  note         = {Preprint}
-}
-
-% ---------- Aprendizado informado por física ---------------------------------
+% ---------- Aprendizado informado por física e prática de aprendizado --------
 
 @article{raissi2019,
   author  = {Raissi, Maziar and Perdikaris, Paris and Karniadakis, George Em},
@@ -134,11 +105,99 @@
   doi     = {10.1016/j.jcp.2018.10.045}
 }
 
+@book{geron2022,
+  author    = {G\'eron, Aur\'elien},
+  title     = {Hands-On Machine Learning with {Scikit-Learn}, {Keras}, and
+               {TensorFlow}},
+  edition   = {3},
+  publisher = {O'Reilly Media},
+  address   = {Sebastopol},
+  year      = {2022},
+  note      = {ISBN 978-1-098-12597-4}
+}
+
+% ---------- Integridade de sinal e potência, projeto digital de alta velocidade
+
+@book{bogatin2010,
+  author    = {Bogatin, Eric},
+  title     = {Signal and Power Integrity --- Simplified},
+  edition   = {2},
+  series    = {Prentice Hall Modern Semiconductor Design Series},
+  publisher = {Prentice Hall},
+  address   = {Upper Saddle River},
+  year      = {2010},
+  note      = {ISBN 978-0-13-234979-6}
+}
+
+@book{johnson1993,
+  author    = {Johnson, Howard W. and Graham, Martin},
+  title     = {High-Speed Digital Design: A Handbook of Black Magic},
+  publisher = {Prentice Hall},
+  address   = {Upper Saddle River},
+  year      = {1993},
+  note      = {ISBN 0-13-395724-1}
+}
+
+% ---------- Compatibilidade eletromagnética -----------------------------------
+
+@book{ott2009,
+  author    = {Ott, Henry W.},
+  title     = {Electromagnetic Compatibility Engineering},
+  publisher = {John Wiley \& Sons},
+  address   = {Hoboken},
+  year      = {2009},
+  note      = {ISBN 978-0-470-18930-6}
+}
+
+@book{paul2006,
+  author    = {Paul, Clayton R.},
+  title     = {Introduction to Electromagnetic Compatibility},
+  edition   = {2},
+  publisher = {Wiley-Interscience},
+  address   = {Hoboken},
+  year      = {2006},
+  note      = {ISBN 978-0-471-75500-5}
+}
+
+% ---------- Normas de emissão (edições vigentes em 05/08/2026) ----------------
+
+@manual{cispr32,
+  organization = {International Electrotechnical Commission},
+  author       = {{International Electrotechnical Commission}},
+  title        = {{CISPR} 32: Electromagnetic compatibility of multimedia
+                  equipment --- Emission requirements},
+  address      = {Geneva},
+  edition      = {2.0},
+  year         = {2015},
+  note         = {Vers\~ao consolidada {CISPR} 32:2015+{AMD1}:2019}
+}
+
+@manual{iec610006m3,
+  organization = {International Electrotechnical Commission},
+  author       = {{International Electrotechnical Commission}},
+  title        = {{IEC} 61000-6-3: Electromagnetic compatibility ({EMC}) ---
+                  Part 6-3: Generic standards --- Emission standard for
+                  equipment in residential locations},
+  address      = {Geneva},
+  edition      = {4.0},
+  year         = {2026}
+}
+
+@manual{iec610006m4,
+  organization = {International Electrotechnical Commission},
+  author       = {{International Electrotechnical Commission}},
+  title        = {{IEC} 61000-6-4: Electromagnetic compatibility ({EMC}) ---
+                  Part 6-4: Generic standards --- Emission standard for
+                  industrial environments},
+  address      = {Geneva},
+  edition      = {3.0},
+  year         = {2018}
+}
+
 % ---------- Otimização e interpretabilidade ----------------------------------
 
 @article{deb2002,
-  author  = {Deb, Kalyanmoy and Pratap, Amrit and Agarwal, Sameer and
-             Meyarivan, T.},
+  author  = {Deb, Kalyanmoy and others},
   title   = {A fast and elitist multiobjective genetic algorithm: {NSGA-II}},
   journal = {IEEE Transactions on Evolutionary Computation},
   volume  = {6},
@@ -151,17 +210,16 @@
 @inproceedings{lundberg2017,
   author    = {Lundberg, Scott M. and Lee, Su-In},
   title     = {A Unified Approach to Interpreting Model Predictions},
-  booktitle = {Advances in Neural Information Processing Systems 30 (NIPS 2017)},
+  booktitle = {Advances in Neural Information Processing Systems 30
+               ({NIPS} 2017)},
   pages     = {4765--4774},
-  year      = {2017},
-  note      = {arXiv:1705.07874}
+  year      = {2017}
 }
 
 % ---------- Produção do grupo de pesquisa (orientação) -----------------------
 
 @article{tessaro2026,
-  author  = {Tessaro, Iron and Ayala, Helon Vicente Hultmann and
-             Mariani, Viviana Cocco and Coelho, Leandro dos Santos},
+  author  = {Tessaro, Iron and others},
   title   = {Robust ensemble learning framework through symbolic regression for
              soft sensor modeling},
   journal = {Journal of Computational Science},
@@ -169,20 +227,6 @@
   pages   = {102886},
   year    = {2026},
   doi     = {10.1016/j.jocs.2026.102886}
-}
-
-@article{takara2026,
-  author  = {Takara, Lucas de Azevedo and Souza, Rodrigo Clemente Thom de and
-             Mariani, Viviana Cocco and Coelho, Leandro dos Santos and
-             Stefenon, Stefano Frizzo},
-  title   = {Multi-Scale Convolutional {Chebyshev} {Kolmogorov}-{Arnold}
-             Networks Using Conformal Prediction for Photovoltaic Power
-             Forecasting},
-  journal = {IEEE Access},
-  volume  = {14},
-  pages   = {81170--81194},
-  year    = {2026},
-  doi     = {10.1109/ACCESS.2026.3694780}
 }
 
 @article{coelho2010,
@@ -195,83 +239,4 @@
   pages   = {1676--1683},
   year    = {2010},
   doi     = {10.1016/j.eswa.2009.06.044}
-}
-
-% ---------- Normalização ------------------------------------------------------
-
-@manual{ufpr2024,
-  organization = {Universidade Federal do Paraná},
-  author       = {{Universidade Federal do Paraná}},
-  title        = {Manual de normalização de documentos científicos de acordo com
-                  as normas da {ABNT}},
-  address      = {Curitiba},
-  publisher    = {Sistema de Bibliotecas da UFPR},
-  year         = {2024}
-}
-
-% ATENÇÃO: registro extraído da folha de dados do subconjunto "2-Layer PCB based
-% PDN with Large Via Array" (SI/PI-Database, out. 2025), que o cita como
-% publicado. Confirmar volume, número e páginas na fonte primária.
-@article{hassab2025,
-  author  = {Hassab, Youcef and Heßling, Jan and Schuster, Christian},
-  title   = {Machine Learning Driven Fast Prediction of Self- and
-             Transfer-Impedance Profiles for the Modeling of {PCB}-Based Power
-             Delivery Networks},
-  journal = {IEEE Transactions on Signal and Power Integrity},
-  year    = {2025}
-}
-
-% ---------- Normas de emissão e modelos de radiação ---------------------------
-%
-% ATENÇÃO: os cinco registros a seguir foram incluídos em 04/08/2026 e NÃO
-% passaram pela conferência via Crossref descrita no cabeçalho — normas técnicas
-% e livros não possuem DOI indexado. Antes da entrega final, confirmar edição e
-% ano de cada um no catálogo do editor (webstore.iec.ch para IEC/CISPR) ou no
-% acervo da biblioteca.
-
-@manual{cispr32,
-  organization = {International Electrotechnical Commission},
-  author       = {{International Electrotechnical Commission}},
-  title        = {{CISPR} 32: Electromagnetic compatibility of multimedia
-                  equipment --- Emission requirements},
-  address      = {Geneva},
-  edition      = {2},
-  year         = {2015}
-}
-
-@manual{iec610006m3,
-  organization = {International Electrotechnical Commission},
-  author       = {{International Electrotechnical Commission}},
-  title        = {{IEC} 61000-6-3: Electromagnetic compatibility ({EMC}) ---
-                  Part 6-3: Generic standards --- Emission standard for
-                  equipment in residential environments},
-  address      = {Geneva},
-  year         = {2020}
-}
-
-@manual{iec610006m4,
-  organization = {International Electrotechnical Commission},
-  author       = {{International Electrotechnical Commission}},
-  title        = {{IEC} 61000-6-4: Electromagnetic compatibility ({EMC}) ---
-                  Part 6-4: Generic standards --- Emission standard for
-                  industrial environments},
-  address      = {Geneva},
-  year         = {2018}
-}
-
-@book{paul2006,
-  author    = {Paul, Clayton R.},
-  title     = {Introduction to Electromagnetic Compatibility},
-  edition   = {2},
-  publisher = {Wiley},
-  address   = {Hoboken},
-  year      = {2006}
-}
-
-@book{ott2009,
-  author    = {Ott, Henry W.},
-  title     = {Electromagnetic Compatibility Engineering},
-  publisher = {Wiley},
-  address   = {Hoboken},
-  year      = {2009}
 }

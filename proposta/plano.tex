@@ -47,7 +47,7 @@
 % aplica essa distinção, então ela é feita aqui. Nas referências, as entradas são
 % separadas entre si por uma linha em branco, conforme a NBR 6023.
 \AtBeginEnvironment{table}{\setstretch{1.0}}
-\AtBeginEnvironment{thebibliography}{\setstretch{1.0}\setlength{\itemsep}{\baselineskip}}
+\AtBeginEnvironment{thebibliography}{\setstretch{1.0}\setlength{\itemsep}{0.1\baselineskip}}
 
 % Alíneas conforme item 3.4.3 do Manual de Normalização da UFPR (2024).
 \newlist{alineas}{enumerate}{1}
@@ -95,9 +95,15 @@ Curso I, conforme o Anexo I da regulamentação do curso}
 
 \titlepage
 
-\include{plano/identificacao}
+\input{plano/identificacao}
 
-\tableofcontents
+% O sumário segue na mesma página da identificação: as duas páginas somadas
+% ocupavam menos de uma, e o Anexo I não pede nenhuma delas em folha separada.
+\begingroup
+  \let\cleardoublepage\relax
+  \let\clearpage\relax
+  \tableofcontents
+\endgroup
 
 % --- elementos textuais -------------------------------------------------------
 

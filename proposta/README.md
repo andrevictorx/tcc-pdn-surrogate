@@ -5,8 +5,8 @@ bibliografia:
 
 | Documento | Fonte | Saída | Papel |
 |---|---|---|---|
-| **Plano de trabalho** | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` (18 pág.) | **entrega à comissão de TCC** — segue estrita e exclusivamente a lista de itens do Anexo I |
-| **Documento completo** | `main.tex` + `0-iniciais/` … | `Documento_completo_com_apendices.pdf` (49 pág.) | leitura pessoal e base do texto de TCC — referencial teórico, hipóteses, justificativa, apêndices |
+| **Plano de trabalho** | `plano.tex` + `plano/` | `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf` (11 pág.) | **entrega à comissão de TCC** — segue estrita e exclusivamente a lista de itens do Anexo I |
+| **Documento completo** | `main.tex` + `0-iniciais/` … | `Documento_completo_com_apendices.pdf` (48 pág.) | leitura pessoal e base do texto de TCC — referencial teórico, hipóteses, justificativa, apêndices |
 
 No plano, o capítulo se chama *Descrição do projeto* (expressão do próprio Anexo)
 e cada seção é um dos itens 2 a 9, na ordem em que o Anexo os enumera; o item 1
@@ -103,12 +103,15 @@ correspondente — ao renumerar seções, conferir o quadro.
 
 ## Estado
 
-Plano de trabalho: 18 páginas, 14 referências. Documento completo: 49 páginas.
-Referências verificadas via Crossref em 2026-08-01, **exceto** as cinco entradas de
-norma técnica e livro acrescentadas em 2026-08-04 (CISPR 32, IEC 61000-6-3, IEC
-61000-6-4, Paul 2006, Ott 2009) e a de Hassab et al. (2025), extraída de folha de
-dados da base, que não têm DOI indexado e cujo ano e edição devem
-ser conferidos no catálogo do editor antes da entrega final.
+Plano de trabalho: 11 páginas, 18 referências. Documento completo: 48 páginas.
+
+**Todas** as referências foram conferidas na fonte primária em 2026-08-05: artigos e
+o livro da Springer pelo DOI via API do Crossref; livros sem DOI pelo ISBN via Open
+Library e pela página de copyright do exemplar; normas IEC/CISPR no catálogo oficial
+(webstore.iec.ch), com verificação da edição vigente — o que trouxe a IEC 61000-6-3
+para a 4ª edição (2026) e a CISPR 32 para a versão consolidada com a AMD1:2019.
+Entradas não verificáveis foram removidas. O acervo local das obras está em
+[`../referencias/`](../referencias/README.md).
 
 Compilação dos dois sem erros, sem referências indefinidas e sem *warnings* do
 LaTeX; um *overfull box* de 2,5 pt na lista de referências do documento completo.

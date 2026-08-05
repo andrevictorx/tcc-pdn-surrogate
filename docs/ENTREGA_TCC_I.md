@@ -16,15 +16,15 @@ ambos assinados pelo orientador:
 
 | # | Documento | Quem produz | Estado |
 |---|-----------|-------------|--------|
-| 1 | **Plano de trabalho** (Anexo I) | estudante | ✅ pronto — `proposta/Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`, 18 páginas |
-| 2 | **Declaração de orientação** (Anexo III) | orientador preenche e assina | ⬜ PDF original em `anexo_iii_declaracao_de_orientacao_de_tcc.pdf`, em branco |
+| 1 | **Plano de trabalho** (Anexo I) | estudante | ✅ pronto — `proposta/Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`, 11 páginas |
+| 2 | **Declaração de orientação** (Anexo III) | orientador preenche e assina | ⬜ PDF original em `docs/normas-ufpr/anexo_iii_...pdf`, em branco |
 
 O **Anexo II** (relatório final de TCC I) **não** entra agora — é o documento de
 fim do semestre, para a terceira avaliação de TCC I.
 
 > **Não confundir os dois PDFs de `proposta/`.** O que vai para a comissão é o
-> **plano de trabalho** (18 páginas), que segue estritamente a lista do Anexo I.
-> O `Documento_completo_com_apendices.pdf` (49 páginas, com referencial teórico,
+> **plano de trabalho** (11 páginas), que segue estritamente a lista do Anexo I.
+> O `Documento_completo_com_apendices.pdf` (48 páginas, com referencial teórico,
 > hipóteses, justificativa e apêndices) é material de leitura pessoal e base para
 > o texto de TCC — **não é a entrega**.
 
@@ -72,7 +72,7 @@ O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparece
 
 1. **Até qui 06/08** — enviar ao Prof. Leandro, por e-mail, dois anexos:
    - `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`
-   - `anexo_iii_declaracao_de_orientacao_de_tcc.pdf` (em branco)
+   - `docs/normas-ufpr/anexo_iii_declaracao_de_orientacao_de_tcc.pdf` (em branco)
 2. **Orientador** — revisa o plano, preenche e assina o Anexo III, e devolve.
 3. **Encaminhamento à comissão** — segue o **edital do semestre 2026/2**,
    publicado na seção específica do site do curso. Como o trabalho é individual,
@@ -109,7 +109,7 @@ TCC I tem **três** avaliações, e todas reaproveitam o que já está escrito:
 | 2ª | fim do semestre | **seminário perante banca**, sem documento escrito obrigatório |
 | 3ª | fim do período letivo | **relatório do Anexo II**, avaliado só pelo orientador |
 
-A rubrica sugerida para TCC I (`sugestoes_avaliacao_tcc_1.pdf`) distribui 100
+A rubrica sugerida para TCC I (`docs/normas-ufpr/sugestoes_avaliacao_tcc_1.pdf`) distribui 100
 pontos assim — 70 de conteúdo, 30 de defesa:
 
 | Critério | Pontos | Onde está coberto |
@@ -136,8 +136,8 @@ projeto**. Vale ter isso em vista ao longo do semestre.
 
 ## 7. Arquivos de referência
 
-- `anexo_i_-_normas_para_plano_de_trabalho.pdf` — checklist do plano (atendido)
-- `anexo_ii_-_normas_para_relatorio_final_de_tcc_i.pdf` — relatório de dezembro
-- `anexo_iii_declaracao_de_orientacao_de_tcc.pdf` — declaração a assinar
-- `sugestoes_avaliacao_tcc_1.pdf` — rubrica de 100 pontos
+- `docs/normas-ufpr/anexo_i_-_normas_para_plano_de_trabalho.pdf` — checklist do plano (atendido)
+- `docs/normas-ufpr/anexo_ii_-_normas_para_relatorio_final_de_tcc_i.pdf` — relatório de dezembro
+- `docs/normas-ufpr/anexo_iii_declaracao_de_orientacao_de_tcc.pdf` — declaração a assinar
+- `docs/normas-ufpr/sugestoes_avaliacao_tcc_1.pdf` — rubrica de 100 pontos
 - `proposta/README.md` — como recompilar o documento

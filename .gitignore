@@ -58,6 +58,15 @@ parameter_edit.csv
 *.msg
 *.eml
 
+# Acervo de referências: obras de terceiros e folhas de dados da TUHH.
+# Só o índice (referencias/README.md) é versionado — ver a nota lá.
+referencias/livros/
+referencias/artigos/
+referencias/datasheets-si-pi/
+docs/normas-ufpr/
+*.epub
+*.djvu
+
 # Data (large files)
 data/raw/**/*.S*p
 data/raw/**/*.zip

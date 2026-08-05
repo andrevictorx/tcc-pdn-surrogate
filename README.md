@@ -56,8 +56,8 @@ impedância — que serve de função objetivo à otimização do empilhamento.
 
 | Etapa | Estado |
 |---|---|
-| Plano de trabalho (Anexo I) | ✅ concluído — 18 páginas, `proposta/plano.tex` |
-| Documento de aprofundamento | ✅ 49 páginas, `proposta/main.tex` |
+| Plano de trabalho (Anexo I) | ✅ concluído — 11 páginas, `proposta/plano.tex` |
+| Documento de aprofundamento | ✅ 48 páginas, `proposta/main.tex` |
 | Caracterização da base de dados | 🔄 verificada sobre amostra de 40 configurações |
 | Pipeline de extração de impedância | 🔄 em implementação (`src/data/touchstone.py`) |
 | Modelos de referência | ⬜ |
@@ -110,6 +110,7 @@ scripts/      utilitários e verificações reproduzíveis
 notebooks/    exploração
 experiments/  rastreamento de experimentos
 proposta/     documentos LaTeX: plano de trabalho (entrega) e texto completo
+referencias/  acervo local das obras citadas (não versionado; ver o índice)
 docs/         documentação de processo
 ```
 
@@ -145,8 +146,8 @@ Requer a base da TUHH disponível localmente.
 
 ```bash
 cd proposta
-make            # plano de trabalho (Anexo I), 18 páginas
-make completo   # documento de aprofundamento, 49 páginas
+make            # plano de trabalho (Anexo I), 11 páginas
+make completo   # documento de aprofundamento, 48 páginas
 ```
 
 Detalhes em [`proposta/README.md`](proposta/README.md); guia de edição em
