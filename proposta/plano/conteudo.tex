@@ -1,5 +1,5 @@
 % =============================================================================
-% Descrição do projeto — itens 2 a 9 do Anexo I, na ordem do Anexo.
+% Descrição do projeto. Itens 2 a 9 do Anexo I, na ordem do Anexo.
 %   1.1 Introdução                     (item 2)
 %   1.2 Objetivos                      (item 3)
 %   1.3 Público alvo                   (item 4)
@@ -9,6 +9,10 @@
 %   1.7 Contribuição / formação        (item 8)
 %   1.8 Cronograma                     (item 9)
 % O item 1 (título) está na folha de rosto; o item 10, em REFERÊNCIAS.
+%
+% Convenções de escrita adotadas neste arquivo: sem travessões, sem negrito e sem
+% realce no corpo do texto. Itálico apenas em palavras estrangeiras, como pede a
+% norma. Vocabulário simples, formal e objetivo.
 % =============================================================================
 
 \chapter{Descrição do projeto}
@@ -17,55 +21,57 @@
 \section{Introdução}
 \label{sec:introducao}
 
-Interfaces digitais contemporâneas — PCI Express Gen 6, DDR5, Ethernet de
-112\,Gb/s — impõem tempos de transição de dezenas de picossegundos, deslocando
-conteúdo espectral relevante para dezenas de gigahertz. Nesse regime, trilhas
-comportam-se como linhas de transmissão, pares de planos como cavidades
-ressonantes e descontinuidades geométricas como antenas não intencionais
+Interfaces digitais atuais, como PCI Express Gen 6, DDR5 e Ethernet de 112\,Gb/s,
+impõem tempos de transição de dezenas de picossegundos, o que leva conteúdo
+espectral relevante para dezenas de gigahertz. Nesse regime, trilhas comportam-se
+como linhas de transmissão, pares de planos como cavidades ressonantes e
+descontinuidades geométricas como antenas não intencionais
 \citep{johnson1993,ott2009}. A rede de distribuição de energia (\textit{power
 delivery network}, PDN) ocupa posição central: os modos próprios da cavidade
-formada pelos planos produzem picos na curva de impedância $Z(f)$, que amplificam
-o ruído de comutação e o convertem em emissão irradiada pelas bordas da placa e
-pelos cabos a ela conectados \citep{bogatin2010}.
+formada pelos planos produzem picos na curva de impedância $Z(f)$, que amplificam o
+ruído de comutação e o convertem em emissão irradiada pelas bordas da placa e pelos
+cabos a ela conectados \citep{bogatin2010}.
 
-O projetista, contudo, não formula sua pergunta em termos de impedância, e sim de
-forma normativa: \emph{este empilhamento tem margem contra a curva-limite de
-emissão da norma que meu produto precisa atender, no ambiente em que será usado?}
-Hoje a resposta chega apenas ao fim do ciclo, por ensaio em laboratório acreditado
-sobre protótipo, quando a reprovação implica reprojeto, nova fabricação e novo
-agendamento — impacto medido em meses. Antecipá-la exige avaliar milhares de
-configurações, e é aí que o custo se torna proibitivo: solvers de onda completa
-consomem de dezenas de minutos a horas por configuração, e mesmo métodos baseados
-em física, uma a duas ordens de grandeza mais rápidos
-\citep{schierholz2021,hillebrecht2024}, permanecem incompatíveis com otimização
-automatizada.
+O projetista, porém, não formula sua pergunta em termos de impedância, e sim de
+forma normativa: este empilhamento tem margem contra a curva-limite de emissão da
+norma que o produto precisa atender, no ambiente em que será usado? Hoje a resposta
+chega apenas ao fim do ciclo de desenvolvimento, por ensaio em laboratório
+acreditado sobre protótipo. A reprovação nesse ponto implica reprojeto, nova
+fabricação e novo agendamento de ensaio, com impacto medido em meses. Antecipar
+essa resposta exige avaliar milhares de configurações, e é aí que o custo
+computacional se torna alto demais: solvers de onda completa consomem de dezenas de
+minutos a horas por configuração, e mesmo métodos baseados em física, uma a duas
+ordens de grandeza mais rápidos \citep{schierholz2021,hillebrecht2024}, seguem
+incompatíveis com otimização automatizada.
 
-Modelos substitutos deslocam esse custo para uma fase de treinamento única e entregam
-predições em milissegundos \citep{swaminathan2020,jiang2020,zhang2021}. Persiste,
-porém, uma limitação estrutural: modelos puramente orientados a dados minimizam erro
-numérico sem garantia de consistência física, e redes treinadas sobre parâmetros de
-espalhamento produzem com frequência respostas não passivas ou não causais, inúteis
-para simulação no domínio do tempo \citep{torun2020}. O problema agrava-se quanto
-menor o orçamento de dados, pois a rede não dispõe de evidência para inferir, apenas
-dela, regularidades que a física fornece em forma fechada \citep{raissi2019}.
+Modelos substitutos deslocam esse custo para uma fase de treinamento única e
+entregam predições em milissegundos \citep{swaminathan2020,jiang2020,zhang2021}.
+Persiste, contudo, uma limitação estrutural: modelos orientados apenas a dados
+reduzem o erro numérico sem garantir consistência física, e redes treinadas sobre
+parâmetros de espalhamento produzem com frequência respostas não passivas ou não
+causais, inúteis para simulação no domínio do tempo \citep{torun2020}. O problema se
+agrava quanto menor a quantidade de dados disponível, pois a rede não tem evidência
+suficiente para inferir, apenas deles, comportamentos que a física já descreve em
+forma fechada \citep{raissi2019}.
 
-Propõe-se, por isso, uma arquitetura de duas camadas: um modelo substituto
-informado por física, que prediz $Z(f)$ a partir dos parâmetros do empilhamento
-com restrições eletromagnéticas incorporadas à função de perda; e uma camada
-normativa determinística, que converte $Z(f)$ em uma estimativa de emissão e a
-confronta com a curva-limite da norma e do ambiente selecionados, produzindo uma
-\textbf{margem em decibéis}. É essa margem — e não a impedância — que serve de
-função objetivo à otimização. Uma investigação preliminar já conduzida sobre a base
-delimitou quais restrições são legítimas: o regime quase-estático segue com precisão
-a lei capacitiva prevista — inclinação logarítmica medida de $-1{,}018 \pm 0{,}008$
-contra $-1$ teórico —, enquanto a ancoragem em frequências modais, inicialmente
-prevista como principal, foi \emph{refutada}. Formula-se o problema de pesquisa:
+Propõe-se, por isso, uma arquitetura de duas camadas. A primeira é um modelo
+substituto informado por física, que prediz $Z(f)$ a partir dos parâmetros do
+empilhamento, com restrições eletromagnéticas incorporadas à função de perda. A
+segunda é uma camada normativa determinística, que converte $Z(f)$ em uma
+estimativa de emissão e a compara com a curva-limite da norma e do ambiente
+selecionados, produzindo uma margem em decibéis. É essa margem, e não a impedância,
+que serve de função objetivo à otimização. Uma investigação preliminar já realizada
+sobre a base mostrou quais restrições podem ser usadas: o regime quase-estático
+segue com precisão a lei capacitiva prevista, com inclinação logarítmica medida de
+$-1{,}018 \pm 0{,}008$ contra $-1$ teórico, enquanto o uso das frequências de
+ressonância como referência, inicialmente previsto como principal, foi refutado.
+Formula-se o problema de pesquisa:
 
 \begin{quote}
 Em que medida a incorporação de restrições eletromagnéticas conhecidas em forma
 fechada à função de perda de um modelo substituto neural melhora a acurácia, a
-plausibilidade física e a generalização entre topologias na predição da impedância
-de PDNs, em função do volume de dados de treinamento, e em que medida a margem
+consistência física e a generalização entre topologias na predição da impedância de
+PDNs, em função do volume de dados de treinamento, e em que medida a margem
 normativa dela derivada ordena empilhamentos de forma estável o suficiente para
 orientar decisões de projeto?
 \end{quote}
@@ -75,180 +81,184 @@ orientar decisões de projeto?
 
 \subsection{Objetivo geral}
 
-Desenvolver e validar um modelo substituto informado por física que, acoplado a
-uma camada normativa determinística, estime a margem de conformidade
-eletromagnética da rede de distribuição de energia de uma placa de circuito
-impresso multicamadas contra as curvas-limite de emissão da norma e do ambiente de
-uso selecionados pelo projetista, com acurácia e latência compatíveis com a
-otimização do empilhamento na fase inicial de projeto.
+Desenvolver e validar um modelo substituto informado por física que, acoplado a uma
+camada normativa determinística, estime a margem de conformidade eletromagnética da
+rede de distribuição de energia de uma placa de circuito impresso multicamadas
+contra as curvas-limite de emissão da norma e do ambiente de uso selecionados pelo
+projetista, com acurácia e latência compatíveis com a otimização do empilhamento na
+fase inicial de projeto.
 
 \subsection{Objetivos específicos}
 
 \begin{alineas}
-\item implementar um pipeline incremental de extração da curva de impedância a partir
-dos arquivos Touchstone, validado contra invariantes analíticas, e harmonizar os
-subconjuntos de PDN da SI/PI-Database — de 1 a 13 cavidades — em representação de
-atributos independente de topologia;
+\item implementar um pipeline incremental de extração da curva de impedância a
+partir dos arquivos Touchstone, validado contra propriedades analíticas conhecidas,
+e reunir os subconjuntos de PDN da SI/PI-Database, de 1 a 13 cavidades, em uma
+representação de atributos independente da topologia;
 
 \item verificar sobre os próprios dados quais relações analíticas da cavidade são
 observáveis na grandeza predita, formulando os termos de perda apenas a partir das
 que se confirmarem;
 
-\item treinar e avaliar o modelo informado por física contra uma bateria de
-referências sob protocolo único, quantificando a plausibilidade física, o ganho em
-função do volume de treinamento e a generalização para topologias não vistas;
+\item treinar e avaliar o modelo informado por física contra um conjunto de modelos
+de referência, sob protocolo único, medindo a consistência física, o ganho em função
+do volume de treinamento e a generalização para topologias não vistas;
 
-\item implementar a camada normativa de estimativa de margem, quantificando a
-estabilidade do ordenamento de empilhamentos sob variação de suas premissas, e
-acoplá-la a um otimizador evolutivo multiobjetivo que maximize a margem e minimize
-o custo de fabricação estimado;
+\item implementar a camada normativa de estimativa de margem, medindo a estabilidade
+do ordenamento de empilhamentos sob variação de suas premissas, e acoplá-la a um
+otimizador evolutivo multiobjetivo que maximize a margem e minimize o custo de
+fabricação estimado;
 
-\item extrair diretrizes de projeto interpretáveis, expressas em decibéis de
-margem, e publicar a implementação como software livre reprodutível.
+\item obter diretrizes de projeto interpretáveis, expressas em decibéis de margem, e
+publicar a implementação como software livre reprodutível.
 \end{alineas}
 
 \section{Público alvo}
 \label{sec:publico}
 
 O público primário é o engenheiro de projeto de \textit{hardware} digital e a equipe
-de compatibilidade eletromagnética que o assessora, em organizações cujos produtos
-passam por ensaios de certificação; o momento de uso é a janela inicial de definição
+de compatibilidade eletromagnética que o apoia, em organizações cujos produtos
+passam por ensaios de certificação. O momento de uso é a fase inicial de definição
 do empilhamento, quando número de camadas, espessura de cavidade, dielétrico e
-densidade de vias ainda são reversíveis. O secundário é a comunidade acadêmica de integridade
-de sinal e potência e de aprendizado informado por física, à qual se destinam a
-implementação aberta, o protocolo experimental e o desenho falsificável das
-hipóteses. Há ainda o institucional: o pipeline, a base harmonizada e a camada
-normativa ficam disponíveis para trabalhos subsequentes do DELT e para continuidade
-no PPGEE.
+densidade de vias ainda podem ser alterados. O público secundário é a comunidade
+acadêmica de integridade de sinal e potência e de aprendizado informado por física,
+para a qual se destinam a implementação aberta, o protocolo experimental e as
+hipóteses formuladas de modo que possam ser refutadas. Há ainda o público
+institucional: o pipeline, a base reunida e a camada normativa ficam disponíveis
+para trabalhos futuros no Departamento de Engenharia Elétrica da UFPR.
 
 \section{Metodologia de desenvolvimento}
 \label{sec:metodologia}
 
-\subsection{Base de dados e harmonização}
+\subsection{Base de dados}
 \label{subsec:harmonizacao}
 
 Utiliza-se a SI/PI-Database, do \textit{Institut für Theoretische Elektrotechnik} da
 Universidade Técnica de Hamburgo \citep{schierholz2021,hillebrecht2024}, de acesso
 público mediante aceite dos termos de uso. A referência controlada é o subconjunto
 \textit{6-Layer PCB based PDN with Two Via Arrays}, amostrado por hipercubo latino e
-já caracterizado por inspeção direta: \textbf{985} configurações, 36 portas,
-\textbf{334} pontos entre 1\,MHz e 1\,GHz e \textbf{oito} graus de liberdade
-efetivos dos dezessete parâmetros tabulados.
+já caracterizado por inspeção direta dos arquivos: 985 configurações, 36 portas, 334
+pontos entre 1\,MHz e 1\,GHz e oito graus de liberdade efetivos entre os dezessete
+parâmetros tabulados.
 
-O trabalho não se restringe, porém, a esse subconjunto. A base oferece catorze
-subconjuntos de PDN, com \textbf{1 a 13 cavidades} e cerca de \textbf{135 mil}
-configurações, todos cobrindo 1\,MHz a 1\,GHz e simulados pela mesma ferramenta
-baseada em física. São combináveis porque o alvo é a autoimpedância em uma única
-porta, de modo que a variação no número total de portas — de 2 a 68 — não impõe
-dimensão de saída variável; exclui-se apenas o subconjunto de onda completa de 14
-camadas, fora da banda e de fidelidade distinta. A união exige quatro tratamentos:
-o espaço de parâmetros é heterogêneo, o que leva a adotar \textbf{atributos
-derivados independentes de topologia} — número de cavidades, espessura total,
-capacitância acumulada, densidade de vias, passo normalizado e razões geométricas;
-a porta de interesse recebe numeração distinta em cada subconjunto, exigindo um
-adaptador verificável contra a folha de dados; as variantes Eurocard usam 121 pontos
-na mesma faixa, e são interpoladas para a grade comum; e os 119\,GB comprimidos
-excederiam o armazenamento se descompactados de uma vez, de modo que cada
-subconjunto é baixado, reduzido à curva de impedância e tem os arquivos brutos
-descartados antes do próximo. Como os desenhos de amostragem diferem, o experimento
-controlado de curva de aprendizado fica restrito aos subconjuntos por hipercubo
-latino.
+O trabalho não se restringe a esse subconjunto. A base oferece catorze subconjuntos
+de PDN, com 1 a 13 cavidades e cerca de 135 mil configurações, todos cobrindo 1\,MHz
+a 1\,GHz e simulados pela mesma ferramenta baseada em física. Eles são combináveis
+porque o alvo é a autoimpedância em uma única porta, de modo que a variação no
+número total de portas, de 2 a 68, não altera a dimensão da saída. Exclui-se apenas
+o subconjunto de onda completa de 14 camadas, fora da banda e de fidelidade
+distinta. A união exige quatro tratamentos. O espaço de parâmetros é diferente em
+cada subconjunto, o que leva a adotar atributos derivados independentes da
+topologia, como número de cavidades, espessura total, capacitância acumulada,
+densidade de vias, passo normalizado e razões geométricas. A porta de interesse
+recebe numeração distinta em cada subconjunto, o que exige um adaptador conferido
+contra a folha de dados. As variantes Eurocard usam 121 pontos de frequência na
+mesma faixa, e são interpoladas para a grade comum. E os 119\,GB comprimidos do
+conjunto completo excederiam o armazenamento se descompactados de uma vez, de modo
+que cada subconjunto é baixado, reduzido à curva de impedância e tem os arquivos
+brutos descartados antes do próximo. Como os desenhos de amostragem diferem, o
+experimento controlado de curva de aprendizado fica restrito aos subconjuntos por
+hipercubo latino.
 
-O ganho não é só de volume: com o número de cavidades variando de 1 a 13, essa
-grandeza torna-se atributo observável, permitindo testar se a capacitância efetiva
-escala com o número de cavidades em paralelo — desvio que a investigação preliminar
-detectou e não pôde explicar com um único subconjunto. Confirmada a lei, o termo
-quase-estático passa a restringir também a magnitude; e a variedade de topologias
-permite validação \textbf{com topologia retida}, tornando mensurável a principal
-limitação de validade externa.
+O ganho não é só de volume. Com o número de cavidades variando de 1 a 13, essa
+grandeza passa a ser um atributo observável, o que permite testar se a capacitância
+efetiva cresce com o número de cavidades em paralelo, desvio que a investigação
+preliminar detectou e não pôde explicar com um único subconjunto. Confirmada a
+relação, o termo quase-estático passa a restringir também a magnitude da resposta. A
+variedade de topologias permite ainda validação com topologia retida, o que torna
+mensurável a principal limitação de validade externa do trabalho.
 
 \subsection{Modelo informado por física}
 
-O alvo é a curva $y(f) = \log_{10}|Z_{11}(f)|$, obtida da matriz de espalhamento;
-prediz-se a curva completa, e não um escalar, porque é ela que alimenta a camada
-normativa e porque as restrições físicas incidem sobre sua forma. A perda soma o
-erro de reconstrução, ponderado por década para compensar a subamostragem da
-primeira década, a três termos derivados da física: desvio da derivada logarítmica
-em relação a $-1$ na região quase-estática — formulação invariante a fator
-multiplicativo, imune ao desvio de escala observado; monotonicidade até o nulo de
-série, que penaliza oscilações espúrias típicas de redes treinadas com poucos dados;
-e passividade. Os pesos, hiperparâmetros críticos, serão determinados por otimização
-bayesiana sobre validação, com a sensibilidade do resultado reportada.
+O alvo é a curva $y(f) = \log_{10}|Z_{11}(f)|$, obtida da matriz de espalhamento.
+Prediz-se a curva completa, e não um valor escalar, porque é ela que alimenta a
+camada normativa e porque as restrições físicas atuam sobre sua forma. A função de
+perda soma o erro de reconstrução, ponderado por década para compensar a
+subamostragem da primeira década, a três termos derivados da física: o desvio da
+derivada logarítmica em relação a $-1$ na região quase-estática, formulação que é
+invariante a fator multiplicativo e por isso não é afetada pelo desvio de escala
+observado; a monotonicidade até o nulo de série, que penaliza oscilações falsas,
+comuns em redes treinadas com poucos dados; e a passividade. Os pesos são
+hiperparâmetros críticos e serão determinados por otimização bayesiana sobre o
+conjunto de validação, com a sensibilidade do resultado reportada.
 
-As referências de comparação, sob protocolo idêntico, são regressão regularizada,
-floresta aleatória, \textit{gradient boosting}, processos gaussianos e um perceptron
-multicamadas \citep{geron2022} — este decisivo, por diferir do modelo proposto apenas
-pela ausência dos termos físicos, o que isola o efeito da informação física. O
-conjunto é particionado com semente registrada, o teste é acessado uma única vez e o
-ganho é medido em frações crescentes do treinamento, com significância por teste não
-paramétrico pareado. O critério de aceitação é
-$R^2 > 0{,}90$ sobre $|Z|_{\max}$ em teste isolado, com latência inferior a 1\,ms.
+Os modelos de referência, avaliados sob protocolo idêntico, são regressão
+regularizada, floresta aleatória, \textit{gradient boosting}, processos gaussianos e
+um perceptron multicamadas \citep{geron2022}. Este último é o mais importante, por
+diferir do modelo proposto apenas pela ausência dos termos físicos, o que isola o
+efeito da informação física. O conjunto é particionado com semente registrada, o
+teste é acessado uma única vez e o ganho é medido em frações crescentes do
+treinamento, com significância avaliada por teste não paramétrico pareado. O
+critério de aceitação é $R^2 > 0{,}90$ sobre $|Z|_{\max}$ em teste isolado, com
+latência de inferência inferior a 1\,ms.
 
 \subsection{Camada normativa de estimativa de margem}
 \label{subsec:normativa}
 
-A conversão de $Z(f)$ em margem é determinística, sem aprendizado, em três etapas com
-premissas declaradas. A \textbf{excitação} não integra a base e é entrada do
-projetista: gabarito trapezoidal parametrizado por frequência de relógio, tempo de
-transição e corrente, cujo envelope decai a $-20$\,dB/década até o joelho em
-$1/(\pi t_r)$ e a $-40$\,dB/década acima \citep{johnson1993}, resultando em
-$V_n(f) = |Z_{11}(f)|\,I(f)$. A \textbf{radiação} é modelada por expressões fechadas
-para os dois mecanismos dominantes abaixo de 1\,GHz \citep{ott2009}: emissão pelas
-bordas do par de planos e emissão de modo comum excitada por cabos. A
-\textbf{comparação normativa} usa curvas-limite da CISPR 32, classes A e B
-\citep{cispr32}, e das genéricas IEC 61000-6-3 \citep{iec610006m3} e IEC 61000-6-4
-\citep{iec610006m4}, selecionáveis pelo ambiente de uso; a margem é
-$m(f) = L(f) - \hat{E}(f)$ e a figura de mérito é a pior margem na faixa.
+A conversão de $Z(f)$ em margem é determinística, sem aprendizado, e ocorre em três
+etapas com premissas declaradas. A excitação não integra a base de dados e é entrada
+do projetista: adota-se um modelo de corrente trapezoidal, definido por frequência
+de relógio, tempo de transição e amplitude, cujo envelope espectral decai a
+$-20$\,dB por década até o joelho em $1/(\pi t_r)$ e a $-40$\,dB por década acima
+dele \citep{johnson1993}, do que resulta $V_n(f) = |Z_{11}(f)|\,I(f)$. A radiação é
+modelada por expressões fechadas para os dois mecanismos dominantes abaixo de
+1\,GHz \citep{ott2009}: a emissão pelas bordas do par de planos e a emissão de modo
+comum excitada por cabos. A comparação normativa usa as curvas-limite da CISPR 32,
+classes A e B \citep{cispr32}, e das normas genéricas IEC 61000-6-3
+\citep{iec610006m3} e IEC 61000-6-4 \citep{iec610006m4}, selecionáveis pelo ambiente
+de uso. A margem é $m(f) = L(f) - \hat{E}(f)$ e a medida de desempenho é a menor
+margem na faixa.
 
-Duas delimitações são essenciais. Os limites de emissão irradiada iniciam em
-30\,MHz, de modo que a margem é calculada sobre 30\,MHz--1\,GHz. E a camada é
-analítica e \emph{não calibrada contra medição}, pois a base não contém dados de
-campo: sua saída não é veredito de certificação — que depende também de gabinete,
-cabos, aterramento e \textit{firmware} — e sim um \textbf{indicador ordinal de
-triagem}, cuja validade será quantificada varrendo premissas plausíveis e medindo a
-estabilidade do ordenamento por coeficiente de Kendall.
+Duas delimitações são essenciais. Os limites de emissão irradiada começam em
+30\,MHz, de modo que a margem é calculada sobre 30\,MHz a 1\,GHz. Além disso, a
+camada é analítica e não é calibrada contra medição, pois a base não contém dados de
+campo. Sua saída não é uma decisão de certificação, que depende também de gabinete,
+cabos, aterramento e \textit{firmware}, e sim um indicador de triagem, válido para
+comparar projetos entre si. Essa validade será medida, e não suposta: varre-se um
+conjunto de premissas plausíveis e avalia-se a estabilidade do ordenamento pelo
+coeficiente de Kendall.
 
 \subsection{Otimização, interpretabilidade e validação}
 \label{subsec:validacao}
 
-Validado o conjunto, ele é embutido como função de avaliação em um problema
-multiobjetivo que maximiza a pior margem e minimiza um custo de fabricação estimado,
-por NSGA-II \citep{deb2002} comparado à evolução diferencial multiobjetivo
-\citep{coelho2010}, com as soluções extremas da fronteira de Pareto verificadas por
+Validado o conjunto, ele é usado como função de avaliação em um problema
+multiobjetivo que maximiza a menor margem e minimiza um custo de fabricação
+estimado, por NSGA-II \citep{deb2002} comparado à evolução diferencial multiobjetivo
+\citep{coelho2010}, com as soluções extremas da fronteira de Pareto conferidas por
 simulação de referência. A interpretabilidade emprega valores de Shapley
-\citep{lundberg2017} e regressão simbólica \citep{tessaro2026} para destilar
-expressões algébricas que relacionem parâmetros de empilhamento à margem, com faixas
-de validade declaradas.
+\citep{lundberg2017} e regressão simbólica \citep{tessaro2026} para obter expressões
+algébricas que relacionem parâmetros de empilhamento à margem, com faixas de
+validade declaradas.
 
 Sob coorientação do Prof.\ Dr.\ Bruno Pohlot Ricobom, prevê-se ainda um estudo de
 caso com o escâner de campo próximo desenvolvido pelo autor em iniciação científica:
-fabricar duas placas de empilhamentos contrastantes e verificar se o ordenamento de
-emissão medido corresponde ao predito — único ponto em que a camada normativa é
-confrontada com medição. É verificação de consistência ordinal, não validação
-metrológica; dada a incerteza não caracterizada do instrumento, nenhuma conclusão
-quantitativa será extraída desta etapa, que permanece fora do caminho crítico.
+fabricar duas placas com empilhamentos contrastantes e verificar se o ordenamento de
+emissão medido corresponde ao predito. É o único ponto em que a camada normativa é
+comparada com medição. Trata-se de verificação de consistência entre ordenamentos, e
+não de validação metrológica. Dada a incerteza ainda não caracterizada do
+instrumento, nenhuma conclusão quantitativa será extraída desta etapa, que permanece
+fora do caminho crítico.
 
 \section{Recursos necessários}
 \label{sec:recursos}
 
 A execução é conduzida pelo autor sob orientação do Prof.\ Dr.\ Leandro dos Santos
 Coelho, responsável pelas frentes de modelagem substituta, otimização e regressão
-simbólica, e coorientação do Prof.\ Dr.\ Bruno Pohlot Ricobom, na de instrumentação
-e medição. Estima-se dedicação de vinte horas semanais ao longo de dois semestres,
-com reuniões quinzenais.
+simbólica, e sob coorientação do Prof.\ Dr.\ Bruno Pohlot Ricobom, na frente de
+instrumentação e medição. Estima-se dedicação de dez horas semanais ao longo de dois
+semestres letivos, com reuniões quinzenais de acompanhamento.
 
-Não há necessidade de aquisição de equipamentos ou licenças. Basta uma estação de
-trabalho pessoal com 8\,GB de memória e cerca de 60\,GB livres em disco — suficiente
+Não há necessidade de aquisição de equipamentos ou licenças. Basta um computador
+pessoal com 8\,GB de memória e cerca de 60\,GB livres em disco, o que é suficiente
 mesmo com todos os subconjuntos, dado o pré-processamento incremental. A cadeia de
-software é integralmente livre: \texttt{numpy}, \texttt{pandas} e \texttt{scipy};
-\texttt{scikit-rf} para Touchstone; \texttt{scikit-learn} e \texttt{LightGBM} para
-as referências; \texttt{PyTorch} para o modelo informado por física;
-\texttt{Optuna} e \texttt{pymoo} para otimização; \texttt{SHAP} e \texttt{PySR}
-para interpretabilidade; e \texttt{MLflow}, \texttt{pytest}, \texttt{Hydra}, Git e
+software é integralmente livre: numpy, pandas e scipy para manipulação numérica;
+scikit-rf para os arquivos Touchstone; scikit-learn e LightGBM para os modelos de
+referência; PyTorch para o modelo informado por física; Optuna e pymoo para
+otimização; SHAP e PySR para interpretabilidade; e MLflow, pytest, Hydra, Git e
 \LaTeX{} para registro, testes, configuração, versionamento e redação. O treinamento
-roda em CPU, com o Google Colab gratuito como contingência. Não há custos no escopo
-principal; R\$\,300 a R\$\,600 incorreriam só na fabricação das placas de teste da
-validação complementar.
+roda em CPU, com o Google Colab gratuito como alternativa. Não há custos previstos no
+escopo principal. Um custo de R\$\,300 a R\$\,600 incorreria apenas na fabricação das
+placas de teste da validação complementar.
 
 \section{Resultados fundamentais a serem atingidos}
 \label{sec:resultados}
@@ -256,21 +266,20 @@ validação complementar.
 \begin{alineas}
 \item um modelo substituto informado por física com $R^2 > 0{,}90$ sobre
 $|Z|_{\max}$ em teste isolado e latência inferior a 1\,ms, e um conjunto de dados
-harmonizado, reprodutível a partir da base original, reunindo os subconjuntos de PDN
-de 1 a 13 cavidades sob representação independente de topologia;
+reunido a partir da base original, reprodutível, cobrindo os subconjuntos de PDN de
+1 a 13 cavidades sob representação independente da topologia;
 
-\item a quantificação do efeito da informação física sobre o erro de generalização,
-em função do volume de treinamento e para topologias não vistas, com significância
+\item a medida do efeito da informação física sobre o erro de generalização, em
+função do volume de treinamento e para topologias não vistas, com significância
 estatística avaliada;
 
 \item uma camada normativa que traduz a impedância predita em margem em decibéis
-contra CISPR 32 e IEC 61000-6-3 e 6-4, com a estabilidade do ordenamento
-quantificada, e uma fronteira de Pareto de empilhamentos que equilibram margem e
-custo, com expressões analíticas interpretáveis e faixas de validade declaradas;
+contra a CISPR 32 e as normas IEC 61000-6-3 e 6-4, com a estabilidade do ordenamento
+medida, e uma fronteira de Pareto de empilhamentos que equilibram margem e custo,
+com expressões analíticas interpretáveis e faixas de validade declaradas;
 
 \item uma implementação de código aberto, reprodutível e documentada, e, como
-desdobramento pretendido, um manuscrito submetido a evento da área e base para
-ingresso no mestrado do PPGEE/UFPR.
+desdobramento pretendido, um manuscrito submetido a evento da área.
 \end{alineas}
 
 \section{Contribuição esperada para a ênfase e importância para a formação do
@@ -279,32 +288,33 @@ autor}
 
 A ênfase em sistemas eletrônicos embarcados forma o profissional que projeta o
 \textit{hardware} de um produto e responde por seu funcionamento em campo, e é nesse
-ponto que o trabalho incide. O sistema embarcado é onde a decisão de empilhamento, o
+ponto que o trabalho atua. O sistema embarcado é onde a decisão de empilhamento, o
 ruído de comutação e a aprovação em ensaio deixam de ser assuntos separados: a mesma
 escolha de espessura de cavidade que reduz o custo da placa determina a impedância
-vista pelos componentes e, por consequência, a emissão medida no laboratório. A contribuição está em tratar essa camada física — habitualmente terceirizada a
-especialistas ou descoberta tardiamente por reprovação em ensaio — como objeto
-explícito de projeto, e em expressar seu resultado na linguagem que o projetista
-usa. Há também integração curricular: o problema exige simultaneamente
-eletromagnetismo aplicado, teoria de circuitos e linhas de transmissão, análise de
-sinais no domínio da frequência, normas de compatibilidade eletromagnética e métodos
-numéricos.
+vista pelos componentes e, por consequência, a emissão medida no laboratório. A
+contribuição está em tratar essa camada física, em geral repassada a especialistas
+ou descoberta tarde por reprovação em ensaio, como objeto explícito de projeto, e em
+expressar seu resultado na linguagem que o projetista usa. Há também integração
+curricular, pois o problema exige ao mesmo tempo eletromagnetismo aplicado, teoria de
+circuitos e linhas de transmissão, análise de sinais no domínio da frequência, normas
+de compatibilidade eletromagnética e métodos numéricos.
 
-Para a formação do autor, o trabalho consolida três competências: a metodológica, de
-conduzir investigação empírica com hipóteses refutáveis e protocolo fixado antes da
-observação dos resultados; a técnica, de aplicar aprendizado de máquina a um problema
-cuja física é parcialmente conhecida em forma fechada, em que cabe ao engenheiro
-decidir o que o modelo deve aprender e o que já se sabe; e a de prática profissional,
-de distinguir o que o modelo sustenta do que não sustenta — distinção que, na camada
-normativa, separa um instrumento de triagem de uma afirmação de conformidade
-indevida.
+Para a formação do autor, o trabalho desenvolve três competências. A primeira é
+metodológica: conduzir investigação empírica com hipóteses que podem ser refutadas e
+com protocolo fixado antes da observação dos resultados. A segunda é técnica: aplicar
+aprendizado de máquina a um problema cuja física é parcialmente conhecida em forma
+fechada, situação em que cabe ao engenheiro decidir o que o modelo deve aprender e o
+que já se sabe. A terceira é de prática profissional: distinguir o que o modelo
+sustenta do que não sustenta, distinção que, na camada normativa, separa um
+instrumento de triagem de uma afirmação de conformidade indevida.
 
 \section{Cronograma}
 \label{sec:cronograma}
 
 O trabalho distribui-se por dois semestres letivos, conforme a
-Tabela~\ref{tab:crono}: 2026/2 dedicado à fundamentação e à infraestrutura de dados;
-2027/1 ao modelo informado por física, à camada normativa e à otimização.
+Tabela~\ref{tab:crono}. O período 2026/2 é dedicado à fundamentação e à
+infraestrutura de dados, e o período 2027/1 ao modelo informado por física, à camada
+normativa e à otimização.
 
 \begin{table}[htb]
 \centering
@@ -313,18 +323,18 @@ Tabela~\ref{tab:crono}: 2026/2 dedicado à fundamentação e à infraestrutura d
 \footnotesize
 \begin{tabular}{@{}p{0.38\linewidth}ccccc@{\hspace{1.1em}}ccccc@{}}
 \toprule
-& \multicolumn{5}{c}{\textbf{TCC I --- 2026/2}} &
-  \multicolumn{5}{c}{\textbf{TCC II --- 2027/1}} \\
+& \multicolumn{5}{c}{TCC I (2026/2)} &
+  \multicolumn{5}{c}{TCC II (2027/1)} \\
 \cmidrule(r){2-6}\cmidrule(l){7-11}
-\textbf{Atividade} & ago & set & out & nov & dez & mar & abr & mai & jun & jul \\
+Atividade & ago & set & out & nov & dez & mar & abr & mai & jun & jul \\
 \midrule
 Revisão bibliográfica                        & \mes & \mes & \mes &      &      &      &      &      &      &      \\
 Pipeline de extração e validação da base     & \mes & \mes & \mes &      &      &      &      &      &      &      \\
-Harmonização dos subconjuntos e normas       &      & \mes & \mes & \mes &      &      &      &      &      &      \\
+Reunião dos subconjuntos e das normas        &      & \mes & \mes & \mes &      &      &      &      &      &      \\
 Modelos de referência e protocolo            &      &      & \mes & \mes &      &      &      &      &      &      \\
 Entrega e apresentação de TCC I              &      &      &      &      & \mes &      &      &      &      &      \\
 Termos físicos e calibração dos pesos        &      &      &      &      &      & \mes & \mes & \mes &      &      \\
-Camada normativa e estabilidade do ranking   &      &      &      &      &      &      & \mes & \mes &      &      \\
+Camada normativa e estabilidade da ordenação &      &      &      &      &      &      & \mes & \mes &      &      \\
 Otimização, interpretabilidade e validação   &      &      &      &      &      &      &      & \mes & \mes &      \\
 Redação                                      &      &      & \mes & \mes & \mes &      &      & \mes & \mes & \mes \\
 Revisão final e defesa                       &      &      &      &      &      &      &      &      &      & \mes \\
@@ -334,9 +344,10 @@ Revisão final e defesa                       &      &      &      &      &     
 \\{\footnotesize FONTE: O autor (2026).}
 \end{table}
 
-Quatro marcos balizam a continuidade: pipeline validado contra invariantes
-analíticas (set./2026); quatro subconjuntos harmonizados e melhor referência em
-$R^2 > 0{,}80$ (nov./2026); modelo informado por física superando a ablação com
-significância estatística (abr./2027); e fronteira de Pareto verificada por simulação
-(jun./2027). O terceiro não condiciona a validade do trabalho: a hipótese é
-falsificável, e sua refutação é resultado publicável.
+Quatro marcos orientam a continuidade: o pipeline validado contra propriedades
+analíticas conhecidas, em setembro de 2026; quatro subconjuntos reunidos e o melhor
+modelo de referência em $R^2 > 0{,}80$, em novembro de 2026; o modelo informado por
+física superando a ablação com significância estatística, em abril de 2027; e a
+fronteira de Pareto conferida por simulação, em junho de 2027. O terceiro marco não
+condiciona a validade do trabalho, pois a hipótese pode ser refutada, e sua refutação
+é um resultado que também merece publicação.
