@@ -35,12 +35,29 @@ c₀ = 299792458 m/s
 **Enunciado.** Abaixo do nulo de série, `|Z11(f)| ∝ 1/f`, isto é, a derivada
 `d log10|Z11| / d log10 f` vale −1.
 
-**Evidência.** Inclinação medida em 40 configurações, sobre os 8 primeiros
-pontos de frequência (f < 25 MHz):
+**Evidência.** Inclinação medida sobre os 8 primeiros pontos de frequência
+(f < 25 MHz). Verificada em **todas as 985 configurações** em 2026-08-11
+(`notebooks/04_sensibilidade_fisica.py`):
 
 ```
-média  −1,018    desvio-padrão  0,008    faixa  [−1,029 ; −0,980]
+985 configs   média  −1,0197   desvio-padrão  0,0062   faixa  [−1,0373 ; −0,9800]
+              100,0 % dentro de [−1,05 ; −0,95]
+ 40 configs   média  −1,018    desvio-padrão  0,008    (verificação anterior)
 ```
+
+**Status: confirmada em escala plena e verificada entre topologias.** Nenhuma
+configuração viola o critério. É a única restrição que pode ser imposta globalmente
+sem ressalva.
+
+**Verificação cruzada (2026-08-17).** No subconjunto *PWR/GND Plane 11×11 Array*, de
+**uma** cavidade, a inclinação é **−1,0001 ± 0,0113** com 100 % de conformidade. R1
+transfere entre topologias.
+
+⚠️ **Mas a janela de medição não transfere.** A regra dos 8 primeiros pontos foi
+calibrada no subconjunto de 6 camadas. No de 1 cavidade os decaps empurram o nulo de
+série para 27,7 MHz (mediana), e a mesma regra derruba a conformidade para **9 %**. A
+janela quase-estática passa a ser definida por configuração como `f < f_nulo/K`, com
+`K ≥ 3` e no mínimo 3 pontos. Ver `spec/UNIAO_SUBCONJUNTOS.md`.
 
 **Uso.** Termo `L_cap`, penalizando o desvio da derivada logarítmica em relação
 a −1. Formulação invariante a fator multiplicativo — ver R2.
@@ -51,13 +68,57 @@ a −1. Formulação invariante a fator multiplicativo — ver R2.
 
 **Enunciado testado.** `C = ε₀ ε_r a b / h` (placas paralelas, cavidade única).
 
-**Evidência.** Correlação log-log entre `C` extraída e `C` analítica:
-`r = 0,64`. A razão `C_extraída / C_analítica` tem mediana 2,1 mas varia de
-0,49 a 22,6.
+**Evidência (985 configurações, 2026-08-11).** A razão `C_extraída/C_analítica`
+tem mediana 2,130, mas a população é **heterogênea**:
 
-**Interpretação.** A mediana ≈ 2 é compatível com uma porta acoplada a duas
-cavidades em paralelo num empilhamento de seis camadas. A dispersão restante não
-está explicada e depende de acoplamento entre cavidades.
+| grupo | n | % |
+|---|---|---|
+| razão < 1,5 | 169 | 17,2 % |
+| **1,5 ≤ razão < 3,0 (duas cavidades)** | **653** | **66,3 %** |
+| 3,0 ≤ razão < 10 | 121 | 12,3 % |
+| razão ≥ 10 | 42 | 4,3 % |
+
+Restringindo a regressão `log10|Z11(1 MHz)| ~ log10(TDIEL) + log10(ε_r)` à população
+conforme, os expoentes batem com a física:
+
+| amostra | n | coef. log10(TDIEL) | coef. log10(ε_r) | R² |
+|---|---|---|---|---|
+| todas | 985 | +0,428 ± 0,056 | −0,574 ± 0,237 | 0,197 |
+| **só conformes** | **653** | **+0,952 ± 0,012** | **−0,974 ± 0,048** | **0,973** |
+| previsto pela física | — | +1,000 | −1,000 | — |
+
+**Interpretação.** Para dois terços do conjunto, a porta acopla-se a **duas cavidades em
+paralelo** e a lei de placas paralelas vale com precisão (R² = 0,973). O fator ≈ 2,1 fica
+confirmado. O terço restante desvia por motivo **ainda não identificado**.
+
+**O que já foi descartado como causa do desvio:**
+
+- *artefato de porta* — os 36 portos de uma mesma configuração dão razões idênticas
+  a 0,08 %, como a física quase-estática exige (em 1 MHz a placa é um capacitor único);
+- *desalinhamento global entre `parameter.csv` e os `.s36p`* — R² real 0,197 contra
+  0,0018 ± 0,0019 com rótulos embaralhados (200 repetições);
+- *desalinhamento parcial por permutação de linhas* — o pareamento de `ε_r/h` observado
+  contra o do CSV **não é bijetivo** (916 pareamentos usando apenas 514 linhas distintas)
+  e o teste KS rejeita que os desviantes venham da mesma distribuição (p = 0,007);
+- *dependência das features de projeto* — as médias das 8 features são estatisticamente
+  indistinguíveis entre conformes e desviantes.
+
+**Direção do desvio:** dielétricos finos (< 10 mil) tendem a razão < 1; espessos
+(> 50 mil) a razão ≫ 1. Compatível, no extremo espesso, com a ressalva de Schierholz et al.
+(T-CPMT 2023, Seç. IV-A): *"For very long vias, the potential cannot be assumed to be
+constant across the via as is usually assumed for the cavity model wave propagation."*
+O extremo fino permanece sem explicação.
+
+**Verificação cruzada (2026-08-17).** No subconjunto de **uma** cavidade a razão é
+**0,46** — abaixo da fórmula, e não acima — subindo monotonicamente de 0,43 em `h` de
+1–2 mil até 0,90 em 8–12 mil. O modelo de uma capacitância parasita em série foi testado
+e **refutado** (`C_série` implicado varia de 51,7 a 11,0 nF; R² negativo em log). A escala
+absoluta, portanto, **não transfere entre topologias**, o que reforça a formulação do termo
+quase-estático apenas sobre a derivada logarítmica, invariante a fator multiplicativo.
+
+**Uso.** **Não** impor R2 globalmente. Ou restringir à população conforme, ou estimar `γ`
+por configuração, ou ponderar o termo pela confiança. A ablação deve reportar R2 com e sem
+restrição de domínio — é resultado, não detalhe de implementação.
 
 **Uso.** **Não** impor o valor analítico. Usar `C_ef = γ · ε₀ ε_r a b / h`, com
 `γ` estimado sobre o conjunto de treinamento. A informação de forma (R1) é a

@@ -91,7 +91,7 @@ s_to_z(S, z0=50.0) -> Z: complex128[nf, P, P]
 
 | # | Invariante | Tolerância |
 |---|---|---|
-| I1 | `S` simétrica (reciprocidade) | `atol=1e-6` |
+| I1 | `S` simétrica (reciprocidade) | `atol=1e-4` ⚠️ ver nota |
 | I2 | valores singulares de `S` ≤ 1 (passividade) | `atol=1e-6` |
 | I3 | `Re{Z_ii} ≥ 0` ∀ f, ∀ i (passividade) | `atol=1e-9` |
 | I4 | `freq` estritamente crescente | exato |
@@ -114,3 +114,23 @@ s_to_z(S, z0=50.0) -> Z: complex128[nf, P, P]
    entre 100 MHz e 1 GHz. Toda métrica de erro deve ser **ponderada por década**.
 3. **Volume** — não carregar a base bruta inteira em memória; processar por
    streaming, um arquivo por vez.
+
+
+---
+
+## Nota sobre a tolerância de I1 (verificado em 2026-08-11)
+
+A tolerância `atol=1e-6` originalmente especificada para a reciprocidade **reprova todas as
+configurações**. Varredura sobre 20 configurações sorteadas:
+
+| `atol` | aprovados |
+|---|---|
+| 1e-9 a 1e-6 | 0 / 20 |
+| 1e-5 | 11 / 20 |
+| **1e-4** | **20 / 20** |
+
+A assimetria `|S − Sᵀ|` tem máximo de 1,511e-05 e mediana de 9,355e-06 — magnitude típica de
+ruído numérico do solver, não de violação física. **`atol=1e-4` é a tolerância correta para
+I1.** Hillebrecht et al. (T-EMC 2024) registram que reciprocidade e passividade são usadas
+como critério de descarte de simulações defeituosas nesta mesma base, o que sustenta manter a
+verificação — apenas com tolerância realista.
