@@ -50,9 +50,11 @@ env/
 6_layer_pcb_based_pdn_with_two_arrays_LHS_mar_2023/
 Universal-SE-SI-Array-10MAY2024/
 Universal-Diff-SI-Array-10MAY2024/
+pwr_gnd_plane_pcb_11x11_array_nov_22_2023/
 *.[sS][0-9]*[pP]
 parameter.csv
 parameter_edit.csv
+preproc_parameter.csv
 
 # Correspondência privada
 *.msg
@@ -102,8 +104,10 @@ outputs/
 *.pdf
 
 # Exceções: material próprio e arquivos necessários para compilar o documento.
-# O plano de trabalho é a entrega oficial e fica versionado.
+# O plano de trabalho e os relatórios de avaliação são entregas oficiais e ficam
+# versionados.
 !proposta/Plano_de_Trabalho_*.pdf
+!proposta/Relatorio_*.pdf
 !proposta/0-iniciais/fundo-capa.pdf
 !proposta/3-metodo/figuras/*.pdf
 
@@ -112,6 +116,7 @@ proposta/Documento_completo_com_apendices.pdf
 proposta/main_com_apendices.pdf
 proposta/main.pdf
 proposta/plano.pdf
+proposta/relatorio.pdf
 
 # Apêndices A e B: material de consulta pessoal, fora do repositório público.
 # main.tex detecta a ausência e compila normalmente a versão de entrega.

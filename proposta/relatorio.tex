@@ -1,0 +1,93 @@
+% ==============================================================================
+% Relatório de progresso — primeira avaliação de TCC I
+% Engenharia Elétrica / UFPR — Setor de Tecnologia
+%
+% Documento de acompanhamento solicitado pelo orientador para a primeira
+% avaliação (25/09/2026), de peso 10% na nota final de TCC I. Não substitui o
+% relatório final de TCC I, cuja estrutura segue o Anexo II das normas do DELT.
+%
+% Compartilha classe, pacotes, bibliografia e imagem de capa com plano.tex e
+% main.tex.
+%
+% Compilar:  make relatorio
+% ==============================================================================
+
+\documentclass[defesa,oneside,english,brazilian]{ppginf}
+
+\usepackage{amssymb}
+
+\input{packages}
+
+% --- ajustes locais -----------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[table]{xcolor}
+
+\newcommand{\mes}{\cellcolor{black!55}}
+
+% Espaçamento simples em tabelas e referências (Manual de Normalização UFPR 2024).
+\AtBeginEnvironment{table}{\setstretch{1.0}}
+\AtBeginEnvironment{longtable}{\setstretch{1.0}}
+\AtBeginEnvironment{thebibliography}{\setstretch{1.0}\setlength{\itemsep}{0.1\baselineskip}}
+
+% Alíneas conforme item 3.4.3 do Manual de Normalização da UFPR (2024).
+\newlist{alineas}{enumerate}{1}
+\setlist[alineas]{label=\alph*), leftmargin=1.5cm, itemsep=0.3\baselineskip,
+                  topsep=0.5\baselineskip, parsep=0pt}
+
+\begin{document}
+
+% --- metadados ----------------------------------------------------------------
+
+\title{Predição de margem de conformidade eletromagnética em placas de circuito
+impresso multicamadas por modelo substituto informado por física}
+
+\pchave{Compatibilidade eletromagnética; integridade de potência; modelo
+substituto; redes neurais informadas por física; conformidade normativa.}
+
+\keyword{Electromagnetic compatibility; power integrity; surrogate model;
+physics-informed neural networks; regulatory compliance.}
+
+\author{André Victor Xavier Pires}
+\advisor{Prof.\ Dr.\ Leandro dos Santos Coelho}
+
+\instit{UFPR}{Universidade Federal do Paraná}
+\field{Engenharia Elétrica}
+\local{Curitiba}
+\date{2026}
+
+\coverimage{0-iniciais/fundo-capa.pdf}
+
+\descr{Relatório de progresso apresentado ao orientador para a primeira
+avaliação da disciplina de Trabalho de Conclusão de Curso I, do curso de
+Engenharia Elétrica, ênfase em sistemas eletrônicos embarcados (curso noturno),
+Setor de Tecnologia da Universidade Federal do Paraná}
+
+% --- elementos pré-textuais ---------------------------------------------------
+
+\frontmatter
+\pagestyle{frontmatter}
+
+\titlepage
+
+\input{relatorio/identificacao}
+
+\begingroup
+  \let\cleardoublepage\relax
+  \let\clearpage\relax
+  \tableofcontents
+\endgroup
+
+% --- elementos textuais -------------------------------------------------------
+
+\mainmatter
+\pagestyle{mainmatter}
+
+\include{relatorio/conteudo}
+
+% --- elementos pós-textuais ---------------------------------------------------
+
+\bibliography{referencias}
+
+\end{document}

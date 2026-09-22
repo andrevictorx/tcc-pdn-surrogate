@@ -1,0 +1,286 @@
+% =============================================================================
+% Relatório de progresso — conteúdo.
+% Convenções: sem travessões, sem negrito no corpo do texto, itálico apenas em
+% palavras estrangeiras. Mesma norma adotada em plano/conteudo.tex.
+% =============================================================================
+
+\chapter{Relatório de progresso}
+\label{cap:relatorio}
+
+\section{Resumo executivo}
+\label{sec:resumo}
+
+O trabalho encontra-se em dia com o cronograma aprovado no plano de trabalho. No
+período de agosto a setembro de 2026 foram concluídas a revisão bibliográfica
+inicial, a construção da infraestrutura de dados e a verificação empírica das
+hipóteses físicas que sustentam o modelo proposto. Em síntese:
+
+\begin{alineas}
+\item o plano de trabalho foi entregue, com onze páginas, conforme o Anexo I das
+normas do Departamento de Engenharia Elétrica;
+
+\item a infraestrutura de extração e validação de dados está construída, com
+1341 linhas de código em Python e 36 testes automatizados, todos aprovados;
+
+\item dois subconjuntos da base de dados foram processados integralmente,
+somando 985 e 36199 configurações, o equivalente a 25 GB de arquivos no formato
+Touchstone;
+
+\item cinco hipóteses físicas foram testadas sobre os dados reais: três
+confirmadas, uma reformulada e uma refutada, com a evidência registrada em
+especificação versionada;
+
+\item o primeiro marco previsto no cronograma, a validação do pipeline contra
+propriedades analíticas conhecidas, com prazo em setembro de 2026, está
+cumprido.
+\end{alineas}
+
+\section{Revisão bibliográfica}
+\label{sec:revisao}
+
+Foram reunidos quinze artigos, dos quais nove foram lidos integralmente e
+fichados em documento de análise metodológica com 375 linhas. A revisão produziu
+três resultados de natureza prática.
+
+O primeiro é a identificação do artigo que projetou o subconjunto de dados
+utilizado como referência controlada \citep{schierholz2023}. A tabela de
+parâmetros daquele trabalho reproduz, valor a valor, as constantes do arquivo de
+parâmetros do subconjunto, o que fornece a justificativa publicada de por que
+oito dos dezessete parâmetros tabulados variam e nove permanecem fixos.
+
+O segundo é a delimitação do espaço ocupado por esta pesquisa.
+\citet{hillebrecht2024} declaram que a predição do comportamento
+eletromagnético em toda a faixa de frequência permanece um problema em aberto,
+que exige adaptações mais sofisticadas de algoritmos de aprendizado de máquina, e
+remetem a métodos informados por física. \citet{garbuglia2023}, por sua vez,
+declaram como trabalho futuro exatamente os dois itens que este trabalho executa:
+estender a modelagem a variáveis de projeto adicionais e impor propriedades
+físicas às predições do modelo.
+
+O terceiro é a incorporação das referências indicadas pelo orientador, todas já
+fichadas. Entre elas, o levantamento mais recente da base de dados
+\citep{hillebrecht2025} fornece a relação dos subconjuntos disponíveis, o que
+orienta a escolha dos dois próximos conjuntos a incorporar.
+
+\section{Infraestrutura de dados}
+\label{sec:infraestrutura}
+
+A Tabela~\ref{tab:modulos} apresenta os módulos implementados. O carregamento é
+paralelo e genérico: um adaptador descreve cada subconjunto, declarando número de
+portas, porta de interesse, colunas de geometria e dimensões físicas da placa, de
+modo que a incorporação de um novo conjunto não exige alteração de código.
+
+\begin{table}[htb]
+\centering
+\caption{Módulos implementados}
+\label{tab:modulos}
+\footnotesize
+\begin{tabular}{@{}lrp{0.52\linewidth}@{}}
+\toprule
+Arquivo & Linhas & Função \\
+\midrule
+\texttt{touchstone.py} & 231 & Leitura de arquivos Touchstone, conversão de
+parâmetros de espalhamento em impedância e verificação de invariantes físicas \\
+\texttt{loader.py} & 346 & Carregamento paralelo e genérico de subconjuntos \\
+\texttt{subsets.py} & 98 & Adaptador de descrição de cada subconjunto \\
+\texttt{grid.py} & 81 & Interpolação para grade de frequência comum \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+A verificação automatizada compreende 36 testes, distribuídos entre casos
+analíticos, invariantes físicas e conferências de forma e tipo, executados em
+16 segundos. O carregamento das 985 configurações do subconjunto de referência,
+com 23 GB de arquivos, completa-se em cerca de 30 segundos com processamento em
+oito núcleos.
+
+\section{Resultados experimentais}
+\label{sec:resultados}
+
+\subsection{Verificação das hipóteses físicas}
+\label{subsec:hipoteses}
+
+Adotou-se, desde o plano de trabalho, o princípio de que uma restrição física só
+é incorporada à função de perda depois de verificada sobre os próprios dados. A
+Tabela~\ref{tab:hipoteses} resume os resultados.
+
+\begin{table}[htb]
+\centering
+\caption{Verificação das hipóteses físicas}
+\label{tab:hipoteses}
+\footnotesize
+\begin{tabular}{@{}clp{0.40\linewidth}l@{}}
+\toprule
+Hipótese & Enunciado & Resultado medido & Situação \\
+\midrule
+R1 & Comportamento capacitivo & $-1{,}0197 \pm 0{,}0062$ em 985 configurações e
+$-1{,}0001 \pm 0{,}0113$ em 36199, com 100\,\% de conformidade nas duas
+topologias & Confirmada \\
+R2 & Escala da capacitância & Vale para 66,3\,\% do conjunto, com expoentes
+$+0{,}952$ e $-0{,}974$ contra $+1$ e $-1$ teóricos, e $R^2 = 0{,}973$ &
+Reformulada \\
+R3 & Monotonicidade até o nulo de série & Confirmada no subconjunto de
+referência & Confirmada \\
+R4 & Passividade & Obrigatória por construção & Confirmada \\
+R5 & Localização modal & Os modos previstos não são observáveis na
+autoimpedância & Refutada \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+O fator aproximadamente igual a dois encontrado na verificação de R2 corresponde
+à porta acoplada a duas cavidades em paralelo. A escala absoluta, contudo, não se
+transfere entre topologias: a razão entre capacitância medida e analítica tem
+mediana 2,13 em um subconjunto e 0,46 no outro. Esse resultado confirma a decisão
+de projeto já registrada no plano de trabalho, de formular o termo quase-estático
+da função de perda apenas sobre a derivada logarítmica, que é invariante a fator
+multiplicativo.
+
+\subsection{Reprodução de resultado publicado}
+\label{subsec:reproducao}
+
+O ranqueamento de sensibilidade dos parâmetros de projeto, medido por correlação
+de postos sobre as 985 configurações, reproduz nas duas primeiras posições a
+ordem publicada por \citet{schierholz2023}, obtida por metodologia
+independente. Os dois parâmetros dominantes são a espessura do dielétrico e a
+permissividade relativa.
+
+\subsection{Validação do pipeline contra referência externa}
+\label{subsec:validacao_pipeline}
+
+No subconjunto de 36199 configurações, o banco de capacitores de desacoplamento
+é uma grandeza conhecida de forma independente, declarada no arquivo de
+parâmetros. Ajustando a capacitância extraída das curvas contra as duas
+contribuições conhecidas, obtém-se
+
+\begin{equation}
+C_{\text{extraída}} = \alpha \, C_{\text{placa}} + \beta \, C_{\text{decaps}},
+\qquad \beta = 1{,}065, \qquad R^2 = 0{,}996,
+\label{eq:validacao}
+\end{equation}
+
+\noindent com $n = 300$. O coeficiente do banco de capacitores é recuperado em
+1,065 contra 1,000 esperado, o que valida, de ponta a ponta, a leitura dos
+arquivos, a conversão de parâmetros de espalhamento em impedância e a extração de
+capacitância.
+
+\subsection{Correções identificadas por medição}
+\label{subsec:correcoes}
+
+Três correções de engenharia resultaram diretamente da verificação empírica.
+
+A primeira é um erro na janela de medição. A regra de extração calibrada no
+primeiro subconjunto reprovava 91\,\% das configurações do segundo, por motivo
+metodológico: os capacitores de desacoplamento deslocam o nulo de série para
+dentro da janela de medição, misturando os regimes capacitivo e indutivo. A regra
+passou a ser adaptativa por configuração, elevando a conformidade de 9\,\% para
+100\,\%.
+
+A segunda é a recalibração da tolerância de reciprocidade. O valor originalmente
+especificado, $1 \times 10^{-6}$, reprovava todas as configurações; a assimetria
+medida é da ordem de $10^{-5}$, compatível com ruído numérico do solucionador. A
+tolerância foi corrigida para $1 \times 10^{-4}$, com a medição registrada.
+
+A terceira é a verificação do alinhamento entre parâmetros e curvas. Um teste de
+permutação confirmou o pareamento correto, com coeficiente de determinação de
+0,197 no ajuste real contra 0,002 com rótulos embaralhados.
+
+\section{Documentação produzida}
+\label{sec:documentacao}
+
+Foram produzidas seis especificações técnicas, somando 1189 linhas, que cobrem
+escopo, roteiro, dados, física, união de subconjuntos e brief de pesquisa; um
+documento de arquitetura com 383 linhas; a análise metodológica da literatura já
+mencionada; e uma apresentação de 27 slides, no modelo institucional da UFPR,
+com a exploração completa dos dados. Acompanham ainda quatro roteiros de análise,
+com as figuras correspondentes.
+
+\section{Situação do cronograma}
+\label{sec:cronograma}
+
+A Tabela~\ref{tab:marcos} apresenta a situação dos marcos definidos no plano de
+trabalho.
+
+\begin{table}[htb]
+\centering
+\caption{Situação dos marcos}
+\label{tab:marcos}
+\footnotesize
+\begin{tabular}{@{}p{0.52\linewidth}ll@{}}
+\toprule
+Marco & Prazo & Situação \\
+\midrule
+Pipeline validado contra propriedades analíticas conhecidas & set.\ 2026 &
+Cumprido \\
+Quatro subconjuntos reunidos e melhor modelo de referência com $R^2 > 0{,}80$ &
+nov.\ 2026 & Em andamento \\
+Modelo informado por física superando a ablação com significância estatística &
+abr.\ 2027 & TCC II \\
+Fronteira de Pareto conferida por simulação de referência & jun.\ 2027 & TCC II
+\\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}
+
+Das atividades previstas para o período corrente, estão em execução a revisão
+bibliográfica, o pipeline de extração e validação da base e a reunião dos
+subconjuntos e das normas. Dos quatro subconjuntos exigidos pelo segundo marco,
+dois já foram processados.
+
+\section{Próximos passos}
+\label{sec:proximos}
+
+\begin{alineas}
+\item incorporar dois subconjuntos adicionais, identificados no levantamento de
+\citet{hillebrecht2025}: um de oito camadas, com 10000 configurações amostradas
+por hipercubo latino, e outro de quatro camadas, com 9999 configurações. Com
+três, cinco e sete cavidades na mesma família geométrica, o número de cavidades
+passa a ser um atributo observável, o que permite testar a hipótese que
+explicaria o desvio de escala observado na verificação de R2;
+
+\item executar a análise exploratória complementar sugerida pelo orientador:
+correlações de Pearson e phik, uma vez que a de Spearman já foi calculada;
+correlações sobre a fase da resposta; avaliação do balanceamento de classes; e
+agrupamento de capacitores por proximidade à porta sob investigação;
+
+\item treinar os modelos de referência sob protocolo único, com processos
+gaussianos e rede neural, partição registrada e curva de aprendizado;
+
+\item tabular as curvas-limite normativas da CISPR 32, classes A e B, e das
+normas IEC 61000-6-3 e 61000-6-4, preparando a camada normativa a ser
+desenvolvida em TCC II.
+\end{alineas}
+
+\section{Arquivos para análise}
+\label{sec:arquivos}
+
+O material de apoio acompanha este relatório, com a organização descrita na
+Tabela~\ref{tab:arquivos}.
+
+\begin{table}[htb]
+\centering
+\caption{Material de apoio}
+\label{tab:arquivos}
+\footnotesize
+\begin{tabular}{@{}p{0.40\linewidth}p{0.52\linewidth}@{}}
+\toprule
+Arquivo ou diretório & Conteúdo \\
+\midrule
+\texttt{proposta/} & Plano de trabalho entregue, com onze páginas \\
+\texttt{docs/} & Apresentação com a exploração dos dados, 27 slides \\
+\texttt{spec/} & Especificações técnicas, incluindo hipóteses físicas e
+registro da refutação \\
+\texttt{referencias/} & Análise metodológica dos trabalhos correlatos \\
+\texttt{src/} e \texttt{tests/} & Código-fonte e testes automatizados \\
+\texttt{notebooks/} & Roteiros de análise e figuras \\
+\bottomrule
+\end{tabular}
+\vspace{0.3em}
+\\{\footnotesize FONTE: O autor (2026).}
+\end{table}

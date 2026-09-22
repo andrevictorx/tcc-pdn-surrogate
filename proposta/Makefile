@@ -14,12 +14,14 @@
 
 PLANO=plano
 MAIN=main
+RELATORIO=relatorio
 ENTREGA=Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf
 COMPLETO=Documento_completo_com_apendices.pdf
+RELENTREGA=Relatorio_Primeira_Avaliacao_TCC_I_Andre_Victor_Xavier_Pires.pdf
 
 # Sem .PHONY, o alvo "plano" seria confundido com o diretório plano/ e o make
 # reportaria "up to date" sem compilar nada.
-.PHONY: plano completo tudo bib clean purge
+.PHONY: plano completo relatorio tudo bib clean purge
 
 # ---- padrão: o plano de trabalho (entrega) -----------------------------------
 plano:
@@ -40,7 +42,16 @@ completo:
 	@mv main_ap.pdf $(COMPLETO)
 	@echo "==> $(COMPLETO)  (documento completo — leitura pessoal)"
 
-tudo: plano completo
+# ---- relatorio de progresso (primeira avaliacao) -----------------------------
+relatorio:
+	@pdflatex $(RELATORIO)
+	@bibtex   $(RELATORIO)
+	@pdflatex $(RELATORIO)
+	@pdflatex $(RELATORIO)
+	@mv $(RELATORIO).pdf $(RELENTREGA)
+	@echo "==> $(RELENTREGA)  (RELATORIO — primeira avaliacao de TCC I)"
+
+tudo: plano completo relatorio
 
 bib:
 	@bibtex $(PLANO)
@@ -56,7 +67,9 @@ clean:
 	-rm -f $(MAIN).acr $(MAIN).smb
 	-rm -f main_ap.log main_ap.lot main_ap.lof main_ap.out
 	-rm -f main_ap.toc main_ap.bbl main_ap.blg
+	-rm -f $(RELATORIO).log $(RELATORIO).lot $(RELATORIO).lof $(RELATORIO).out
+	-rm -f $(RELATORIO).toc $(RELATORIO).bbl $(RELATORIO).blg
 
 purge: clean
-	@rm -f $(ENTREGA) $(COMPLETO) $(PLANO).pdf $(MAIN).pdf
+	@rm -f $(ENTREGA) $(COMPLETO) $(RELENTREGA) $(PLANO).pdf $(MAIN).pdf $(RELATORIO).pdf
 	@rm -f main_com_apendices.pdf
