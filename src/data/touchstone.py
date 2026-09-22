@@ -146,18 +146,74 @@ def cavity_modes(eps_r: float, width_m: float, length_m: float, f_max: float,
     return modes
 
 
-def low_frequency_slope(freq: np.ndarray, z_abs: np.ndarray, n_points: int = 8) -> float:
+def quasi_static_window(
+    freq: np.ndarray, z_abs: np.ndarray, factor: float = 3.0, min_points: int = 3
+) -> np.ndarray:
+    """Máscara booleana da região quase-estática, adaptativa por curva.
+
+    A janela fixa dos primeiros N pontos (usada até `spec/UNIAO_SUBCONJUNTOS.md`)
+    pressupõe que o nulo de série está sempre distante do início da banda. Isso
+    falha quando decaps deslocam o nulo para baixo: no subconjunto de 1 cavidade,
+    8 pontos fixos capturam apenas 9% das curvas dentro do regime capacitivo
+    puro, contra 91-100% com a janela adaptativa `f < f_nulo/factor`.
+
+    Args:
+        freq: grade de frequência, Hz, shape (nf,).
+        z_abs: magnitude de |Z11(f)|, mesma shape.
+        factor: a janela cobre f < f_nulo/factor. Maior => janela mais estreita,
+            mais distante do nulo, portanto mais seguramente quase-estática.
+        min_points: garante ao menos esta contagem de pontos mesmo se o nulo
+            estiver muito próximo do início da banda.
+
+    Returns:
+        Máscara booleana, shape (nf,), com min_points True no mínimo.
+    """
+    f_nulo = freq[int(np.argmin(z_abs))]
+    mask = freq < f_nulo / factor
+    if mask.sum() < min_points:
+        mask = np.zeros_like(mask)
+        mask[:min_points] = True
+    return mask
+
+
+def low_frequency_slope(
+    freq: np.ndarray, z_abs: np.ndarray, n_points: int | None = 8, factor: float = 3.0
+) -> float:
     """Inclinação log-log de |Z| na região quase-estática.
 
     Vale -1 para comportamento capacitivo ideal. Invariante verificável I6 de
-    `spec/DATA_SPEC.md`; medida em -1.018 +- 0.008 sobre 40 configurações.
+    `spec/DATA_SPEC.md`.
+
+    Args:
+        n_points: se um inteiro, usa a janela fixa histórica (compatibilidade
+            retroativa com a medição de -1.018 +- 0.008 sobre 40 configurações
+            do subconjunto de 6 camadas). Se None, usa a janela adaptativa
+            `quasi_static_window` — necessária para subconjuntos onde o nulo de
+            série pode cair dentro dos primeiros pontos da banda (ex.: 1
+            cavidade com decaps). Ver `spec/UNIAO_SUBCONJUNTOS.md`.
+        factor: repassado a `quasi_static_window` quando n_points é None.
     """
-    lo = slice(0, n_points)
-    return float(np.polyfit(np.log10(freq[lo]), np.log10(z_abs[lo]), 1)[0])
+    if n_points is None:
+        mask = quasi_static_window(freq, z_abs, factor=factor)
+    else:
+        mask = np.zeros_like(z_abs, dtype=bool)
+        mask[:n_points] = True
+    return float(np.polyfit(np.log10(freq[mask]), np.log10(z_abs[mask]), 1)[0])
 
 
-def check_invariants(network: Network, atol: float = 1e-6) -> dict[str, bool]:
+def check_invariants(
+    network: Network,
+    atol_reciprocidade: float = 1e-4,
+    atol_passividade_s: float = 1e-6,
+    atol_passividade_z: float = 1e-9,
+) -> dict[str, bool]:
     """Verifica as invariantes físicas I1-I4 de `spec/DATA_SPEC.md`.
+
+    Tolerâncias distintas por invariante, conforme medido empiricamente: I1
+    (reciprocidade) exige 1e-4 porque a assimetria numérica do solver chega a
+    1.5e-5 mesmo em simulações fisicamente saudáveis (ver nota em
+    `spec/DATA_SPEC.md`, 20/20 configurações aprovadas nessa tolerância contra
+    0/20 em 1e-6). I2 e I3 permanecem nas tolerâncias originais, mais estritas.
 
     Returns:
         Mapa nome -> resultado. Nenhuma exceção é levantada; a decisão sobre o
@@ -168,8 +224,8 @@ def check_invariants(network: Network, atol: float = 1e-6) -> dict[str, bool]:
     z = s_to_z(network)
     diagonal = np.einsum("kii->ki", z)
     return {
-        "I1_reciprocidade": bool(np.allclose(s, np.swapaxes(s, 1, 2), atol=atol)),
-        "I2_passividade_S": bool(np.all(singular <= 1.0 + atol)),
-        "I3_passividade_Z": bool(np.all(diagonal.real >= -1e-9)),
+        "I1_reciprocidade": bool(np.allclose(s, np.swapaxes(s, 1, 2), atol=atol_reciprocidade)),
+        "I2_passividade_S": bool(np.all(singular <= 1.0 + atol_passividade_s)),
+        "I3_passividade_Z": bool(np.all(diagonal.real >= -atol_passividade_z)),
         "I4_freq_crescente": bool(np.all(np.diff(network.freq) > 0)),
     }
