@@ -56,7 +56,6 @@
 - [ ] Integração com EDA tools (KiCad plugin) — future work
 - [ ] Validação experimental (teste em lab) — fora do escopo TCC
 - [ ] Otimização multi-objetivo (Pareto) — pode ser extensão
-- [ ] Dados reais do scanner 3D — nice-to-have, não core
 - [ ] Comparação com simuladores comerciais (Ansys, CST)
 - [ ] Training em GPU/distributed — laptop é suficiente
 - [ ] API REST/web service — versão 2.0

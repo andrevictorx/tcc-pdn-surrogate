@@ -5,7 +5,6 @@ eletrônicos embarcados · Universidade Federal do Paraná.
 
 **Autor:** André Victor Xavier Pires (GRR20212735)
 **Orientador:** Prof. Dr. Leandro dos Santos Coelho (DELT / PPGEE — UFPR)
-**Coorientador:** Prof. Dr. Bruno Pohlot Ricobom (DELT — UFPR)
 **Período:** TCC I (2026/2) · TCC II (2027/1) — **em andamento**
 
 ---

@@ -91,7 +91,7 @@ cd .. && python scripts/verify_physics_anchors.py --n 40 --seed 42
 ## Conformidade com o Anexo I
 
 Ambos os documentos declaram os dados de identificação exigidos — estudante,
-matrícula, ênfase, orientador e coorientador com dados profissionais — em uma página
+matrícula, ênfase e orientador — em uma página
 logo após a folha de rosto (`plano/identificacao.tex` e
 `0-iniciais/identificacao.tex`).
 

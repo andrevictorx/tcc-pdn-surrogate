@@ -26,8 +26,8 @@ O conteúdo está em arquivos separados.
 
 | Quero mexer em… | Arquivo |
 |---|---|
-| Título, autor, orientador, **coorientador** | `plano.tex` (bloco "metadados") |
-| **Matrícula, ênfase, dados do coorientador** | `plano/identificacao.tex` |
+| Título, autor, orientador | `plano.tex` (bloco "metadados") |
+| **Matrícula, ênfase** | `plano/identificacao.tex` |
 | **Todo o conteúdo** (itens 2 a 9 do Anexo I) | `plano/conteudo.tex` |
 | Referências bibliográficas | `referencias.bib` (compartilhado) |
 
@@ -38,7 +38,7 @@ e um cabeçalho de comentário no topo mapeando seção → item do Anexo.
 
 | Quero mexer em… | Arquivo |
 |---|---|
-| Título, autor, orientador, coorientador | `main.tex` (bloco "metadados") |
+| Título, autor, orientador | `main.tex` (bloco "metadados") |
 | Matrícula, ênfase, quadro do Anexo I | `0-iniciais/identificacao.tex` |
 | Resumo / Abstract | `0-iniciais/resumo.tex`, `0-iniciais/abstract.tex` |
 | Listas de siglas e símbolos | `0-iniciais/abreviaturas.tex`, `0-iniciais/simbolos.tex` |
@@ -136,18 +136,12 @@ Abra `plano/identificacao.tex` (ou `0-iniciais/identificacao.tex`, no documento
 completo). É uma tabela; cada linha tem o formato `\textbf{Rótulo} & valor \\`:
 
 ```latex
-\textbf{Coorientador} & Prof.\ Dr.\ Bruno Pohlot Ricobom \\[0.4em]
-\textbf{\quad Vínculo} & Departamento de Engenharia Elétrica, UFPR \\
+\textbf{Orientador} & Prof.\ Dr.\ Leandro dos Santos Coelho \\[0.4em]
+\textbf{\quad Vínculo} & Departamento de Engenharia Elétrica e PPGEE, UFPR \\
 ```
 
-O nome do coorientador aparece **também** na folha de rosto, via
-`\coadvisor{...}` no `plano.tex` — se mudar em um lugar, mude nos dois.
-
-### Remover o coorientador
-
-Três lugares: a linha `\coadvisor{...}` no `plano.tex` (comente ou apague), as
-quatro linhas do coorientador em `plano/identificacao.tex`, e o §1.5.1 (Recursos
-humanos) em `plano/conteudo.tex`.
+O nome do orientador aparece **também** na folha de rosto, via `\advisor{...}`
+no `plano.tex` — se mudar em um lugar, mude nos dois.
 
 ### Acrescentar um parágrafo
 
@@ -253,7 +247,7 @@ pdfinfo Plano_de_Trabalho_*.pdf | grep Pages   # deve dar 11
 
 Depois abra o PDF e confira a olho:
 
-- página de identificação: matrícula, ênfase e dados do coorientador corretos;
+- página de identificação: matrícula e ênfase corretos;
 - **sumário**: as oito seções têm de ser, na ordem, os itens 2 a 9 do Anexo I —
   Introdução, Objetivos, Público alvo, Metodologia, Recursos, Resultados,
   Contribuição, Cronograma. O sumário é o checklist da comissão;

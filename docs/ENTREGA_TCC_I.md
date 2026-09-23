@@ -3,7 +3,6 @@
 **Estudante:** André Victor Xavier Pires · **Matrícula:** GRR20212735
 **Ênfase:** Sistemas eletrônicos embarcados (curso noturno)
 **Orientador:** Prof. Dr. Leandro dos Santos Coelho
-**Coorientador:** Prof. Dr. Bruno Pohlot Ricobom — **aceite pendente de confirmação**
 **Prazo interno:** enviar ao orientador até **quinta, 06/08/2026** (ele viaja na
 sexta, 07/08, data em que pretende encaminhar).
 
@@ -30,30 +29,7 @@ fim do semestre, para a terceira avaliação de TCC I.
 
 ---
 
-## 2. Antes de tudo: confirmar a coorientação
-
-O plano de trabalho **já declara o Prof. Dr. Bruno Pohlot Ricobom como
-coorientador**, com os dados profissionais que o Anexo I exige. Isso pressupõe o
-aceite dele. Portanto, antes de enviar:
-
-1. **Perguntar ao Prof. Bruno** se aceita coorientar, e confirmar com ele:
-   - a grafia da **titulação** e do **vínculo** (hoje: "Departamento de Engenharia
-     Elétrica, Setor de Tecnologia, UFPR");
-   - a **área de atuação** declarada (hoje: "instrumentação eletrônica e medição de
-     campo próximo aplicada a compatibilidade eletromagnética");
-   - a **contribuição** atribuída a ele (concepção das placas de teste e condução da
-     validação experimental por varredura de campo próximo).
-2. **Avisar o Prof. Leandro**, porque é ele quem marca a caixa de coorientação no
-   Anexo III.
-
-Se o Prof. Bruno **não** aceitar, o plano precisa ser revertido: editar
-`proposta/plano/identificacao.tex` (linha do coorientador), o §1.5.1 de
-`proposta/plano/conteudo.tex` e a linha `\coadvisor{...}` de `proposta/plano.tex`,
-e recompilar com `make`. São cinco minutos.
-
----
-
-## 3. Anexo III — o que o professor precisa preencher
+## 2. Anexo III — o que o professor precisa preencher
 
 O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparecem:
 
@@ -61,14 +37,13 @@ O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparece
 - **1ª linha de aluno** → `André Victor Xavier Pires`, matrícula `GRR20212735`
 - **2ª linha de aluno** → deixar em branco (trabalho **individual**)
 - **Ênfase** → marcar **`( x ) sistemas eletrônicos embarcados (curso noturno)`**
-- **Coorientação** → marcar **`( x ) será coorientado por Bruno Pohlot Ricobom`**,
-  coerente com o que o plano de trabalho declara
+- **Coorientação** → marcar **`( ) não terá coorientador`**
 - **Data** e **assinatura** → assinatura digital pelo gov.br/SEI ou à mão com
   digitalização posterior.
 
 ---
 
-## 4. Sequência da entrega
+## 3. Sequência da entrega
 
 1. **Até qui 06/08** — enviar ao Prof. Leandro, por e-mail, dois anexos:
    - `Plano_de_Trabalho_TCC_Andre_Victor_Xavier_Pires_GRR20212735.pdf`
@@ -87,7 +62,7 @@ O arquivo é entregue **intacto**, sem edição. Campos, na ordem em que aparece
 
 ---
 
-## 5. O que NÃO se aplica nesta etapa
+## 4. O que NÃO se aplica nesta etapa
 
 O roteiro de "passo a passo para finalização do documento TCC" — transformar em
 PDF, **remover metadados**, processo **SEI**, publicação no **Repositório
@@ -99,7 +74,7 @@ colegiado do curso de Engenharia Elétrica em 01/11/2024.
 
 ---
 
-## 6. Como este plano alimenta as avaliações do semestre
+## 5. Como este plano alimenta as avaliações do semestre
 
 TCC I tem **três** avaliações, e todas reaproveitam o que já está escrito:
 
@@ -134,7 +109,7 @@ projeto**. Vale ter isso em vista ao longo do semestre.
 
 ---
 
-## 7. Arquivos de referência
+## 6. Arquivos de referência
 
 - `docs/normas-ufpr/anexo_i_-_normas_para_plano_de_trabalho.pdf` — checklist do plano (atendido)
 - `docs/normas-ufpr/anexo_ii_-_normas_para_relatorio_final_de_tcc_i.pdf` — relatório de dezembro
