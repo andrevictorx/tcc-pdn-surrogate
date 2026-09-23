@@ -64,9 +64,42 @@ a −1. Formulação invariante a fator multiplicativo — ver R2.
 
 ---
 
-## R2 — Escala da capacitância  ⚠️ CONFIRMADA APENAS COMO TENDÊNCIA
+## R2 — Escala da capacitância  ✅ CONFIRMADA NO BLOCO CONFIÁVEL · ⚠️ NÃO TRANSFERE ENTRE TOPOLOGIAS
 
 **Enunciado testado.** `C = ε₀ ε_r a b / h` (placas paralelas, cavidade única).
+
+> ### Correção (2026-09-23) — o "terço desviante" é integridade de dados, não física
+>
+> A heterogeneidade relatada abaixo (66,3 % conformes, 33,7 % desviantes) **não é um
+> fenômeno físico**. Ordenando as configurações por `simu_index`, os desvios se concentram
+> inteiramente nas simulações **1000–1499**; a partir de **1500** a conformidade é de
+> **100 %** (último desviante: 1498). Ver `notebooks/05a_integridade_pi4.png`.
+>
+> | bloco | n | razão C_ext/C_ana (p5 · mediana · p95) | lei quase-estática |
+> |---|---|---|---|
+> | simu 1000–1499 | 500 | 0,35 · 2,13 · 12,08 | — |
+> | **simu 1500–1999** | **485** | **2,04 · 2,13 · 2,33** | **log h +0,955 ± 0,004 · log ε_r −1,022 ± 0,016 · R² 0,998** |
+>
+> Leitura: os arquivos 1000–1499 **não correspondem aos parâmetros registrados** no
+> `parameter.csv`. Não é um deslocamento simples de índice (nenhum deslocamento de −4 a +4
+> reduz o erro). As curvas desses arquivos são fisicamente válidas (R1 vale em 100 %) —
+> apenas não descrevem os parâmetros de suas linhas. No bloco confiável, a razão 2,13 vale
+> para **todas** as configurações: a explicação das duas cavidades em paralelo é completa.
+>
+> **O que muda no texto abaixo:**
+> - a hipótese de *permutação parcial* foi declarada "descartada" com dois testes que **não
+>   tinham poder para descartá-la** — o KS comparou distribuições sem corrigir o fator de
+>   escala ≈ 1,07, e o pareamento por um único escalar num contínuo denso não discrimina.
+>   A hipótese de descasamento entre linhas e arquivos é, na verdade, a que os dados sustentam;
+> - a "direção do desvio" (finos → razão < 1, espessos → razão ≫ 1) é o efeito esperado de
+>   dividir uma capacitância sem relação com a linha pela `C_analítica` dessa linha. Não
+>   requer a ressalva sobre vias longas;
+> - consequência para o aprendizado: com as 985 configurações nenhum modelo passa de
+>   R² ≈ 0,11 em qualquer frequência; no bloco confiável, gradient boosting atinge
+>   **R² = 0,995 em 1 MHz** (validação cruzada 5 dobras). Ver `notebooks/05_resultados_salib.md`.
+>
+> **Ação pendente:** reportar aos mantenedores da TUHH e excluir `simu_index < 1500` do
+> PI-4 no carregador até resposta. Registro original mantido abaixo como histórico.
 
 **Evidência (985 configurações, 2026-08-11).** A razão `C_extraída/C_analítica`
 tem mediana 2,130, mas a população é **heterogênea**:
@@ -116,13 +149,11 @@ e **refutado** (`C_série` implicado varia de 51,7 a 11,0 nF; R² negativo em lo
 absoluta, portanto, **não transfere entre topologias**, o que reforça a formulação do termo
 quase-estático apenas sobre a derivada logarítmica, invariante a fator multiplicativo.
 
-**Uso.** **Não** impor R2 globalmente. Ou restringir à população conforme, ou estimar `γ`
-por configuração, ou ponderar o termo pela confiança. A ablação deve reportar R2 com e sem
-restrição de domínio — é resultado, não detalhe de implementação.
-
-**Uso.** **Não** impor o valor analítico. Usar `C_ef = γ · ε₀ ε_r a b / h`, com
-`γ` estimado sobre o conjunto de treinamento. A informação de forma (R1) é a
-restrição forte; a de escala é um termo auxiliar de peso menor.
+**Uso (atualizado em 2026-09-23).** Dentro de uma topologia, a escala vale com um fator
+constante (`γ ≈ 2,13` no PI-4, bloco confiável). Entre topologias, não transfere (2,13 no
+PI-4, 0,46 no PI-1). Portanto: o termo quase-estático da perda usa só a **derivada
+logarítmica** (R1), invariante a escala; a escala entra, no máximo, como `γ` estimado por
+subconjunto no treino.
 
 ---
 
