@@ -242,3 +242,39 @@ comum.
 Descoberta durante a verificação (não estava nos critérios originais, mas decorre deles): a
 densidade da grade comum precisou ser calibrada empiricamente contra a profundidade do nulo de
 série, não escolhida a priori — ver Armadilha 3 acima.
+
+
+---
+
+## Catálogo oficial da TUHH (site, consultado em 2026-09-23)
+
+O site da SI/PI-Database passou a numerar os conjuntos. Esta numeração **substitui** a
+nomenclatura "Caso N" da Tabela I de Hillebrecht et al. (2025), usada antes nesta spec.
+
+| ID | Estrutura | Amostragem | Sims | Cav. | Portas | Δf | Zip | Situação |
+|---|---|---|---|---|---|---|---|---|
+| PI-1 | PWR/GND Plane PCB 11×11 Via-Array | decaps | 36 200 | 1 | 2 | 334 | 1,3 GB | **em disco** |
+| PI-2 | 4-Layer PDN, two Via Arrays | aleatória | 10 000 | 3 | 28 | 334 | 44 GB | **2º a baixar** |
+| PI-3 | 8-Layer PDN, two Via Arrays | **LHS** | 10 000 | 7 | 28 | 334 | 42 GB | **1º a baixar** |
+| PI-4 | 6-Layer PDN, two Via Arrays | **LHS** | 985 | 5 | 36 | 334 | 7,2 GB | **em disco** (⚠️ só simu ≥ 1500) |
+| PI-5 | 4-Layer Polygonal PDN | — | 500 | 3 | 2 | 334 | 12 MB | — |
+| PI-6 | 2-Layer PDN, Large Via Array | — | 10 000 | 1 | 2 | 334 | 280 MB | — |
+| PI-7 | 4-Layer PDN, Three Via Arrays, Central Power Rail | — | 20 000 | 3 | 6 | 334 | 3,8 GB | — |
+| PI-8 | 4-Layer PDN, two Via Arrays, Central Power Rail | — | 20 000 | 3 | 4 | 334 | 1,7 GB | — |
+| PI-9 | 14-Layer PDN, two Via Arrays, Central Power Rail | — | 20 000 | 13 | 4 | 334 | 1,7 GB | — |
+| PI-10 a PI-13 | 4-Layer Eurocard (via distante / simples / média / complexa) | — | 2 000 cada | 3 | 4 / 8 / 18 / 68 | **121** | 75 MB a 16 GB | — |
+
+SI-1 a SI-9 (integridade de sinal) ficam fora de escopo.
+
+**Por que PI-3 e depois PI-2.** Mesma família estrutural de PI-4 (PDN com dois arranjos de
+vias), variando o número de cavidades: 3 (PI-2), 5 (PI-4), 7 (PI-3). PI-3 é LHS e serve ao
+experimento controlado de curva de aprendizado; PI-2 (aleatória) serve à união e à validação
+com topologia retida, mas não à curva de aprendizado — restrição já prevista na proposta.
+
+**Família alternativa, mais leve.** PI-7, PI-8 e PI-9 somam 7,2 GB e cobrem 3 e 13
+cavidades com 20 000 simulações cada. Útil se o disco (166 GB livres) não comportar PI-2 e
+PI-3 descompactados.
+
+**Espaço em disco.** A razão de descompactação observada vai de 2,3× a 3,4×. PI-3 pode
+ocupar 100–140 GB descompactado. O ciclo incremental (baixar → reduzir à curva → apagar
+o bruto) é **obrigatório** para esses dois conjuntos.

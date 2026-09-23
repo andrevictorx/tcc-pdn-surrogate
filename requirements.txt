@@ -4,9 +4,9 @@
 # até o primeiro experimento reproduzível em experiments/.
 
 # --- base numérica e dados ---------------------------------------------------
-numpy>=2.5
+numpy>=2.4
 pandas>=3.0
-scipy>=1.18
+scipy>=1.15              # o dowhy exige scipy < 1.16 (ver docs/GUIA_FERRAMENTAS_E_EVENTOS.md)
 scikit-rf                # leitura Touchstone (.sNp) e conversão S↔Z
 matplotlib>=3.11
 
@@ -21,9 +21,13 @@ torch                    # PINN: perda com termos físicos R1/R3/R4
 optuna                   # pesos dos termos físicos (otimização bayesiana)
 pymoo                    # NSGA-II / evolução diferencial multiobjetivo
 
-# --- interpretabilidade ------------------------------------------------------
+# --- sensibilidade e interpretabilidade --------------------------------------
+SALib                    # RBD-FAST, delta, PAWN sobre amostra dada; Sobol via substituto
 shap
 pysr                     # regressão simbólica (requer Julia; ver docs do PySR)
+
+# --- inferência causal (apoio) ------------------------------------------------
+dowhy                    # testes de refutação; causalml NÃO: conflita com o dowhy
 
 # --- registro, teste e configuração -----------------------------------------
 mlflow
