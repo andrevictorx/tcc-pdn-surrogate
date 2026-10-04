@@ -177,7 +177,26 @@ prediz impedância complexa.
 
 ---
 
-## R5 — Localização modal  ❌ REFUTADA para `Z11` nesta banda
+## R5 — Localização modal  🔎 REABERTA (TM11) · TM10/TM01 seguem refutados
+
+> **Correção (2026-10-04).** A refutação abaixo foi feita sobre uma amostra que
+> incluía o bloco descasado `simu_index` 1000–1499 (ver R2). Refeita só no bloco
+> confiável (n = 485), com `find_peaks(prominence = 0,05 década)` e **inspeção
+> gráfica das curvas**, conforme a regra deste projeto:
+>
+> | medida | valor |
+> |---|---|
+> | curvas com pico proeminente | 178 de 485 (37 %), proeminência mediana ≈ 1 década |
+> | faixa dos picos | 469–997 MHz, mediana 946 MHz |
+> | desvio mediano pico − TM₁₀ / TM₀₁ / TM₁₁ previsto | +87 % / +29 % / **+6 %** |
+> | curvas com TM₁₁ previsto < 990 MHz | 296, das quais 171 têm pico |
+>
+> TM₁₀ e TM₀₁ continuam ausentes. Há uma ressonância compatível com **TM₁₁**
+> perto do topo da banda. Pendências antes de qualquer uso na perda: (1) a porta
+> está no centro da placa, onde o TM₁₁ de uma cavidade ideal tem nó — explicar a
+> excitação (cavidades acopladas, assimetria dos arranjos); (2) os picos ficam
+> truncados pelo limite de 1 GHz; (3) repetir em PI-2 e PI-3. Ver o notebook
+> `notebooks/TCC_PDN_Colab.ipynb`, seção I.6.
 
 **Enunciado testado.** Máximos de `|Z11|` nas frequências
 `f_mn = c₀/(2√ε_r) · √((m/a)² + (n/b)²)`.
@@ -245,4 +264,4 @@ Requisitos:
 - [ ] cada termo desativável por configuração, sem edição de código
 - [ ] ablação completa reprodutível por um único arquivo de config
 - [ ] os 4 testes acima passam para cada termo ativo
-- [ ] R5 permanece desativado até que haja evidência gráfica em contrário
+- [ ] R5 permanece desativado até que haja evidência gráfica em contrário — evidência gráfica de TM₁₁ registrada em 2026-10-04; continua desativado até as pendências acima
