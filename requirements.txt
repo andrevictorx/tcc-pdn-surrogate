@@ -9,6 +9,7 @@ pandas>=3.0
 scipy>=1.15              # o dowhy exige scipy < 1.16 (ver docs/GUIA_FERRAMENTAS_E_EVENTOS.md)
 scikit-rf                # leitura Touchstone (.sNp) e conversão S↔Z
 matplotlib>=3.11
+seaborn>=0.13            # figuras do notebook de apresentação
 
 # --- modelos de referência --------------------------------------------------
 scikit-learn>=1.9        # regressão regularizada, floresta aleatória, GPR
