@@ -121,6 +121,14 @@ sobre uma amostra de 500 configurações do subconjunto de 1 cavidade, através 
 genérico novo (não mais manualmente): conformidade com R1 sobe de 11,2% (janela fixa) para
 92,4% (adaptativa) — mesma ordem de grandeza da medição anterior (9% → 91%).
 
+> **Correção (2026-10-04).** Sobre 3 000 configurações sorteadas do cache completo
+> do PI-1 (36 199 curvas), com a mesma função `quasi_static_window(factor=3)`:
+> **61 %** em ±0,05 e **91 %** em ±0,10, inclinação mediana −1,044. Nas 551 em que a
+> placa responde por mais de 50 % da capacitância, **99 %** em ±0,05 (mediana
+> −1,031). O desvio sistemático vem de janelas com 2 ou 3 pontos antes de um nulo
+> próximo de 24 MHz, onde a indutância dos decaps já pesa. Os 92,4 % acima não se
+> reproduzem nesta amostra e não devem ser citados.
+
 ---
 
 ## Atributos independentes de topologia
