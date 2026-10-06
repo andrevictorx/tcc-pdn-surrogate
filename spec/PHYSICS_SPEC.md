@@ -177,7 +177,7 @@ prediz impedância complexa.
 
 ---
 
-## R5 — Localização modal  🔎 REABERTA (TM11) · TM10/TM01 seguem refutados
+## R5 — Localização modal  ✅ CONFIRMADA em PI-3 e PI-2, condicionada à posição da porta · TM11 do PI-4 em aberto
 
 > **Correção (2026-10-04).** A refutação abaixo foi feita sobre uma amostra que
 > incluía o bloco descasado `simu_index` 1000–1499 (ver R2). Refeita só no bloco
@@ -197,6 +197,14 @@ prediz impedância complexa.
 > excitação (cavidades acopladas, assimetria dos arranjos); (2) os picos ficam
 > truncados pelo limite de 1 GHz; (3) repetir em PI-2 e PI-3. Ver o notebook
 > `notebooks/TCC_PDN_Colab.ipynb`, seção I.6.
+
+> **Atualização (2026-10-06) — PI-3 e PI-2.** Nos 20 000 casos dos dois subconjuntos, o 1º pico acima do nulo de
+> série cai sobre o TM₁₀ da maior dimensão (mediana 0,995 da previsão). Com a porta fora do nó do modo
+> (|cos(π·u)| > 0,5, u = posição relativa da porta), 98 % (PI-3) e 99 % (PI-2) das curvas acertam em ±5 %. Com a
+> porta perto do nó, o primeiro pico salta para 2·TM₁₀ (TM₂₀). Isso explica a ausência de TM₁₀/TM₀₁ no PI-4: a porta
+> fica no centro da placa, nó dos dois modos. A restrição modal só é válida ponderada pelo fator de acoplamento
+> cos(mπu)·cos(nπv). Continua em aberto o pico compatível com TM₁₁ no PI-4, já que o centro também é nó desse modo.
+> Ver `notebooks/TCC_PDN_Colab.ipynb`, seção II-B.6.
 
 **Enunciado testado.** Máximos de `|Z11|` nas frequências
 `f_mn = c₀/(2√ε_r) · √((m/a)² + (n/b)²)`.
@@ -264,4 +272,4 @@ Requisitos:
 - [ ] cada termo desativável por configuração, sem edição de código
 - [ ] ablação completa reprodutível por um único arquivo de config
 - [ ] os 4 testes acima passam para cada termo ativo
-- [ ] R5 permanece desativado até que haja evidência gráfica em contrário — evidência gráfica de TM₁₁ registrada em 2026-10-04; continua desativado até as pendências acima
+- [ ] R5 permanece desativado até que haja evidência gráfica em contrário — evidência gráfica de TM₁₁ registrada em 2026-10-04; continua desativado até as pendências acima; em 2026-10-06 confirmado TM₁₀ em PI-3/PI-2 com fator de acoplamento — reativável no TCC II com essa ponderação
