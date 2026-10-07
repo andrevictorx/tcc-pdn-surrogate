@@ -171,14 +171,42 @@ aprenderia a associar entradas a saídas que não lhes pertencem.
 | 3. As linhas estão embaralhadas dentro do bloco | melhor atribuição um-para-um curva × linha (algoritmo húngaro) | erro 0,156 década, contra 0,059 no controle | descartada |
 | 4. Os arquivos vêm de outra amostragem, não registrada | espessura inferida da própria curva por um modelo inverso | cobre 4–78 mil, mas não concorda com o CSV (R² = −1,12) | compatível |
 
-**Indício adicional: os carimbos de data e hora.** Os 500 arquivos do bloco ruim foram gravados em sequência, em
-4,6 minutos e sem falhas, como numa cópia. Os do bloco bom foram gravados de forma intercalada ao longo de 51 minutos,
-com 15 simulações ausentes, como numa execução em paralelo.
+**Cronologia dos arquivos (I.2c).** O zip preserva a data e a hora de gravação de cada arquivo, e todas são de 6 de
+março de 2023, nos servidores da TUHH:
 
-**Conclusão.** O defeito está no rótulo, não na simulação. A explicação compatível com todos os testes é que os
-arquivos 1000–1499 vêm de uma rodada cujos parâmetros não foram gravados. Todas as análises usam o **bloco
-confiável** de 485 simulações. A confirmação depende dos mantenedores da TUHH. As 500 curvas ainda podem servir para
-conferir restrições que não dependem dos parâmetros (H1, H4, H5).
+| Grupo | Arquivos | Gravados | Coerentes com a planilha |
+|---|---|---|---|
+| simu 1000–1499 | 500 | 07:20:14 – 07:24:50 | 15 % (só por acaso) |
+| simu 1500–1999, antes da planilha | 206 | 07:24:51 – 07:29:07 | 100 % |
+| `parameter.csv` | 1 | **07:59:03** | — |
+| simu 1500–1999, depois da planilha | 279 | 08:09:33 – 08:16:01 | 99 % |
+
+Os arquivos 1499 e 1500 foram gravados com **um segundo** de diferença, no mesmo fluxo contínuo. O processo de
+gravação foi o mesmo; o que muda é a lista de parâmetros. As 500 primeiras linhas da planilha descrevem uma amostragem
+diferente da que foi simulada. A hipótese mais provável é que essa parte da lista tenha sido sorteada de novo, ou
+sobrescrita, antes de a planilha ser escrita.
+
+**O arquivo original já tinha o defeito?** Sim. As datas são as do servidor da TUHH, preservadas pelo zip, e a planilha
+nunca foi editada localmente. Baixar de novo traria o mesmo defeito.
+
+**É possível corrigir a planilha a partir das curvas?** Só em parte, e não vale a pena. Um modelo inverso, que lê o
+parâmetro a partir da curva, treinado no bloco confiável, recupera:
+
+| Parâmetro | R² do modelo inverso | Recuperável? |
+|---|---|---|
+| espessura `TDIEL` | 0,98 | sim |
+| permissividade `PERMITTIVITY` | 0,75 | aproximadamente |
+| raio da via do arranjo I | 0,56 | mal |
+| os outros cinco (antipad e passo do arranjo I; todo o arranjo II) | negativo | **não** |
+
+É a contrapartida da análise de sensibilidade: se um parâmetro mexe pouco na curva, a curva diz pouco sobre ele. Uma
+planilha "corrigida" teria valores inventados nas colunas das vias e contaminaria a análise de sensibilidade. O ganho
+seriam 500 linhas num total que, com PI-2 e PI-3, passa de 20 000.
+
+**Conclusão.** O defeito está no rótulo, não na simulação. **A única correção legítima é pedir à TUHH a lista de
+parâmetros original**, que existe no script de geração da amostragem. Até lá, todas as análises usam o **bloco
+confiável** de 485 simulações. As 500 curvas ainda podem servir para conferir restrições que não dependem dos
+parâmetros (H1, H4, H5).
 
 ### 5.3 As hipóteses físicas no PI-4 (I.3 a I.7)
 
@@ -373,6 +401,47 @@ conhecida em forma fechada. A curva completa, com nulo e ressonâncias, é o pro
 Variando o peso da física de 0 a 10: sem física, a violação das derivadas é mais de cem vezes maior e o R² de
 extrapolação cai para 0,74. O ganho satura perto de peso 1. O treinamento por **currículo** não trouxe ganho neste
 problema, que não é rígido.
+
+### 9.7 Painel de métricas (IV.3)
+
+Treino com 10 ou 20 simulações finas (TDIEL < 40 mil), três sementes. Interpolação: as demais simulações finas.
+Extrapolação: as espessas.
+
+| Categoria | Métrica | Alvo | Só dados (20) | PINN (10) | PINN (20) |
+|---|---|---|---|---|---|
+| Dados | Erro relativo $L_2$ de $\lvert Zvert$, treino | < 1–5 % | ✅ 0,8 % | ✅ 1,9 % | ✅ 2,2 % |
+| Dados | Erro relativo $L_2$, interpolação | < 1–5 % | ❌ 29 % | ❌ 17 % | ✅ 4,7 % |
+| Dados | $R^2$ interpolado | > 0,99 | ❌ 0,931 | ❌ 0,966 | ✅ 0,999 |
+| Física | Resíduo $\mathcal{L}_{m física}$ | < $10^{-3}$ | ❌ 0,91 | ✅ $6{,}5	imes10^{-4}$ | ✅ $3{,}6	imes10^{-4}$ |
+| Generalização | $R^2$ em extrapolação | > 0,90–0,95 | ❌ 0,744 | ✅ 0,965 | ✅ 0,994 |
+| Otimização | Razão de gradientes $\lVert
+abla\mathcal{L}_{m dados}Vert/\lVert
+abla\mathcal{L}_{m física}Vert$ | ≈ 1 | — | ❌ 0,03 | ❌ 0,10 |
+| Desempenho | Tempo de inferência, 1 projeto | < 1 ms | ✅ | ✅ | ✅ 16–29 µs; 2,6 µs em lote |
+
+**Leitura.**
+- **A rede só com dados decora o treino.** Tem o menor erro de treino, mas erra 29 % ao lado, dentro da mesma faixa. O
+  expoente de $h$ que ela aprende vale +0,65 ± 0,29 e varia de ponto para ponto; a PINN aprende +1,00 ± 0,005.
+- **O erro de treino maior da PINN é esperado.** Ela impõe +1 para o expoente de $h$, mas os dados têm +0,955, porque
+  a fórmula de placas paralelas ignora o efeito de borda. Passo do TCC II: aprender o expoente em vez de fixá-lo
+  (PINN inversa).
+- **A razão de gradientes revela desequilíbrio.** O gradiente da Loss física é de 10 a 30 vezes maior que o da Loss de
+  dados. Aqui os dados ainda são ajustados com 2 % de erro, mas na curva completa isso tende a fazer a rede ignorar os
+  dados. Correção: balanceamento adaptativo dos pesos $\lambda$ (Wang, Teng e Perdikaris, 2021).
+- **Os alvos são referências, não normas.** O resíduo "< $10^{-3}$" depende da escala da Loss: aqui equivale a um erro
+  típico de 0,03 no expoente.
+
+### 9.8 Hardware
+
+Todo o processamento roda em CPU (Ryzen 7 5825U, 8 núcleos e 16 threads, 15 GB de RAM): cerca de 3 s por treino da
+demonstração. Uma rede de 4 865 pesos não se beneficia de GPU, porque o custo de transferir os dados para a placa
+supera o cálculo. Sobre as GPUs disponíveis:
+
+| GPU | Situação para PyTorch |
+|---|---|
+| Radeon integrada do Ryzen 7 5825U (Linux) | sem suporte oficial no ROCm; divide a RAM com a CPU; não compensa |
+| RX 570 (Windows) | arquitetura Polaris, fora do ROCm atual; só via `torch-directml`, sem garantia de suporte às derivadas de segunda ordem de que a Loss física depende; seria preciso testar antes de confiar |
+| Google Colab (T4) | opção prática se o TCC II precisar de GPU, por exemplo para a curva completa com 20 000 simulações × 334 frequências |
 
 ---
 
