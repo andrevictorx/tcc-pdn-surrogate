@@ -5,8 +5,9 @@ arquivo Touchstone é lido em memória, convertido de S para Z e descartado; só
 curvas reduzidas vão para disco. É o procedimento de `spec/UNIAO_SUBCONJUNTOS.md`:
 baixar, reduzir à curva, descartar o bruto.
 
-Guarda três curvas por simulação, porque a porta de interesse dos subconjuntos com
-arranjo de regulador (VRM) ainda não foi conferida contra a folha de dados:
+Guarda três curvas por simulação. Pela Fig. 3 das folhas de dados, P1–P10 ficam no
+arranjo do regulador (VRM) e P11–P28 no arranjo A1; P11 é a primeira via de alimentação
+do A1 vista pelo topo, a mesma posição da porta 0 do PI-4:
   z_a1   autoimpedância na primeira porta do arranjo A1 (P11, índice 10)
   z_vrm  autoimpedância na primeira porta do arranjo VRM (P1, índice 0)
   z_tr   transimpedância entre as duas (Z[P11, P1])

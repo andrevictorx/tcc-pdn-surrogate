@@ -409,14 +409,20 @@ Extrapolação: as espessas.
 
 | Categoria | Métrica | Alvo | Só dados (20) | PINN (10) | PINN (20) |
 |---|---|---|---|---|---|
-| Dados | Erro relativo $L_2$ de $\lvert Zvert$, treino | < 1–5 % | ✅ 0,8 % | ✅ 1,9 % | ✅ 2,2 % |
+| Dados | Erro relativo $L_2$ de $\lvert Z
+vert$, treino | < 1–5 % | ✅ 0,8 % | ✅ 1,9 % | ✅ 2,2 % |
 | Dados | Erro relativo $L_2$, interpolação | < 1–5 % | ❌ 29 % | ❌ 17 % | ✅ 4,7 % |
 | Dados | $R^2$ interpolado | > 0,99 | ❌ 0,931 | ❌ 0,966 | ✅ 0,999 |
-| Física | Resíduo $\mathcal{L}_{m física}$ | < $10^{-3}$ | ❌ 0,91 | ✅ $6{,}5	imes10^{-4}$ | ✅ $3{,}6	imes10^{-4}$ |
+| Física | Resíduo $\mathcal{L}_{
+m física}$ | < $10^{-3}$ | ❌ 0,91 | ✅ $6{,}5	imes10^{-4}$ | ✅ $3{,}6	imes10^{-4}$ |
 | Generalização | $R^2$ em extrapolação | > 0,90–0,95 | ❌ 0,744 | ✅ 0,965 | ✅ 0,994 |
 | Otimização | Razão de gradientes $\lVert
-abla\mathcal{L}_{m dados}Vert/\lVert
-abla\mathcal{L}_{m física}Vert$ | ≈ 1 | — | ❌ 0,03 | ❌ 0,10 |
+abla\mathcal{L}_{
+m dados}
+Vert/\lVert
+abla\mathcal{L}_{
+m física}
+Vert$ | ≈ 1 | — | ❌ 0,03 | ❌ 0,10 |
 | Desempenho | Tempo de inferência, 1 projeto | < 1 ms | ✅ | ✅ | ✅ 16–29 µs; 2,6 µs em lote |
 
 **Leitura.**
@@ -469,7 +475,7 @@ assim passa no teste de placebo**. Refutação estatística verifica a robustez 
 |---|---|---|
 | set. 2026 | **M1** — pipeline validado contra propriedades analíticas | ✅ cumprido |
 | out. 2026 | integridade do PI-4 | ✅ diagnosticada; reportar à TUHH |
-| out. 2026 | PI-3 e PI-2 | ✅ reduzidos direto do zip; confirmar a porta P11 |
+| out. 2026 | PI-3 e PI-2 | ✅ reduzidos direto do zip; porta P11 conferida na folha de dados |
 | nov. 2026 | **M2** — 4 subconjuntos e referência com R² > 0,80 | 🟡 4 de 4 reduzidos; falta a união (`load_multi_subset`) |
 | nov. 2026 | normas | ⬜ tabular CISPR 32 A/B e IEC 61000-6-3/6-4 |
 | dez. 2026 | entrega do TCC I | ⬜ |
@@ -479,7 +485,7 @@ assim passa no teste de placebo**. Refutação estatística verifica a robustez 
 | jul. 2027 | defesa | ⬜ |
 
 ### Pendências abertas
-1. **Porta P11** do PI-3 e do PI-2: equivalência assumida com a porta do PI-4; conferir na folha de dados.
+1. ~~Porta P11 do PI-3 e do PI-2~~ — conferida: é a primeira via de alimentação do arranjo A1, vista pelo topo, a mesma posição da porta 0 do PI-4 (Fig. 3 das folhas de dados).
 2. **PI-1** com razão 0,45 em vez de 1.
 3. **Pico compatível com TM$_{11}$ no PI-4**, que não deveria ser excitado no centro da placa.
 4. **Bloco 1000–1499 do PI-4**: reportar aos mantenedores da TUHH.
