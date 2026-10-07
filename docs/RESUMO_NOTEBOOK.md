@@ -134,6 +134,9 @@ impedância de uma porta se a porta **não** estiver num nó de tensão dele.
 90 a 96 % do tempo é gasto lendo o texto dos arquivos Touchstone; a álgebra S → Z é barata. O PI-4 é o caso extremo
 de redução: 23 GB de matrizes 36 × 36 viram um cache de 2,5 MB, porque só se usa $Z_{11}$.
 
+**Validação independente.** A conversão S → Z coincide com a da biblioteca `scikit-rf` com erro relativo máximo de
+$6\times10^{-14}$, nos arquivos de 36 e de 2 portas.
+
 **PI-3 e PI-2.** Os zips têm 147 e 113 GB descompactados. O script
 [`scripts/reduzir_zip_pdn.py`](../scripts/reduzir_zip_pdn.py) lê cada arquivo **dentro do zip**, sem extrair,
 converte S → Z e guarda só três curvas por simulação: $Z$ na porta P11 (arranjo A1), na porta P1 (regulador) e a
