@@ -206,10 +206,28 @@ parâmetro a partir da curva, treinado no bloco confiável, recupera:
 planilha "corrigida" teria valores inventados nas colunas das vias e contaminaria a análise de sensibilidade. O ganho
 seriam 500 linhas num total que, com PI-2 e PI-3, passa de 20 000.
 
-**Conclusão.** O defeito está no rótulo, não na simulação. **A única correção legítima é pedir à TUHH a lista de
-parâmetros original**, que existe no script de geração da amostragem. Até lá, todas as análises usam o **bloco
-confiável** de 485 simulações. As 500 curvas ainda podem servir para conferir restrições que não dependem dos
-parâmetros (H1, H4, H5).
+**Conclusão.** O defeito está no rótulo, não na simulação. A única correção legítima era pedir à TUHH a lista de
+parâmetros original.
+
+**A correção da TUHH (I.2d, outubro de 2026).** A TUHH confirmou o problema e enviou um `parameter.csv` corrigido.
+Validação feita em 15/10/2026:
+
+| Teste | Planilha original | Planilha corrigida |
+|---|---|---|
+| correlação capacitância medida × calculada, simu 1000–1499 | 0,02 | **0,9997** |
+| razão $C_{\rm medida}/C_{\rm 1\,cavidade}$, simu 1000–1499 | sem padrão | 2,11 (bloco 1500–1999: 2,13) |
+| linhas 1500–1999 | — | inalteradas |
+| lei $C \propto \varepsilon_r/h$ nas 985 simulações | R² = 0,20 | **R² = 0,998**, expoentes +0,973 e −1,016 |
+| geometria: via cabe no antipad e antipads vizinhos não se tocam | — | sim, em todas as linhas |
+
+Os 15 índices ausentes são esperados, segundo a TUHH: são combinações em que a simulação falhou.
+
+**Os dois blocos são duas amostragens diferentes.** O bloco 1000–1499 usa vias bem menores: raio de 3 a 9 mil,
+antipad de 13 a 19 e passo de 40 a 120, contra 10–20, 20–39 e 80–120 no bloco 1500–1999. Um modelo treinado num bloco e
+testado no outro tem R² de 0,86 a 0,90, por extrapolação em geometria de vias. Numa divisão aleatória, o R² volta a
+0,97. A partir da I.2d, o notebook usa as **985 simulações**. A exceção é a análise de sensibilidade, que fica no
+bloco 1500–1999, porque o índice de Sobol supõe entradas independentes e, na união, os parâmetros de via ficam
+correlacionados pelo bloco.
 
 ### 5.3 As hipóteses físicas no PI-4 (I.3 a I.7)
 
