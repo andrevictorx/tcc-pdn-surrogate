@@ -184,7 +184,7 @@ prediz impedância complexa.
 
 ---
 
-## R5 — Localização modal  ✅ CONFIRMADA em PI-3 e PI-2, condicionada à posição da porta · TM11 do PI-4 em aberto
+## R5 — Localização modal  ✅ CONFIRMADA NOS QUATRO SUBCONJUNTOS, condicionada ao acoplamento κ da porta
 
 > **Correção (2026-10-04).** A refutação abaixo foi feita sobre uma amostra que
 > incluía o bloco descasado `simu_index` 1000–1499 (ver R2). Refeita só no bloco
@@ -212,6 +212,12 @@ prediz impedância complexa.
 > fica no centro da placa, nó dos dois modos. A restrição modal só é válida ponderada pelo fator de acoplamento
 > cos(mπu)·cos(nπv). Continua em aberto o pico compatível com TM₁₁ no PI-4, já que o centro também é nó desse modo.
 > Ver `notebooks/TCC_PDN_Colab.ipynb`, seção II-B.6.
+
+> **Atualização (2026-10-17) — PI-4 e PI-1.** O pico do PI-4 tido como "compatível com TM11" é o **TM20**: no centro
+> da placa, TM10, TM01 e TM11 têm nó (κ ≈ 0), e o TM20 tem ventre (κ = 1). Ele aparece em 100 % das curvas em que cai
+> abaixo de 990 MHz, 1–11 % abaixo da previsão, deslocamento crescente com h (ρ = −0,89). No PI-1, com até 2 capacitores,
+> os modos aparecem nas frequências teóricas (TM02: desvio −0,04 %) e escalam com εr^−0,501; com 5 ou mais capacitores,
+> são amortecidos e somem. Critérios em `spec/CONSISTENCIA_DADOS.md`; validação quantitativa em `spec/PLANO_VALIDACAO.md`.
 
 **Enunciado testado.** Máximos de `|Z11|` nas frequências
 `f_mn = c₀/(2√ε_r) · √((m/a)² + (n/b)²)`.

@@ -24,7 +24,9 @@ modelo. Nenhum termo físico entra na Loss sem passar aqui.
 
 ### Convenções
 
-- $\hat y = \log_{10}|Z_{11}|$; $f_{\rm nulo}$ = frequência de $\min|Z_{11}|$.
+- $\hat y = \log_{10}|Z_{11}|$; $f_{\rm nulo}$ = frequência do **primeiro mínimo local** de $|Z_{11}|$, que encerra a região
+  capacitiva. Em placas sem capacitores de desacoplamento coincide com o mínimo global; com capacitores, pode ser a
+  ressonância série de um capacitor (PI-1: 6 % das curvas).
 - $h_{\rm ef}$ = distância entre os planos de uma cavidade alimentação–terra (ver C4); $n_{pg}$ = número de cavidades
   alimentação–terra.
 - **Uso na PINN:** *dura* = penalidade sempre ativa, alto peso; *branda* = penalidade com peso calibrado; *diagnóstico* =
@@ -46,7 +48,7 @@ modelo. Nenhum termo físico entra na Loss sem passar aqui.
 | PI-4 | 100 % (−1,020 ± 0,006) | ✅ |
 | PI-3 | 99,6 % | ✅ |
 | PI-2 | 99,9 % | ✅ |
-| PI-1 | 91 % em ±0,10 | ⚠️ abaixo do critério: a grade de 3,34 MHz deixa só 2–3 pontos antes de $f_{\rm nulo}/3$ (mediana 3); refazer só com as curvas elegíveis |
+| PI-1 | **100 %** em ±0,10 (98,8 % em ±0,05), mediana −1,035, nas 19 547 curvas elegíveis | ✅ com $f_{\rm nulo}$ = primeiro mínimo local. Com o mínimo global, 6 % das curvas falhavam: a janela invadia a ressonância de um capacitor |
 
 ### H2 — Ressonâncias nos modos de cavidade
 
@@ -61,16 +63,16 @@ modelo. Nenhum termo físico entra na Loss sem passar aqui.
 |---|---|---|
 | PI-3 | TM10: 98 % com $\kappa > 0{,}5$ | ✅ |
 | PI-2 | TM10: 99 % com $\kappa > 0{,}5$ | ✅ |
-| PI-4 | TM10 e TM01 ausentes, como prevê $\kappa = 0$ no centro; pico compatível com TM11 em 313 de 601 curvas, sem explicação ($\kappa_{11} = 0$) | ⚠️ não usar H2 no PI-4 até explicar o pico |
-| PI-1 | não testada (placa de 12 × 10 pol: TM10 ≈ 240 MHz para εr = 4,2) | ⬜ pendente |
+| PI-4 | TM10, TM01 e TM11 ausentes ($\kappa \approx 0$ no centro); o pico observado é o **TM20** ($\kappa = 1$), presente em 100 % das curvas em que cai na banda, 1–11 % abaixo da previsão, e o deslocamento cresce com $h$ (ρ = −0,89) | ✅ com tolerância de −12 % para o TM20 |
+| PI-1 | com até 2 capacitores, picos nos modos teóricos (TM02: 100 %, desvio −0,04 %); ≥ 5 capacitores: modos amortecidos, 0 % | ✅ **só com ≤ 2 capacitores** |
 
 ### H3 — Escala da capacitância
 
 | | |
 |---|---|
 | **Enunciado** | $C_{\rm medida} = n_{pg}\,\varepsilon_0\varepsilon_r A/h_{\rm ef} + C_{\rm decaps}$. |
-| **Medição** | $C = -1/(2\pi f\,\mathrm{Im}\{Z_{11}\})$ em 1 MHz, só nas curvas elegíveis de H1. |
-| **Critério** | Mediana de $C_{\rm medida}/C_{\rm prevista}$ entre 0,95 e 1,15. O limite superior acomoda o **campo de borda**, que cresce com $h$ (no PI-4, razão e $h$ têm $r = 0{,}86$). |
+| **Medição** | $C = (1-(f/f_0)^2)/(-2\pi f\,\mathrm{Im}\{Z_{11}\})$ no ponto mais capacitivo (maior $\lvert\mathrm{Im}\rvert/\mathrm{Re}$) com $f < f_0/2$: corrige o LC série e evita o ponto de 1 MHz (C10). Função `capacitancia_medida` em `src/data/consistencia.py`. |
+| **Critério** | Mediana de $C_{\rm medida}/C_{\rm prevista}$ entre 0,95 e 1,15. O excesso acima de 1 é o **campo de borda**, previsto pela fórmula de Palmer: medido/Palmer = 1,0002 no PI-4 (`spec/PLANO_VALIDACAO.md`, V5). |
 | **Uso na PINN** | Através das derivadas, que não dependem de escala: $\partial\hat y/\partial\log h = +1$ e $\partial\hat y/\partial\log\varepsilon_r = -1$, branda. O valor absoluto de $C$ só entra como portão de consistência (C1), não como Loss. |
 
 | Subconjunto | $n_{pg}$ | $h_{\rm ef}$ | Razão / $n_{pg}$ | Situação |
@@ -127,6 +129,7 @@ testes de hipótese.
 | **C7 — passividade numérica** | H5 com tolerância de 2 % | excluir a linha |
 | **C8 — desenho experimental** | faixas, independência das entradas, blocos de amostragem distintos | documentar e definir a estratificação |
 | **C9 — versão dos dados** | arquivo e data da planilha usada | registrar no cache |
+| **C10 — ponto de 1 MHz** | anomalia de baixa frequência nos subconjuntos multicamadas (V13 de `spec/PLANO_VALIDACAO.md`): parte real 7–13× a perda dielétrica e $\lvert Z(1\,\text{MHz})\rvert$ até > 10 % fora da curva capacitiva | não usar o ponto de 1 MHz como alvo de $\lvert Z\rvert_{\max}$ sem correção; fora dos pontos de colocação |
 
 ### Situação por subconjunto (17/10/2026)
 
@@ -141,6 +144,7 @@ testes de hipótese.
 | C7 | ✅ | ✅ | ✅ | ✅ |
 | C8 | 67 % das linhas com $h$ nominal 4,4 e 75 % com $\varepsilon_r$ nominal 4,2: amostragem concentrada | grade de níveis; posição do regulador = função do tamanho da placa | **dois blocos com faixas de via diferentes**: estratificar | LHS contínuo; posição do regulador = função do tamanho da placa |
 | C9 | cache de nov. 2023 | zip de fev. 2022 | **planilha corrigida pela TUHH, validada em 15/10/2026** | zip de jul. 2022 |
+| C10 | desvio > 5 % em 0,1 % | desvio > 5 % em 27,7 % | 1,2 % | 25,7 % |
 
 ### Detalhe dos portões que já mudaram o projeto
 
@@ -171,17 +175,20 @@ testes de hipótese.
 
 | | PI-1 | PI-2 | PI-4 | PI-3 |
 |---|---|---|---|---|
-| H1 (inclinação −1) | ⚠️ só nas curvas elegíveis | ✅ | ✅ | ✅ |
-| H2 (modos, ponderados por κ) | ⬜ testar antes | ✅ | ❌ até explicar o TM11 | ✅ |
+| H1 (inclinação −1) | ✅ nas curvas elegíveis | ✅ | ✅ | ✅ |
+| H2 (modos, ponderados por κ) | ✅ só com ≤ 2 capacitores | ✅ | ✅ (TM20) | ✅ |
 | H3 (derivadas em $h$ e $\varepsilon_r$) | ✅ com $h_{\rm ef}$ | ✅ | ✅ | ✅ |
 | H4 (monotonicidade) | ❌ fora do domínio | ✅ | ✅ | ✅ |
 | H5 (passividade) | ✅ | ✅ | ✅ | ✅ |
 
 ## Pendências
 
-- [ ] H1 no PI-1 restrita às curvas elegíveis (C5 e C6): confirmar se passa de 95 %.
-- [ ] H2 no PI-1: medir.
-- [ ] Explicar o pico compatível com TM11 no PI-4.
-- [ ] Explicar a fase de −50° em 1 MHz nas cavidades finas do PI-1 ($h \le 1{,}4$ mil).
-- [ ] Implementar os portões C1–C9 como funções em `src/data/` com testes, e rodá-los em `load_multi_subset()`.
-- [ ] Avisar a TUHH sobre a descrição da espessura na folha de dados do PI-1.
+- [x] H1 no PI-1 com as curvas elegíveis: 100 % em ±0,10, com $f_{\rm nulo}$ = primeiro mínimo local (17/10/2026).
+- [x] H2 no PI-1: modos confirmados com até 2 capacitores (17/10/2026).
+- [x] Pico do PI-4: é o TM20, de ventre no centro da placa, e não o TM11 (17/10/2026).
+- [x] Portões C1, C5, C6 e C7 implementados em `src/data/consistencia.py`, com testes.
+- [ ] Explicar o deslocamento do TM20 do PI-4 para baixo, crescente com $h$: carregamento pelas vias?
+- [ ] Explicar a fase de −50° em 1 MHz nas cavidades finas: é o mesmo artefato do C10?
+- [ ] Decidir o alvo $\lvert Z\rvert_{\max}$ diante do C10: extrapolação capacitiva ou ponto de 4,3 MHz.
+- [ ] Rodar os portões dentro de `load_multi_subset()`.
+- [ ] Avisar a TUHH sobre a folha de dados do PI-1 e perguntar sobre a anomalia em 1 MHz.

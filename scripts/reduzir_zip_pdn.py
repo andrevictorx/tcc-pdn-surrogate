@@ -44,7 +44,10 @@ def ler_touchstone_texto(texto: str, n_portas: int) -> tuple[np.ndarray, np.ndar
     v = np.array(" ".join(dados).split(), dtype=float)
     b = v.reshape(-1, 1 + 2 * n_portas**2)
     par = b[:, 1:].reshape(-1, n_portas, n_portas, 2)
-    return b[:, 0], par[..., 0] + 1j * par[..., 1]
+    s = par[..., 0] + 1j * par[..., 1]
+    if n_portas == 2:  # Touchstone v1: só os arquivos de 2 portas gravam S11, S21, S12, S22
+        s = np.swapaxes(s, 1, 2)
+    return b[:, 0], s
 
 
 def s_para_z(s: np.ndarray, z0: float = 50.0) -> np.ndarray:

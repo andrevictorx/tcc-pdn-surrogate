@@ -37,14 +37,19 @@ C_0 = 299792458.0
 # --------------------------------------------------------------------------
 
 def _write_touchstone(tmp_path: Path, freq: np.ndarray, s: np.ndarray) -> Path:
-    """Escreve um Touchstone RI válido, quebrando linhas a cada 4 pares."""
+    """Escreve um Touchstone RI válido, quebrando linhas a cada 4 pares.
+
+    Segue a norma v1: com 2 portas a ordem é S11, S21, S12, S22 (coluna a coluna);
+    com mais portas, linha a linha.
+    """
     path = tmp_path / "caso.s2p"
     lines = ["! Touchstone Version 1.1", "#   Hz S RI R   50.00"]
     for k, f in enumerate(freq):
         flat = []
+        sk = s[k].T if s.shape[1] == 2 else s[k]
         for i in range(s.shape[1]):
             for j in range(s.shape[2]):
-                flat += [s[k, i, j].real, s[k, i, j].imag]
+                flat += [sk[i, j].real, sk[i, j].imag]
         tokens = [f"{f:.16E}"] + [f"{v:.16E}" for v in flat]
         # primeira linha: frequência + 4 pares; demais: 4 pares
         lines.append(" " + " ".join(tokens[:9]))
@@ -225,3 +230,12 @@ class TestBaseReal:
         net = parse_touchstone(DATASET / "variation" / "simu_1000.s36p", n_ports=36)
         slope = low_frequency_slope(net.freq, np.abs(self_impedance(net)))
         assert -1.05 < slope < -0.95, f"inclinação fora da faixa esperada: {slope}"
+
+
+def test_ordem_touchstone_duas_portas_e_coluna_a_coluna(tmp_path):
+    """Touchstone v1 de 2 portas: S11, S21, S12, S22. Os de N > 2 portas são linha a linha."""
+    from src.data.touchstone import parse_touchstone
+    arq = tmp_path / "x.s2p"
+    arq.write_text("# Hz S RI R 50\n1e6 0.1 0 0.21 0 0.12 0 0.22 0\n2e6 0.1 0 0.21 0 0.12 0 0.22 0\n")
+    s = parse_touchstone(arq, 2).s
+    assert s[0, 1, 0] == pytest.approx(0.21) and s[0, 0, 1] == pytest.approx(0.12)

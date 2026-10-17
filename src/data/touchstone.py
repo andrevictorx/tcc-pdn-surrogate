@@ -88,6 +88,9 @@ def parse_touchstone(path: str | Path, n_ports: int) -> Network:
 
     pairs = blocks[:, 1:].reshape(-1, n_ports, n_ports, 2)
     s = pairs[..., 0] + 1j * pairs[..., 1]
+    if n_ports == 2:
+        # Touchstone v1: só os arquivos de 2 portas gravam S11, S21, S12, S22 (coluna a coluna)
+        s = np.swapaxes(s, 1, 2)
     logger.debug("%s: %d frequências, %d portas", path.name, freq.size, n_ports)
     return Network(freq=freq, s=s)
 
@@ -132,8 +135,10 @@ def cavity_modes(eps_r: float, width_m: float, length_m: float, f_max: float,
                  max_order: int = 3) -> np.ndarray:
     """Frequências dos modos TM_mn0 de uma cavidade retangular, em Hz.
 
-    Fornecida para análise; NÃO usar como restrição de treinamento sobre a
-    autoimpedância — ver R5 em `spec/PHYSICS_SPEC.md`, refutada empiricamente.
+    Só aparecem na autoimpedância se a porta não estiver num nó do modo: usar
+    `acoplamento_modal` para ponderar (H2 em `spec/CONSISTENCIA_DADOS.md`). Em
+    placas com muitos capacitores de desacoplamento os modos são amortecidos e
+    deixam de aparecer (PI-1: 0 % com 5 ou mais capacitores).
     """
     c_0 = 299792458.0
     modes = [
@@ -144,6 +149,17 @@ def cavity_modes(eps_r: float, width_m: float, length_m: float, f_max: float,
     ]
     modes = np.array(sorted(f for f in modes if f <= f_max))
     return modes
+
+
+def primeiro_minimo(z_abs: np.ndarray) -> int:
+    """Índice do primeiro mínimo local de |Z|: fim da região capacitiva.
+
+    Coincide com o mínimo global em placas sem capacitores de desacoplamento;
+    com capacitores, é a primeira ressonância série (PI-1: difere em 6 % das
+    curvas, exatamente as não monotônicas).
+    """
+    subida = np.flatnonzero(np.diff(z_abs) > 0)
+    return int(subida[0]) if len(subida) else len(z_abs) - 1
 
 
 def quasi_static_window(
@@ -159,7 +175,9 @@ def quasi_static_window(
 
     Args:
         freq: grade de frequência, Hz, shape (nf,).
-        z_abs: magnitude de |Z11(f)|, mesma shape.
+        z_abs: magnitude de |Z11(f)|, mesma shape. O nulo é o PRIMEIRO mínimo
+            local, não o global: com capacitores de desacoplamento, a primeira
+            ressonância série pode ser a de um capacitor, antes do nulo da placa.
         factor: a janela cobre f < f_nulo/factor. Maior => janela mais estreita,
             mais distante do nulo, portanto mais seguramente quase-estática.
         min_points: garante ao menos esta contagem de pontos mesmo se o nulo
@@ -168,7 +186,7 @@ def quasi_static_window(
     Returns:
         Máscara booleana, shape (nf,), com min_points True no mínimo.
     """
-    f_nulo = freq[int(np.argmin(z_abs))]
+    f_nulo = freq[primeiro_minimo(z_abs)]
     mask = freq < f_nulo / factor
     if mask.sum() < min_points:
         mask = np.zeros_like(mask)

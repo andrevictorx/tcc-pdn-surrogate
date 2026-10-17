@@ -340,8 +340,8 @@ da resistência, por isso a tangente de perdas aparece ali. Em 1 GHz, na região
 
 **Consequência para o PI-4.** A porta do PI-4 fica no centro da placa, que é nó do TM$_{10}$ e do TM$_{01}$. A
 ausência desses modos, que tinha levado a declarar H2 refutada, é exatamente o que a teoria prevê para essa posição.
-H2 passa a **confirmada, condicionada à posição da porta**. O pico do PI-4 compatível com TM$_{11}$ continua sem
-explicação, porque o centro também é nó desse modo.
+H2 passa a **confirmada, condicionada à posição da porta**. O pico do PI-4 que parecia o TM$_{11}$ é o **TM$_{20}$**,
+que tem ventre no centro (κ = 1): aparece em 100 % das curvas em que cai na banda, 1–11 % abaixo da previsão.
 
 ---
 
@@ -508,7 +508,7 @@ assim passa no teste de placebo**. Refutação estatística verifica a robustez 
 ### Pendências abertas
 1. ~~Porta P11 do PI-3 e do PI-2~~ — conferida: é a primeira via de alimentação do arranjo A1, vista pelo topo, a mesma posição da porta 0 do PI-4 (Fig. 3 das folhas de dados).
 2. ~~PI-1 com razão 0,45~~ — resolvido: espessura efetiva $2h + 1$ mil. Avisar a TUHH sobre a descrição na folha de dados.
-3. **Pico compatível com TM$_{11}$ no PI-4**, que não deveria ser excitado no centro da placa.
+3. ~~Pico compatível com TM$_{11}$ no PI-4~~ — resolvido: é o TM$_{20}$, de ventre no centro.
 4. **Bloco 1000–1499 do PI-4**: reportar aos mantenedores da TUHH.
 
 ---
@@ -543,3 +543,16 @@ A definição formal de cada hipótese (enunciado, medição, critério de aceit
 portões de consistência C1–C9 de cada subconjunto estão em [`spec/CONSISTENCIA_DADOS.md`](../spec/CONSISTENCIA_DADOS.md).
 Regra principal: **nenhum termo físico entra na Loss da PINN onde a hipótese não foi aceita**. Por exemplo, H4 não se
 aplica ao PI-1, e H2 não se aplica ao PI-4 enquanto o pico TM11 não for explicado.
+
+## Validação contra as referências teóricas
+
+Em 17/10/2026, o pipeline e as hipóteses foram validados contra Bogatin (2010), Ott (2009), Palmer (1937), a norma
+Touchstone e a scikit-rf: **12 de 12 itens aprovados**, com previsões quantitativas e não só tendências. Destaques:
+- o campo de borda medido coincide com a fórmula de Palmer (medido/previsto = 1,0002 no PI-4);
+- o desvio da inclinação −1 é o do LC série (resíduo < 0,01);
+- $L \propto h$ com expoente 1,00, como na eq. 13-31 de Bogatin;
+- os modos escalam com $\varepsilon_r^{-0,501}$ e lado$^{-1,000}$;
+- a validação encontrou e corrigiu um bug de leitura (ordem dos arquivos Touchstone de 2 portas) e uma anomalia nos
+  dados (ponto de 1 MHz, portão C10).
+
+Detalhes em [`spec/PLANO_VALIDACAO.md`](../spec/PLANO_VALIDACAO.md).
