@@ -220,3 +220,39 @@ class TestBaseRealUmaCavidade:
         n_decaps = np.array([p[0] for p in parsed])
         assert n_decaps.min() >= 1
         assert n_decaps.max() <= 20
+
+
+# --- espessura efetiva e cavidades alimentação–terra (H3) ---------------------------------
+
+def test_espessura_efetiva_pi1_soma_duas_camadas_e_sinal():
+    from src.data.subsets import UMA_CAVIDADE
+    from src.data.touchstone import MIL_TO_M
+    assert UMA_CAVIDADE.espessura_efetiva_m(4.4) == pytest.approx((2 * 4.4 + 1.0) * MIL_TO_M)
+
+
+def test_espessura_efetiva_pi4_e_a_do_csv():
+    from src.data.subsets import SEIS_CAMADAS
+    from src.data.touchstone import MIL_TO_M
+    assert SEIS_CAMADAS.espessura_efetiva_m(20.0) == pytest.approx(20.0 * MIL_TO_M)
+
+
+def test_cavidades_alimentacao_terra():
+    from src.data.subsets import SEIS_CAMADAS, UMA_CAVIDADE
+    assert SEIS_CAMADAS.n_cavidades_alim_terra == 2
+    assert UMA_CAVIDADE.n_cavidades_alim_terra == 1
+
+
+@pytest.mark.skipif(not (Path(__file__).resolve().parents[1] / "data/processed/pi1_cache.npz").exists(),
+                    reason="cache do PI-1 ausente")
+def test_h3_pi1_fecha_com_espessura_efetiva():
+    """C medida em 1 MHz = C_placa(h_ef) + C_decaps, dentro de 2 % na mediana."""
+    import numpy as np
+    from src.data.subsets import UMA_CAVIDADE
+    from src.data.touchstone import plate_capacitance
+    d = np.load(Path(__file__).resolve().parents[1] / "data/processed/pi1_cache.npz")
+    X, f, A, ang = d["X"].astype(float), d["freq"], d["zabs"].astype(float), d["zang"].astype(float)
+    c_med = -1 / (2 * np.pi * f[0] * A[:, 0] * np.sin(ang[:, 0]))
+    c_pl = np.array([plate_capacitance(er, UMA_CAVIDADE.x_width_m, UMA_CAVIDADE.y_width_m,
+                                       UMA_CAVIDADE.espessura_efetiva_m(h)) for h, er in X[:, :2]])
+    razao = c_med / (UMA_CAVIDADE.n_cavidades_alim_terra * c_pl + X[:, 3])
+    assert abs(np.median(razao) - 1) < 0.02

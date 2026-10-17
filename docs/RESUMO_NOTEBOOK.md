@@ -262,7 +262,7 @@ ressonâncias perto de 1 GHz.
 | II.1 | Os capacitores de desacoplamento somam capacitância à da placa: o nulo cai para 24 MHz (mediana), contra 106 MHz no PI-4. |
 | II.2 | **A janela de medição precisa ser adaptativa.** Com a janela fixa de 8 pontos, calibrada no PI-4, quase todo o PI-1 parece violar H1, porque o nulo cai dentro da janela. Com a janela $f < f_{\rm nulo}/3$: 61 % das curvas em ±0,05 e 91 % em ±0,10; 99 % quando a placa domina a capacitância. |
 | II.3 | **Validação do pipeline.** A capacitância do banco de decaps é recuperada com coeficiente β ≈ 1 e R² ≈ 0,99 sobre 36 199 configurações: leitura, conversão e extração estão corretas de ponta a ponta. |
-| II.4 | A razão $C_{\rm ext}/C_{\rm 1\,cavidade}$ dá **0,45**, quando o esperado para uma cavidade seria 1. **Pendência sem explicação.** |
+| II.0 e II.4 | A razão $C_{\rm ext}/C_{\rm 1\,cavidade}$ dava 0,45. **Causa:** a cavidade simulada tem duas camadas de dielétrico de espessura `diel_height` com uma camada de sinal de 1 mil entre elas. As camadas estão em série, então as espessuras se somam: $h_{\rm ef} = 2h + 1$ mil. Com isso, a razão vai a **1,01** (0,996 contando os capacitores), sem parâmetro ajustado. |
 
 ---
 
@@ -289,7 +289,7 @@ cavidades alimentação–terra, ligadas em paralelo pelas vias, então a capaci
 | PI-2 | 3 | 2 | **2,02** |
 | PI-4 | 5 | 2 | **2,13** |
 | PI-3 | 7 | 2 | **2,03** |
-| PI-1 | 1 | 1 | 0,45 (pendente) |
+| PI-1 | 1 | 1 | **1,01** (com $h_{\rm ef} = 2h + 1$ mil) |
 
 **Conclusão.** A previsão se confirmou em três topologias diferentes. Para a união dos subconjuntos, o atributo correto
 é o **número de cavidades entre alimentação e terra**, e não o total. Os dois subconjuntos novos não têm bloco
@@ -351,8 +351,8 @@ explicação, porque o centro também é nó desse modo.
 |---|---|---|---|---|
 | H1 | R1 | Comportamento capacitivo (inclinação −1) | PI-4: −1,020 ± 0,006; PI-3 e PI-2: > 99 % em ±0,10; PI-1: 91 % em ±0,10 | **Confirmada**; exige janela adaptativa |
 | H2 | R5 | Ressonâncias nos modos da cavidade | PI-3 e PI-2: 98–99 % em ±5 % do TM$_{10}$ com a porta fora do nó; PI-4: ausência explicada pelo nó | **Confirmada**, condicionada à posição da porta |
-| H3 | R2 | Escala da capacitância e número de cavidades | fator 2 em três topologias com 2 cavidades alimentação–terra | **Confirmada**; PI-1 pendente |
-| H4 | R3 | Monotonicidade antes do nulo | 100 % no PI-4 | **Confirmada** |
+| H3 | R2 | Escala da capacitância e número de cavidades | fator igual ao nº de cavidades alimentação–terra nos 4 subconjuntos (1,01 / 2,02 / 2,12 / 2,03) | **Confirmada** |
+| H4 | R3 | Monotonicidade antes do nulo | 100 % no PI-2, no PI-3 e no PI-4; 94 % no PI-1 | **Confirmada sem decaps**; não vale com capacitores de desacoplamento |
 | H5 | R4 | Passividade | 100 % em PI-4, PI-1 e PI-2; 2 resíduos numéricos no PI-3 | **Confirmada**; restrição obrigatória |
 
 ---
@@ -507,7 +507,7 @@ assim passa no teste de placebo**. Refutação estatística verifica a robustez 
 
 ### Pendências abertas
 1. ~~Porta P11 do PI-3 e do PI-2~~ — conferida: é a primeira via de alimentação do arranjo A1, vista pelo topo, a mesma posição da porta 0 do PI-4 (Fig. 3 das folhas de dados).
-2. **PI-1** com razão 0,45 em vez de 1.
+2. ~~PI-1 com razão 0,45~~ — resolvido: espessura efetiva $2h + 1$ mil. Avisar a TUHH sobre a descrição na folha de dados.
 3. **Pico compatível com TM$_{11}$ no PI-4**, que não deveria ser excitado no centro da placa.
 4. **Bloco 1000–1499 do PI-4**: reportar aos mantenedores da TUHH.
 
@@ -533,3 +533,13 @@ assim passa no teste de placebo**. Refutação estatística verifica a robustez 
 | Loss function | função que o treinamento minimiza |
 | Ponto de colocação | ponto do espaço de entradas, sem simulação, onde só se avalia a Loss física |
 | Confundidor | variável que influencia ao mesmo tempo a causa e o efeito estudados |
+
+
+---
+
+## Hipóteses e consistência dos dados
+
+A definição formal de cada hipótese (enunciado, medição, critério de aceitação, domínio de validade e uso na Loss) e os
+portões de consistência C1–C9 de cada subconjunto estão em [`spec/CONSISTENCIA_DADOS.md`](../spec/CONSISTENCIA_DADOS.md).
+Regra principal: **nenhum termo físico entra na Loss da PINN onde a hipótese não foi aceita**. Por exemplo, H4 não se
+aplica ao PI-1, e H2 não se aplica ao PI-4 enquanto o pico TM11 não for explicado.
