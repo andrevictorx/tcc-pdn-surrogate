@@ -64,7 +64,14 @@ a −1. Formulação invariante a fator multiplicativo — ver R2.
 
 ---
 
-## R2 — Escala da capacitância  ✅ CONFIRMADA NO BLOCO CONFIÁVEL · ⚠️ NÃO TRANSFERE ENTRE TOPOLOGIAS
+## R2 — Escala da capacitância  ✅ CONFIRMADA NOS QUATRO SUBCONJUNTOS, com n_pg cavidades alimentação–terra e h_ef
+
+> **Atualização (2026-10-17) — PI-1 e número de cavidades.** A razão 0,45 do PI-1 era um erro de espessura: a
+> cavidade simulada tem duas camadas de dielétrico de espessura `diel_height` com uma camada de sinal de 1 mil entre
+> elas, então $h_{\rm ef} = 2h + 1$ mil (camadas em série: as espessuras se somam). Com isso, a razão vai a 0,996.
+> R2 vale nos quatro subconjuntos na forma $C = n_{pg}\,\varepsilon_0\varepsilon_r A/h_{\rm ef}$, com $n_{pg}$ = nº de
+> cavidades alimentação–terra (1 no PI-1; 2 no PI-2, no PI-3 e no PI-4). Critérios e domínio de validade de todas as
+> hipóteses em `spec/CONSISTENCIA_DADOS.md`.
 
 **Enunciado testado.** `C = ε₀ ε_r a b / h` (placas paralelas, cavidade única).
 
