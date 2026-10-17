@@ -174,6 +174,7 @@ Agente 4:
 | [`design/architecture.md`](design/architecture.md) | ✓ Criado | 2 |
 | [`design/data_pipeline.md`](design/data_pipeline.md) | ✓ Criado | 2 |
 | [`spec/CONSISTENCIA_DADOS.md`](spec/CONSISTENCIA_DADOS.md) | ✓ Criado — portão antes de qualquer modelo | 1 |
+| [`spec/PLANO_VALIDACAO.md`](spec/PLANO_VALIDACAO.md) | ✓ Executado — 12/12 contra Bogatin, Ott e Palmer | 1 |
 | [`design/model_design.md`](design/model_design.md) | ⏳ TODO | 3 |
 | `spec/LOAD_DATA_SPEC.md` | ⏳ TODO | 3 |
 
