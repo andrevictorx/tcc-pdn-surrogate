@@ -189,6 +189,6 @@ testes de hipótese.
 - [x] Portões C1, C5, C6 e C7 implementados em `src/data/consistencia.py`, com testes.
 - [ ] Explicar o deslocamento do TM20 do PI-4 para baixo, crescente com $h$: carregamento pelas vias?
 - [ ] Explicar a fase de −50° em 1 MHz nas cavidades finas: é o mesmo artefato do C10?
-- [ ] Decidir o alvo $\lvert Z\rvert_{\max}$ diante do C10: extrapolação capacitiva ou ponto de 4,3 MHz.
+- [x] Alvo $\lvert Z\rvert_{\max}$ diante do C10: extrapolação capacitiva sem o ponto de 1 MHz; 4,34 MHz como sensibilidade (`spec/ALVO_ZMAX.md`, 24/10/2026).
 - [ ] Rodar os portões dentro de `load_multi_subset()`.
 - [ ] Avisar a TUHH sobre a folha de dados do PI-1 e perguntar sobre a anomalia em 1 MHz.

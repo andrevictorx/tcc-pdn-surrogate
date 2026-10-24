@@ -151,3 +151,6 @@ Thumbs.db
 .pytest_cache/
 *.bak
 *.tmp
+
+# Planilhas recebidas da TUHH (base não redistribuída, inclusive versões corrigidas)
+data/raw/

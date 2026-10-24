@@ -1,0 +1,25 @@
+norma,tabela,classe,instalacao,distancia_m,f_ini_MHz,f_fim_MHz,limite_ini_dBuVm,limite_fim_dBuVm,detector
+CISPR 32:2015,A2.1,A,OATS/SAC,10,30,230,40,40,quase-pico
+CISPR 32:2015,A2.1,A,OATS/SAC,10,230,1000,47,47,quase-pico
+CISPR 32:2015,A2.2,A,OATS/SAC,3,30,230,50,50,quase-pico
+CISPR 32:2015,A2.2,A,OATS/SAC,3,230,1000,57,57,quase-pico
+CISPR 32:2015,A2.3,A,FAR,10,30,230,42,35,quase-pico
+CISPR 32:2015,A2.3,A,FAR,10,230,1000,42,42,quase-pico
+CISPR 32:2015,A2.4,A,FAR,3,30,230,52,45,quase-pico
+CISPR 32:2015,A2.4,A,FAR,3,230,1000,52,52,quase-pico
+CISPR 32:2015,A4.1,B,OATS/SAC,10,30,230,30,30,quase-pico
+CISPR 32:2015,A4.1,B,OATS/SAC,10,230,1000,37,37,quase-pico
+CISPR 32:2015,A4.2,B,OATS/SAC,3,30,230,40,40,quase-pico
+CISPR 32:2015,A4.2,B,OATS/SAC,3,230,1000,47,47,quase-pico
+CISPR 32:2015,A4.3,B,FAR,10,30,230,32,25,quase-pico
+CISPR 32:2015,A4.3,B,FAR,10,230,1000,32,32,quase-pico
+CISPR 32:2015,A4.4,B,FAR,3,30,230,42,35,quase-pico
+CISPR 32:2015,A4.4,B,FAR,3,230,1000,42,42,quase-pico
+IEC 61000-6-3:2020,3.1,residencial,OATS/SAC,10,30,230,30,30,quase-pico
+IEC 61000-6-3:2020,3.1,residencial,OATS/SAC,10,230,1000,37,37,quase-pico
+IEC 61000-6-3:2020,3.3,residencial,FAR,3,30,230,42,35,quase-pico
+IEC 61000-6-3:2020,3.3,residencial,FAR,3,230,1000,42,42,quase-pico
+IEC 61000-6-4:2018,3.1,industrial,OATS/SAC,10,30,230,40,40,quase-pico
+IEC 61000-6-4:2018,3.1,industrial,OATS/SAC,10,230,1000,47,47,quase-pico
+IEC 61000-6-4:2018,3.3,industrial,FAR,3,30,230,52,45,quase-pico
+IEC 61000-6-4:2018,3.3,industrial,FAR,3,230,1000,52,52,quase-pico

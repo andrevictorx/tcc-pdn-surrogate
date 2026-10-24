@@ -175,6 +175,8 @@ Agente 4:
 | [`design/data_pipeline.md`](design/data_pipeline.md) | ✓ Criado | 2 |
 | [`spec/CONSISTENCIA_DADOS.md`](spec/CONSISTENCIA_DADOS.md) | ✓ Criado — portão antes de qualquer modelo | 1 |
 | [`spec/PLANO_VALIDACAO.md`](spec/PLANO_VALIDACAO.md) | ✓ Executado — 12/12 contra Bogatin, Ott e Palmer | 1 |
+| [`spec/ALVO_ZMAX.md`](spec/ALVO_ZMAX.md) | ✓ Decidido — extrapolação capacitiva; 4,34 MHz como sensibilidade | 1 |
+| [`spec/NORMAS.md`](spec/NORMAS.md) | ✓ Tabulado — CISPR 32, IEC 61000-6-3 e 6-4, 30 MHz–1 GHz | 1 |
 | [`design/model_design.md`](design/model_design.md) | ⏳ TODO | 3 |
 | `spec/LOAD_DATA_SPEC.md` | ⏳ TODO | 3 |
 
